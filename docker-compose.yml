@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: wordpress_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db-dumps:/docker-entrypoint-initdb.d  # Папка для импорта дампов
+    ports:
+      - "3306:3306"
+    networks:
+      - wordpress-network
+    command: '--default-authentication-plugin=mysql_native_password'
+
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: wordpress_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+      UPLOAD_LIMIT: 50M
+    ports:
+      - "8080:80"
+    networks:
+      - wordpress-network
+    depends_on:
+      - db
+
+  # WordPress
+  wordpress:
+    build: .
+    container_name: wordpress_app
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      # WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'http://localhost');
+        define('WP_SITEURL', 'http://localhost');
+        define('FS_METHOD', 'direct');
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./plugins:/var/www/html/wp-content/plugins  # Папка для плагинов
+      - ./themes:/var/www/html/wp-content/themes    # Папка для тем
+      - ./uploads:/var/www/html/wp-content/uploads  # Папка для медиафайлов
+    ports:
+      # порт 80 иначе CURL ы настройках WP не сможет сам на себя зайти задание выполнить
+      - "80:80"
+    networks:
+      - wordpress-network
+      - shared-net
+    depends_on:
+      - db
+
+networks:
+  wordpress-network:
+    driver: bridge
+  shared-net: # red-Новое имя для подключения к внешней сети
+    name: shared-network # docker network create shared-network Указываем реальное имя сети, которую создали
+    external: true
+
+volumes:
+  db_data:
