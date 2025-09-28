@@ -35,7 +35,8 @@ class ApiCalculations {
             'person1_place' => sanitize_text_field($data['person1_place'] ?? ''),
             'person2_place' => sanitize_text_field($data['person2_place'] ?? ''),
             'package_type' => $package_type,
-            'language' => get_locale(),
+//            'language' => get_locale(),
+            'language' => 'en', // TODO replace
             'format' => $data['format'] ?? 'json',
             'metadata' => [
                 'source' => 'wordpress_plugin',
@@ -52,14 +53,14 @@ class ApiCalculations {
         // Make calculation request
         $response = $this->client->request('/compatibility/calculate', 'POST', $request_data, true);
 
-        if (!empty($response['calculation'])) {
+        if (!$response['success'] || !empty($response['data'])) {
             // Store calculation in database
-            $this->store_calculation($response['calculation']);
+            $this->store_calculation($response['data']);
 
             // Track usage
             $this->track_usage($package_type);
 
-            return $response['calculation'];
+            return $response['data'];
         }
 
         throw new \Exception(__('Calculation failed', 'numerology-compatibility'));
