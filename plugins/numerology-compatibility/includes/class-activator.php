@@ -1,74 +1,110 @@
 <?php
-// includes/class-activator.php
-
 namespace NC;
-
-use NC\Database\Database;
-use NC\Admin\Settings;
 
 class Activator {
 
     /**
-     * Plugin activation
+     * Plugin activation - упрощенная версия для отладки
      */
     public static function activate() {
-        // Check PHP version
-        if (version_compare(PHP_VERSION, NC_MIN_PHP_VERSION, '<')) {
+        error_log('NC Activator: Starting activation...');
+
+        // 1. Проверка версии PHP
+        if (version_compare(PHP_VERSION, '7.4', '<')) {
             deactivate_plugins(plugin_basename(NC_PLUGIN_FILE));
-            wp_die(sprintf(
-                'This plugin requires PHP %s or higher. Your version: %s',
-                NC_MIN_PHP_VERSION,
-                PHP_VERSION
-            ));
+            wp_die('This plugin requires PHP 7.4 or higher.');
         }
+        error_log('NC Activator: PHP version check passed');
 
-        // Create database tables
-        $db = Database::getInstance();
-        $db->create_tables();
+        // 2. Создание таблиц - упрощенная версия
+        self::create_tables();
+        error_log('NC Activator: Tables created');
 
-        // Set default options
-        $defaults = Settings::get_defaults();
+        // 3. Установка базовых опций
+        self::set_default_options();
+        error_log('NC Activator: Options set');
+
+        // 4. Создание директорий
+        self::create_directories();
+        error_log('NC Activator: Directories created');
+
+        // 5. Flush rewrite rules
+        flush_rewrite_rules();
+        error_log('NC Activator: Rewrite rules flushed');
+
+        // 6. Установка флага для редиректа
+        set_transient('nc_activation_redirect', true, 30);
+        error_log('NC Activator: Activation completed successfully');
+    }
+
+    /**
+     * Создание таблиц
+     */
+    private static function create_tables() {
+        global $wpdb;
+
+        $charset_collate = $wpdb->get_charset_collate();
+
+        // Простая таблица для тестирования
+        $table_name = $wpdb->prefix . 'nc_calculations';
+
+        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            user_id bigint(20) UNSIGNED NOT NULL,
+            calculation_id varchar(255) NOT NULL,
+            created_at datetime DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id)
+        ) $charset_collate;";
+
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        dbDelta($sql);
+
+        // Сохраняем версию БД
+        update_option('nc_db_version', '1.0.0');
+    }
+
+    /**
+     * Установка опций по умолчанию
+     */
+    private static function set_default_options() {
+        $defaults = [
+            'nc_environment' => 'production',
+            'nc_api_url' => 'https://api.your-domain.com',
+            'nc_require_auth' => 1,
+            'nc_currency' => 'USD',
+            'nc_price_light' => 19,
+            'nc_price_pro' => 49
+        ];
+
         foreach ($defaults as $key => $value) {
             if (get_option($key) === false) {
                 add_option($key, $value);
             }
         }
+    }
 
-        // Create upload directories
+    /**
+     * Создание необходимых директорий
+     */
+    private static function create_directories() {
         $upload_dir = wp_upload_dir();
-        $nc_dir = $upload_dir['basedir'] . '/numerology-compatibility';
-        $log_dir = $upload_dir['basedir'] . '/nc-logs';
 
-        if (!file_exists($nc_dir)) {
-            wp_mkdir_p($nc_dir);
-        }
+        $directories = [
+            $upload_dir['basedir'] . '/numerology-compatibility',
+            $upload_dir['basedir'] . '/nc-logs'
+        ];
 
-        if (!file_exists($log_dir)) {
-            wp_mkdir_p($log_dir);
-
-            // Add .htaccess to protect logs
-            $htaccess = $log_dir . '/.htaccess';
-            if (!file_exists($htaccess)) {
-                file_put_contents($htaccess, 'Deny from all');
+        foreach ($directories as $dir) {
+            if (!file_exists($dir)) {
+                wp_mkdir_p($dir);
+                error_log('NC Activator: Created directory - ' . $dir);
             }
         }
 
-        // Create rewrite rules
-        add_rewrite_rule(
-            '^dashboard/?$',
-            'index.php?nc_dashboard=1',
-            'top'
-        );
-
-        // Flush rewrite rules
-        flush_rewrite_rules();
-
-        // Schedule cron events
-        if (!wp_next_scheduled('nc_daily_cleanup')) {
-            wp_schedule_event(time(), 'daily', 'nc_daily_cleanup');
+        // Защита директории логов
+        $htaccess = $upload_dir['basedir'] . '/nc-logs/.htaccess';
+        if (!file_exists($htaccess)) {
+            file_put_contents($htaccess, 'Deny from all');
         }
-
-        // Set activation flag
-        set_transient('nc_activation_redirect', true, 30);
     }
 }
