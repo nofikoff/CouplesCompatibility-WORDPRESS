@@ -315,6 +315,10 @@
                 resultsHtml += '<div class="nc-score">Compatibility Score: <span>' + calculation.compatibility_score + '%</span></div>';
             }
 
+            // TODO here PD calculation URL needed
+            // TODO here PD calculation URL needed
+            // TODO here PD calculation URL needed
+            // TODO here PD calculation URL needed
             if (calculation.pdf_url) {
                 resultsHtml += '<a href="' + calculation.pdf_url + '" class="nc-btn nc-btn-primary" download>Download PDF Report</a>';
             }

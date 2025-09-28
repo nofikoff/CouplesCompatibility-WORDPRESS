@@ -36,7 +36,12 @@ class ApiCalculations {
             'person2_place' => sanitize_text_field($data['person2_place'] ?? ''),
             'package_type' => $package_type,
 //            'language' => get_locale(),
-            'language' => 'en', // TODO replace
+	        // TODO replace with actual language code
+	        // TODO replace with actual language code
+	        // TODO replace with actual language code
+	        // TODO replace with actual language code
+	        // TODO replace with actual language code
+            'language' => 'en',
             'format' => $data['format'] ?? 'json',
             'metadata' => [
                 'source' => 'wordpress_plugin',
