@@ -1,0 +1,167 @@
+{
+  "name": "numerology-compatibility",
+  "version": "1.0.0",
+  "description": "Numerology Compatibility Calculator WordPress Plugin",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:webpack": "webpack --mode development --watch",
+    "dev:sass": "sass --watch public/assets/scss:public/assets/css admin/assets/scss:admin/assets/css --style expanded",
+    "build": "npm-run-all clean build:*",
+    "build:webpack": "webpack --mode production",
+    "build:sass": "sass public/assets/scss:public/assets/css admin/assets/scss:admin/assets/css --style compressed --no-source-map",
+    "build:assets": "npm run optimize-images && npm run copy-vendor",
+    "clean": "rimraf dist public/assets/css/*.map admin/assets/css/*.map",
+    "lint": "npm-run-all lint:*",
+    "lint:js": "eslint public/assets/js admin/assets/js --ext .js",
+    "lint:css": "stylelint 'public/assets/scss/**/*.scss' 'admin/assets/scss/**/*.scss'",
+    "format": "npm-run-all format:*",
+    "format:js": "prettier --write 'public/assets/js/**/*.js' 'admin/assets/js/**/*.js'",
+    "format:css": "prettier --write 'public/assets/scss/**/*.scss' 'admin/assets/scss/**/*.scss'",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "optimize-images": "imagemin public/assets/images/* --out-dir=public/assets/images/optimized",
+    "copy-vendor": "npm run copy-vendor:stripe && npm run copy-vendor:google",
+    "copy-vendor:stripe": "cp node_modules/@stripe/stripe-js/dist/stripe.esm.js public/assets/vendor/",
+    "copy-vendor:google": "cp node_modules/google-auth-library/build/src/auth/oauth2client.js public/assets/vendor/",
+    "bundle": "npm run build && npm run create-zip",
+    "create-zip": "bestzip numerology-compatibility.zip * -x node_modules -x .git -x .gitignore -x tests -x .DS_Store -x *.map",
+    "watch": "npm run dev",
+    "pot": "wp i18n make-pot . languages/numerology-compatibility.pot --exclude=node_modules,vendor,tests",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "numerology",
+    "compatibility",
+    "calculator",
+    "stripe",
+    "laravel"
+  ],
+  "author": "Your Name <your@email.com>",
+  "license": "GPL-2.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/numerology-compatibility.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@wordpress/scripts": "^26.18.0",
+    "@wordpress/eslint-plugin": "^17.4.0",
+    "autoprefixer": "^10.4.16",
+    "babel-loader": "^9.1.3",
+    "bestzip": "^2.2.1",
+    "chart.js": "^4.4.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
+    "css-minimizer-webpack-plugin": "^5.0.1",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jest": "^27.6.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "file-loader": "^6.2.0",
+    "husky": "^8.0.3",
+    "imagemin-cli": "^7.0.0",
+    "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "imagemin-svgo": "^10.0.1",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.1.0",
+    "mini-css-extract-plugin": "^2.7.6",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.31",
+    "postcss-loader": "^7.3.3",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "sass": "^1.69.5",
+    "sass-loader": "^13.3.2",
+    "style-loader": "^3.3.3",
+    "stylelint": "^15.11.0",
+    "stylelint-config-recommended-scss": "^13.1.0",
+    "stylelint-config-wordpress": "^17.0.0",
+    "terser-webpack-plugin": "^5.3.9",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.89.0",
+    "webpack-bundle-analyzer": "^4.10.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^5.10.0",
+    "wp-pot-cli": "^1.5.0"
+  },
+  "dependencies": {
+    "@stripe/stripe-js": "^2.2.0",
+    "axios": "^1.6.2",
+    "chart.js": "^4.4.0",
+    "dayjs": "^1.11.10",
+    "google-auth-library": "^9.4.0",
+    "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
+    "sweetalert2": "^11.10.1",
+    "tippy.js": "^6.3.7",
+    "validator": "^13.11.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{scss,css}": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ],
+    "*.php": [
+      "php -l"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test"
+    }
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "roots": [
+      "<rootDir>/tests/js"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.js",
+      "**/?(*.)+(spec|test).js"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|scss)$": "<rootDir>/tests/js/__mocks__/styleMock.js",
+      "\\.(jpg|jpeg|png|gif|svg)$": "<rootDir>/tests/js/__mocks__/fileMock.js"
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/js/setup.js"
+    ],
+    "collectCoverageFrom": [
+      "public/assets/js/**/*.js",
+      "admin/assets/js/**/*.js",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ]
+  }
+}

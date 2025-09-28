@@ -1,13 +1,33 @@
 FROM wordpress:latest
 
 # Установка дополнительных инструментов для разработки
+# Добавляем gpg и ca-certificates для работы с NodeSource и secure installs
 RUN apt-get update && apt-get install -y \
     vim \
     nano \
     wget \
     unzip \
     git \
+    gpg \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
+
+# ----------------------------------------------------------------------
+## Установка Composer
+# ----------------------------------------------------------------------
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# ----------------------------------------------------------------------
+## Установка Node.js (включает npm)
+# Используем NodeSource для получения актуальной версии Node.js (например, 20.x LTS)
+# ----------------------------------------------------------------------
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Проверка установки (опционально, можно убрать для уменьшения размера лога)
+RUN node -v && npm -v && composer --version
+# ----------------------------------------------------------------------
 
 # Установка WP-CLI
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
