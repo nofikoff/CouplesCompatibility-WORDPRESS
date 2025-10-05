@@ -27,27 +27,12 @@ $require_auth = $attributes['require_auth'] ?? true;
                     <div class="nc-form-group nc-partner-1">
                         <h3><?php _e('Partner 1', 'numerology-compatibility'); ?></h3>
 
-                        <div class="nc-field">
-                            <label for="person1_name"><?php _e('Name (optional)', 'numerology-compatibility'); ?></label>
-                            <input type="text" id="person1_name" name="person1_name" placeholder="<?php _e('Enter name', 'numerology-compatibility'); ?>">
-                        </div>
-
                         <div class="nc-field nc-required">
-                            <label for="person1_date"><?php _e('Date of Birth', 'numerology-compatibility'); ?> *</label>
+                            <label for="person1_date"><?php _e('Date of Birth', 'numerology-compatibility'); ?></label>
                             <input type="date" id="person1_date" name="person1_date" required
                                    max="<?php echo date('Y-m-d'); ?>"
                                    min="1900-01-01">
                             <span class="nc-error-message"></span>
-                        </div>
-
-                        <div class="nc-field nc-advanced" style="display:none;">
-                            <label for="person1_time"><?php _e('Time of Birth (optional)', 'numerology-compatibility'); ?></label>
-                            <input type="time" id="person1_time" name="person1_time">
-                        </div>
-
-                        <div class="nc-field nc-advanced" style="display:none;">
-                            <label for="person1_place"><?php _e('Place of Birth (optional)', 'numerology-compatibility'); ?></label>
-                            <input type="text" id="person1_place" name="person1_place" placeholder="<?php _e('City, Country', 'numerology-compatibility'); ?>">
                         </div>
                     </div>
 
@@ -55,33 +40,15 @@ $require_auth = $attributes['require_auth'] ?? true;
                     <div class="nc-form-group nc-partner-2">
                         <h3><?php _e('Partner 2', 'numerology-compatibility'); ?></h3>
 
-                        <div class="nc-field">
-                            <label for="person2_name"><?php _e('Name (optional)', 'numerology-compatibility'); ?></label>
-                            <input type="text" id="person2_name" name="person2_name" placeholder="<?php _e('Enter name', 'numerology-compatibility'); ?>">
-                        </div>
-
                         <div class="nc-field nc-required">
-                            <label for="person2_date"><?php _e('Date of Birth', 'numerology-compatibility'); ?> *</label>
+                            <label for="person2_date"><?php _e('Date of Birth', 'numerology-compatibility'); ?></label>
                             <input type="date" id="person2_date" name="person2_date" required
                                    max="<?php echo date('Y-m-d'); ?>"
                                    min="1900-01-01">
                             <span class="nc-error-message"></span>
                         </div>
 
-                        <div class="nc-field nc-advanced" style="display:none;">
-                            <label for="person2_time"><?php _e('Time of Birth (optional)', 'numerology-compatibility'); ?></label>
-                            <input type="time" id="person2_time" name="person2_time">
-                        </div>
-
-                        <div class="nc-field nc-advanced" style="display:none;">
-                            <label for="person2_place"><?php _e('Place of Birth (optional)', 'numerology-compatibility'); ?></label>
-                            <input type="text" id="person2_place" name="person2_place" placeholder="<?php _e('City, Country', 'numerology-compatibility'); ?>">
-                        </div>
                     </div>
-                </div>
-
-                <div class="nc-toggle-advanced">
-                    <a href="#" id="nc-toggle-advanced"><?php _e('+ Show advanced options', 'numerology-compatibility'); ?></a>
                 </div>
 
                 <!-- Consent checkboxes for calculation -->

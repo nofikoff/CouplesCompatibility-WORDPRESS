@@ -28,12 +28,6 @@
                 CalculatorManager.handleFormSubmit($(this));
             });
 
-            // Toggle advanced options
-            $('#nc-toggle-advanced').on('click', function(e) {
-                e.preventDefault();
-                CalculatorManager.toggleAdvancedOptions();
-            });
-
             // Package selection
             $('.nc-select-package').on('click', function() {
                 CalculatorManager.selectPackage($(this).data('package'));
@@ -326,16 +320,6 @@
             resultsHtml += '</div>';
 
             $('.nc-result').html(resultsHtml);
-        },
-
-        toggleAdvancedOptions: function() {
-            $('.nc-advanced').slideToggle();
-            var $toggle = $('#nc-toggle-advanced');
-            if ($toggle.text().includes('+')) {
-                $toggle.text('- Hide advanced options');
-            } else {
-                $toggle.text('+ Show advanced options');
-            }
         },
 
         showStep: function(step) {
