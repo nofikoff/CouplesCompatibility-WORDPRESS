@@ -22,16 +22,8 @@ class Settings {
         register_setting('nc_settings_api', 'nc_api_secret');
         register_setting('nc_settings_api', 'nc_webhook_secret'); // Webhook secret для проверки подписи
 
-        // Pricing settings
-        register_setting('nc_settings_pricing', 'nc_currency');
-        register_setting('nc_settings_pricing', 'nc_free_enabled');
-        register_setting('nc_settings_pricing', 'nc_price_light');
-        register_setting('nc_settings_pricing', 'nc_price_pro');
-
-        // Payment settings
-        register_setting('nc_settings_payment', 'nc_stripe_mode');
-        register_setting('nc_settings_payment', 'nc_stripe_webhook_secret');
-        register_setting('nc_settings_payment', 'nc_stripe_publishable_key');
+        // ПРИМЕЧАНИЕ: Pricing и Payment Gateway настройки убраны
+        // Все цены и платежные шлюзы управляются на бэкенде Laravel
 
         // Localization settings
         register_setting('nc_settings_localization', 'nc_default_language');
@@ -79,15 +71,6 @@ class Settings {
             $validated['nc_api_url'] = esc_url_raw($input['nc_api_url']);
         }
 
-        // Validate prices
-        if (isset($input['nc_price_light'])) {
-            $validated['nc_price_light'] = floatval($input['nc_price_light']);
-        }
-
-        if (isset($input['nc_price_pro'])) {
-            $validated['nc_price_pro'] = floatval($input['nc_price_pro']);
-        }
-
         // Validate other fields
         foreach ($input as $key => $value) {
             if (!isset($validated[$key])) {
@@ -103,21 +86,23 @@ class Settings {
      */
     public static function get_defaults() {
         return [
+            // General settings
             'nc_environment' => 'production',
             'nc_require_auth' => 1,
             'nc_email_verification' => 0,
             'nc_terms_url' => '/terms',
             'nc_privacy_url' => '/privacy',
+
+            // API settings
             'nc_api_url' => 'https://api.your-domain.com',
-            'nc_currency' => 'USD',
-            'nc_free_enabled' => 1,
-            'nc_price_light' => 19,
-            'nc_price_pro' => 49,
-            'nc_stripe_mode' => 'test',
+
+            // Localization settings
             'nc_default_language' => get_locale(),
             'nc_multilanguage' => 1,
             'nc_auto_currency' => 1,
             'nc_date_format' => 'Y-m-d',
+
+            // Advanced settings
             'nc_debug_mode' => 0,
             'nc_cache_duration' => 3600,
             'nc_rate_limit' => 10,

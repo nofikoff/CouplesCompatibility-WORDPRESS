@@ -24,12 +24,6 @@ $active_tab = $_GET['tab'] ?? 'general';
         <a href="?page=nc-settings&tab=api" class="nav-tab <?php echo $active_tab == 'api' ? 'nav-tab-active' : ''; ?>">
             <?php _e('API Configuration', 'numerology-compatibility'); ?>
         </a>
-        <a href="?page=nc-settings&tab=pricing" class="nav-tab <?php echo $active_tab == 'pricing' ? 'nav-tab-active' : ''; ?>">
-            <?php _e('Pricing', 'numerology-compatibility'); ?>
-        </a>
-        <a href="?page=nc-settings&tab=payment" class="nav-tab <?php echo $active_tab == 'payment' ? 'nav-tab-active' : ''; ?>">
-            <?php _e('Payment Gateway', 'numerology-compatibility'); ?>
-        </a>
         <a href="?page=nc-settings&tab=localization" class="nav-tab <?php echo $active_tab == 'localization' ? 'nav-tab-active' : ''; ?>">
             <?php _e('Localization', 'numerology-compatibility'); ?>
         </a>
@@ -37,6 +31,15 @@ $active_tab = $_GET['tab'] ?? 'general';
             <?php _e('Advanced', 'numerology-compatibility'); ?>
         </a>
     </nav>
+
+    <?php if (in_array($active_tab, ['pricing', 'payment'])): ?>
+        <div class="notice notice-info">
+            <p>
+                <strong><?php _e('Note:', 'numerology-compatibility'); ?></strong>
+                <?php _e('Pricing and payment gateway settings are now managed on the backend. Please configure them in your Laravel backend .env file.', 'numerology-compatibility'); ?>
+            </p>
+        </div>
+    <?php endif; ?>
 
     <form method="post" action="options.php" class="nc-settings-form">
         <?php settings_fields('nc_settings_' . $active_tab); ?>
@@ -147,110 +150,6 @@ $active_tab = $_GET['tab'] ?? 'general';
                             <?php _e('Test Connection', 'numerology-compatibility'); ?>
                         </button>
                         <span id="nc-test-result" style="margin-left: 10px;"></span>
-                    </td>
-                </tr>
-            </table>
-        <?php endif; ?>
-
-        <!-- Pricing Tab -->
-        <?php if ($active_tab == 'pricing'): ?>
-            <table class="form-table" role="presentation">
-                <tr>
-                    <th scope="row"><?php _e('Default Currency', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <select name="nc_currency">
-                            <option value="USD" <?php selected(get_option('nc_currency'), 'USD'); ?>>USD ($)</option>
-                            <option value="EUR" <?php selected(get_option('nc_currency'), 'EUR'); ?>>EUR (€)</option>
-                            <option value="GBP" <?php selected(get_option('nc_currency'), 'GBP'); ?>>GBP (£)</option>
-                            <option value="CAD" <?php selected(get_option('nc_currency'), 'CAD'); ?>>CAD ($)</option>
-                            <option value="AUD" <?php selected(get_option('nc_currency'), 'AUD'); ?>>AUD ($)</option>
-                            <option value="RUB" <?php selected(get_option('nc_currency'), 'RUB'); ?>>RUB (₽)</option>
-                        </select>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th colspan="2">
-                        <h3><?php _e('Package Pricing', 'numerology-compatibility'); ?></h3>
-                    </th>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Free Package', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="nc_free_enabled" value="1" <?php checked(get_option('nc_free_enabled', 1)); ?>>
-                            <?php _e('Enable free package', 'numerology-compatibility'); ?>
-                        </label>
-                        <p class="description"><?php _e('Basic compatibility overview', 'numerology-compatibility'); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Light Package Price', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <input type="number" name="nc_price_light" value="<?php echo esc_attr(get_option('nc_price_light', 19)); ?>" min="1" step="0.01" class="small-text">
-                        <p class="description"><?php _e('Full report with 1-2 year forecast', 'numerology-compatibility'); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Pro Package Price', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <input type="number" name="nc_price_pro" value="<?php echo esc_attr(get_option('nc_price_pro', 49)); ?>" min="1" step="0.01" class="small-text">
-                        <p class="description"><?php _e('Extended report with karmic analysis and 10-20 year forecast', 'numerology-compatibility'); ?></p>
-                    </td>
-                </tr>
-            </table>
-        <?php endif; ?>
-
-        <!-- Payment Gateway Tab -->
-        <?php if ($active_tab == 'payment'): ?>
-            <table class="form-table" role="presentation">
-                <tr>
-                    <th scope="row"><?php _e('Payment Mode', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <select name="nc_stripe_mode">
-                            <option value="test" <?php selected(get_option('nc_stripe_mode'), 'test'); ?>>
-                                <?php _e('Test Mode', 'numerology-compatibility'); ?>
-                            </option>
-                            <option value="live" <?php selected(get_option('nc_stripe_mode'), 'live'); ?>>
-                                <?php _e('Live Mode', 'numerology-compatibility'); ?>
-                            </option>
-                        </select>
-                        <?php if (get_option('nc_stripe_mode') == 'test'): ?>
-                            <p class="notice notice-warning inline">
-                                <?php _e('⚠️ Test mode is active. Real payments will not be processed.', 'numerology-compatibility'); ?>
-                            </p>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Stripe Configuration', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <div class="notice notice-info inline">
-                            <p><?php _e('Stripe is configured through your Laravel backend. Ensure your backend Stripe settings are properly configured.', 'numerology-compatibility'); ?></p>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Webhook URL', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <code><?php echo home_url('/wp-json/numerology/v1/stripe-webhook'); ?></code>
-                        <button type="button" class="button button-small nc-copy-webhook" style="margin-left: 10px;">
-                            <?php _e('Copy', 'numerology-compatibility'); ?>
-                        </button>
-                        <p class="description"><?php _e('Add this URL to your Stripe webhook settings', 'numerology-compatibility'); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Webhook Secret', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <input type="password" name="nc_stripe_webhook_secret" value="<?php echo esc_attr(get_option('nc_stripe_webhook_secret')); ?>" class="regular-text">
-                        <p class="description"><?php _e('Get this from your Stripe webhook settings', 'numerology-compatibility'); ?></p>
                     </td>
                 </tr>
             </table>
