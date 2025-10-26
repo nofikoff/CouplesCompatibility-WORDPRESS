@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//Users/novikov/PhpstormProjects/test/test-numerology/test-numerorly-WORDPRESS/.claude/**)"
-    ],
-    "deny": [],
-    "ask": []
-  }
-}
