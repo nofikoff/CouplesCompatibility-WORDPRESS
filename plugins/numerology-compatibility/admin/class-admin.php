@@ -105,22 +105,22 @@ class Admin {
                 <div class="nc-stats-grid">
                     <div class="nc-stat-card">
                         <h3><?php _e('Total Users', 'numerology-compatibility'); ?></h3>
-                        <div class="nc-stat-number"><?php echo number_format($stats['total_users']); ?></div>
+                        <div class="nc-stat-number"><?php echo number_format($stats['unique_customers'] ?? 0); ?></div>
                     </div>
 
                     <div class="nc-stat-card">
                         <h3><?php _e('Total Calculations', 'numerology-compatibility'); ?></h3>
-                        <div class="nc-stat-number"><?php echo number_format($stats['total_calculations']); ?></div>
+                        <div class="nc-stat-number"><?php echo number_format($stats['total_calculations'] ?? 0); ?></div>
                     </div>
 
                     <div class="nc-stat-card">
                         <h3><?php _e('Revenue', 'numerology-compatibility'); ?></h3>
-                        <div class="nc-stat-number">$<?php echo number_format($stats['total_revenue'], 2); ?></div>
+                        <div class="nc-stat-number">$<?php echo number_format($stats['total_revenue'] ?? 0, 2); ?></div>
                     </div>
 
                     <div class="nc-stat-card">
                         <h3><?php _e("Today's Calculations", 'numerology-compatibility'); ?></h3>
-                        <div class="nc-stat-number"><?php echo number_format($stats['today_calculations']); ?></div>
+                        <div class="nc-stat-number"><?php echo number_format($stats['today_calculations'] ?? 0); ?></div>
                     </div>
                 </div>
 
@@ -141,7 +141,7 @@ class Admin {
         <script>
             // Initialize chart
             jQuery(document).ready(function($) {
-                var packageData = <?php echo json_encode($stats['packages']); ?>;
+                var packageData = <?php echo json_encode($stats['packages'] ?? []); ?>;
                 // Chart.js code here
             });
         </script>

@@ -92,7 +92,7 @@ $top_events = $wpdb->get_results(
         <div class="nc-metric-card">
             <h3><?php _e('Total Revenue', 'numerology-compatibility'); ?></h3>
             <div class="nc-metric-value">
-                $<?php echo number_format($stats['total_revenue'], 2); ?>
+                $<?php echo number_format($stats['total_revenue'] ?? 0, 2); ?>
             </div>
             <div class="nc-metric-change positive">
                 +12.5% <?php _e('vs last period', 'numerology-compatibility'); ?>
@@ -103,8 +103,10 @@ $top_events = $wpdb->get_results(
             <h3><?php _e('Conversion Rate', 'numerology-compatibility'); ?></h3>
             <div class="nc-metric-value">
                 <?php
-                $conversion_rate = $stats['total_users'] > 0
-                    ? round(($stats['total_revenue'] / 19) / $stats['total_users'] * 100, 2)
+                $unique_customers = $stats['unique_customers'] ?? 0;
+                $total_revenue = $stats['total_revenue'] ?? 0;
+                $conversion_rate = $unique_customers > 0
+                    ? round(($total_revenue / 19) / $unique_customers * 100, 2)
                     : 0;
                 echo $conversion_rate;
                 ?>%
@@ -119,7 +121,8 @@ $top_events = $wpdb->get_results(
             <div class="nc-metric-value">
                 $<?php
                 $completed_orders = $wpdb->get_var("SELECT COUNT(*) FROM $transactions_table WHERE status = 'completed'");
-                $aov = $completed_orders > 0 ? $stats['total_revenue'] / $completed_orders : 0;
+                $total_revenue = $stats['total_revenue'] ?? 0;
+                $aov = $completed_orders > 0 ? $total_revenue / $completed_orders : 0;
                 echo number_format($aov, 2);
                 ?>
             </div>
@@ -226,7 +229,7 @@ $top_events = $wpdb->get_results(
     // Prepare data for charts
     var dailyStatsData = <?php echo json_encode($daily_stats); ?>;
     var dailyRevenueData = <?php echo json_encode($daily_revenue); ?>;
-    var packageData = <?php echo json_encode($stats['packages']); ?>;
+    var packageData = <?php echo json_encode($stats['packages'] ?? []); ?>;
 
     // This will be initialized in admin.js
 </script>
