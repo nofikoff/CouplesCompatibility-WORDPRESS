@@ -20,8 +20,6 @@ if ($delete_on_uninstall) {
     $options = [
         // General settings
         'nc_environment',
-        'nc_require_auth',
-        'nc_email_verification',
         'nc_terms_url',
         'nc_privacy_url',
 

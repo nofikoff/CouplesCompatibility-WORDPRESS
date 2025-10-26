@@ -66,26 +66,6 @@ $active_tab = $_GET['tab'] ?? 'general';
                 </tr>
 
                 <tr>
-                    <th scope="row"><?php _e('Require Authentication', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="nc_require_auth" value="1" <?php checked(get_option('nc_require_auth', 1)); ?>>
-                            <?php _e('Users must sign in before calculations', 'numerology-compatibility'); ?>
-                        </label>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Email Verification', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="nc_email_verification" value="1" <?php checked(get_option('nc_email_verification', 0)); ?>>
-                            <?php _e('Require email verification for new accounts', 'numerology-compatibility'); ?>
-                        </label>
-                    </td>
-                </tr>
-
-                <tr>
                     <th scope="row"><?php _e('Terms Page URL', 'numerology-compatibility'); ?></th>
                     <td>
                         <input type="url" name="nc_terms_url" value="<?php echo esc_attr(get_option('nc_terms_url', '/terms')); ?>" class="regular-text">

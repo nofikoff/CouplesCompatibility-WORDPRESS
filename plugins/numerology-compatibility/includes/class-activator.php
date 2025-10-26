@@ -70,10 +70,12 @@ class Activator {
         $defaults = [
             'nc_environment' => 'production',
             'nc_api_url' => 'https://api.your-domain.com',
-            'nc_require_auth' => 1,
-            'nc_currency' => 'USD',
-            'nc_price_light' => 19,
-            'nc_price_pro' => 49
+            'nc_terms_url' => '/terms',
+            'nc_privacy_url' => '/privacy',
+            'nc_debug_mode' => 0,
+            'nc_cache_duration' => 3600,
+            'nc_rate_limit' => 10,
+            'nc_delete_on_uninstall' => 0
         ];
 
         foreach ($defaults as $key => $value) {

@@ -11,8 +11,6 @@ class Settings {
     public function register_settings() {
         // General settings
         register_setting('nc_settings_general', 'nc_environment');
-        register_setting('nc_settings_general', 'nc_require_auth');
-        register_setting('nc_settings_general', 'nc_email_verification');
         register_setting('nc_settings_general', 'nc_terms_url');
         register_setting('nc_settings_general', 'nc_privacy_url');
 
@@ -88,8 +86,6 @@ class Settings {
         return [
             // General settings
             'nc_environment' => 'production',
-            'nc_require_auth' => 1,
-            'nc_email_verification' => 0,
             'nc_terms_url' => '/terms',
             'nc_privacy_url' => '/privacy',
 
