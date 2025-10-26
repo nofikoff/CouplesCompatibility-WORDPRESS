@@ -137,8 +137,12 @@ $active_tab = $_GET['tab'] ?? 'general';
                             <?php _e('Must match WORDPRESS_WEBHOOK_SECRET in backend .env', 'numerology-compatibility'); ?>
                         </p>
                         <p class="description">
-                            <strong><?php _e('Webhook URL:', 'numerology-compatibility'); ?></strong>
-                            <code><?php echo home_url('/wp-json/numerology/v1/webhook/stripe'); ?></code>
+                            <strong><?php _e('Webhook URL Format:', 'numerology-compatibility'); ?></strong><br>
+                            <code><?php echo home_url('/wp-json/numerology/v1/webhook/{gateway}'); ?></code><br>
+                            <em><?php _e('Examples:', 'numerology-compatibility'); ?></em><br>
+                            <code><?php echo home_url('/wp-json/numerology/v1/webhook/stripe'); ?></code> - <?php _e('for Stripe', 'numerology-compatibility'); ?><br>
+                            <code><?php echo home_url('/wp-json/numerology/v1/webhook/paypal'); ?></code> - <?php _e('for PayPal', 'numerology-compatibility'); ?><br>
+                            <small><?php _e('Configure the appropriate URL on your backend for each payment gateway', 'numerology-compatibility'); ?></small>
                         </p>
                     </td>
                 </tr>

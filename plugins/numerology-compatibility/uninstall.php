@@ -18,25 +18,26 @@ if ($delete_on_uninstall) {
 
     // Delete plugin options
     $options = [
+        // General settings
         'nc_environment',
         'nc_require_auth',
         'nc_email_verification',
         'nc_terms_url',
         'nc_privacy_url',
+
+        // API settings
         'nc_api_url',
         'nc_api_key',
         'nc_api_secret',
-        'nc_currency',
-        'nc_free_enabled',
-        'nc_price_light',
-        'nc_price_pro',
-        'nc_stripe_mode',
-        'nc_stripe_webhook_secret',
-        'nc_stripe_publishable_key',
+        'nc_webhook_secret',
+
+        // Localization settings
         'nc_default_language',
         'nc_multilanguage',
         'nc_auto_currency',
         'nc_date_format',
+
+        // Advanced settings
         'nc_debug_mode',
         'nc_cache_duration',
         'nc_rate_limit',

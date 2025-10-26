@@ -103,18 +103,9 @@ class Plugin {
 	private function define_api_hooks() {
 		// REST API endpoints for payment webhooks
 		// Бэкенд отправляет уведомления о статусе платежа на эти endpoints
+		// Поддерживает любые платежные системы: stripe, paypal, и т.д.
 		add_action('rest_api_init', function() {
-			// Webhook для Stripe
-			register_rest_route('numerology/v1', '/webhook/stripe', [
-				'methods' => 'POST',
-				'callback' => function() {
-					$payments = new Api\ApiPayments();
-					return $payments->handle_webhook('stripe');
-				},
-				'permission_callback' => '__return_true'
-			]);
-
-			// Webhook для других платежных систем (расширение в будущем)
+			// Универсальный webhook для любых платежных систем
 			register_rest_route('numerology/v1', '/webhook/(?P<gateway>[a-zA-Z0-9-]+)', [
 				'methods' => 'POST',
 				'callback' => function($request) {
