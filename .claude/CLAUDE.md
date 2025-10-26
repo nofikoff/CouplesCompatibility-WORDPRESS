@@ -67,7 +67,7 @@ paths:
                 locale:
                   type: string
                   description: ''
-                  example: en
+                  example: ru
                   nullable: true
                   enum:
                     - en
@@ -119,11 +119,21 @@ paths:
                 locale:
                   type: string
                   description: ''
-                  example: ru
+                  example: en
                   nullable: true
                   enum:
                     - en
                     - ru
+                success_url:
+                  type: string
+                  description: 'Must be a valid URL.'
+                  example: 'http://bailey.com/'
+                  nullable: true
+                cancel_url:
+                  type: string
+                  description: 'Must be a valid URL.'
+                  example: 'http://rempel.com/sunt-nihil-accusantium-harum-mollitia'
+                  nullable: true
               required:
                 - email
                 - person1_date
@@ -285,4 +295,5 @@ paths:
       tags:
         - Endpoints
       security: []
+
 

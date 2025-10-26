@@ -2,6 +2,11 @@
 // plugins/numerology-compatibility/api/class-api-payments.php
 namespace NC\Api;
 
+/**
+ * Класс для работы с webhook'ами платежей
+ * Все управление платежами происходит на бэкенде
+ * Этот класс только принимает уведомления от бэкенда
+ */
 class ApiPayments {
 
 	private $client;
@@ -11,266 +16,302 @@ class ApiPayments {
 	}
 
 	/**
-	 * Get available plans
+	 * Обработка webhook от бэкенда
+	 * POST /wp-json/numerology/v1/webhook/{gateway}
+	 *
+	 * Бэкенд отправляет уведомления о статусе платежа
+	 * Webhook подписывается с помощью HMAC SHA256
+	 *
+	 * @param string $gateway Название платежного шлюза (stripe, paypal и т.д.)
+	 * @return array|\WP_Error
 	 */
-	public function get_plans() {
-		$response = $this->client->request('/payment/plans', 'GET');
-
-		// Add localized prices if configured
-		if (!empty($response['plans'])) {
-			$currency = get_option('nc_currency', 'USD');
-			foreach ($response['plans'] as &$plan) {
-				$plan['display_price'] = $this->format_price($plan['price'], $currency);
-				$plan['currency'] = $currency;
-			}
-		}
-
-		return $response['plans'] ?? [];
-	}
-
-	/**
-	 * Create payment intent for one-time calculation
-	 */
-	public function create_payment_intent($package_type, $calculation_data) {
-		// Get package price from settings
-		$price = $this->get_package_price($package_type);
-
-		if ($price <= 0 && $package_type !== 'free') {
-			throw new \Exception(__('Invalid package type', 'numerology-compatibility'));
-		}
-
-		// Validate email
-		if (empty($calculation_data['email']) || !is_email($calculation_data['email'])) {
-			throw new \Exception(__('Valid email is required', 'numerology-compatibility'));
-		}
-
-		$response = $this->client->request('/payment/intent', 'POST', [
-			'amount' => $price * 100, // Convert to cents
-			'currency' => strtolower(get_option('nc_currency', 'USD')),
-			'package_type' => $package_type,
-			'email' => sanitize_email($calculation_data['email']),
-			'metadata' => [
-				'calculation_data' => json_encode($calculation_data),
-				'email' => sanitize_email($calculation_data['email']),
-				'site_url' => home_url()
-			],
-			'description' => sprintf(
-				__('Numerology %s Report', 'numerology-compatibility'),
-				ucfirst($package_type)
-			)
-		]);
-
-		if (!empty($response['client_secret'])) {
-			// Store payment intent for later verification
-			$session_id = $this->get_session_id();
-			set_transient(
-				'nc_payment_intent_' . $session_id,
-				[
-					'intent_id' => $response['id'],
-					'package_type' => $package_type,
-					'calculation_data' => $calculation_data
-				],
-				HOUR_IN_SECONDS
-			);
-
-			return [
-				'success' => true,
-				'client_secret' => $response['client_secret'],
-				'publishable_key' => get_option('nc_stripe_publishable_key'),
-				'amount' => $price,
-				'currency' => get_option('nc_currency', 'USD'),
-				'session_id' => $session_id
-			];
-		}
-
-		throw new \Exception(__('Failed to create payment intent', 'numerology-compatibility'));
-	}
-
-	/**
-	 * Confirm payment and process calculation
-	 */
-	public function confirm_payment($payment_intent_id, $session_id) {
-		// Get stored payment data
-		$payment_data = get_transient('nc_payment_intent_' . $session_id);
-
-		if (empty($payment_data) || $payment_data['intent_id'] !== $payment_intent_id) {
-			throw new \Exception(__('Invalid payment session', 'numerology-compatibility'));
-		}
-
-		// Confirm with API
-		$response = $this->client->request('/payment/confirm', 'POST', [
-			'payment_intent_id' => $payment_intent_id
-		]);
-
-		if (!empty($response['success'])) {
-			// Clear transient
-			delete_transient('nc_payment_intent_' . $session_id);
-
-			// Process calculation
-			$calc_api = new ApiCalculations();
-			$calculation = $calc_api->calculate(
-				$payment_data['calculation_data'],
-				$payment_data['package_type']
-			);
-
-			// Send PDF to email
-			$this->send_pdf_email(
-				$payment_data['calculation_data']['email'],
-				$calculation
-			);
-
-			return [
-				'success' => true,
-				'calculation' => $calculation,
-				'message' => __('Payment successful! PDF report has been sent to your email.', 'numerology-compatibility')
-			];
-		}
-
-		throw new \Exception(__('Payment confirmation failed', 'numerology-compatibility'));
-	}
-
-	/**
-	 * Handle Stripe webhook
-	 */
-	public function handle_stripe_webhook() {
-		// Get webhook payload
+	public function handle_webhook($gateway = 'stripe') {
+		// Получаем payload и подпись
 		$payload = @file_get_contents('php://input');
-		$sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
+		$signature = $_SERVER['HTTP_X_WEBHOOK_SIGNATURE'] ?? '';
 
-		// Verify webhook signature
-		$endpoint_secret = get_option('nc_stripe_webhook_secret');
-
-		if (empty($endpoint_secret)) {
-			return new \WP_Error('config_error', 'Webhook secret not configured', ['status' => 500]);
+		// Проверяем подпись webhook
+		if (!$this->verify_webhook_signature($payload, $signature)) {
+			error_log('NC Webhook: Invalid signature');
+			return new \WP_Error('invalid_signature', 'Invalid webhook signature', ['status' => 401]);
 		}
 
-		try {
-			// Forward to Laravel backend for processing
-			$response = $this->client->request('/webhooks/stripe', 'POST', [
-				'payload' => $payload,
-				'signature' => $sig_header
-			]);
+		// Парсим данные
+		$data = json_decode($payload, true);
 
-			// Handle specific events locally if needed
-			$event = json_decode($payload, true);
-
-			switch ($event['type']) {
-				case 'payment_intent.succeeded':
-					$this->handle_payment_success($event['data']['object']);
-					break;
-
-				case 'payment_intent.payment_failed':
-					$this->handle_payment_failure($event['data']['object']);
-					break;
-			}
-
-			return ['success' => true];
-
-		} catch (\Exception $e) {
-			return new \WP_Error('webhook_error', $e->getMessage(), ['status' => 400]);
+		if (empty($data)) {
+			error_log('NC Webhook: Invalid payload');
+			return new \WP_Error('invalid_payload', 'Invalid webhook payload', ['status' => 400]);
 		}
-	}
 
-	/**
-	 * Get package price from settings
-	 */
-	private function get_package_price($package_type) {
-		switch ($package_type) {
-			case 'free':
-				return 0;
-			case 'light':
-				return (float)get_option('nc_price_light', 19);
-			case 'pro':
-				return (float)get_option('nc_price_pro', 49);
+		// Логируем webhook
+		error_log('NC Webhook received: ' . $gateway . ' | Event: ' . ($data['event_type'] ?? 'unknown'));
+
+		// Обрабатываем различные события согласно спецификации
+		$event_type = $data['event_type'] ?? '';
+
+		switch ($event_type) {
+			case 'payment.succeeded':
+				$this->handle_payment_success($data);
+				break;
+
+			case 'payment.failed':
+				$this->handle_payment_failure($data);
+				break;
+
+			case 'pdf.generated':
+				$this->handle_pdf_generated($data);
+				break;
+
 			default:
-				throw new \Exception(__('Invalid package type', 'numerology-compatibility'));
+				error_log('NC Webhook: Unknown event type - ' . $event_type);
 		}
+
+		return ['success' => true];
 	}
 
 	/**
-	 * Format price for display
+	 * Проверка подписи webhook
+	 *
+	 * @param string $payload Тело запроса
+	 * @param string $signature Подпись из заголовка
+	 * @return bool
 	 */
-	private function format_price($amount, $currency) {
-		$symbols = [
-			'USD' => '$',
-			'EUR' => '€',
-			'GBP' => '£',
-			'RUB' => '₽'
-		];
+	private function verify_webhook_signature($payload, $signature) {
+		$secret = get_option('nc_webhook_secret');
 
-		$symbol = $symbols[$currency] ?? $currency . ' ';
+		if (empty($secret)) {
+			error_log('NC Webhook: Secret not configured');
+			return false;
+		}
 
-		return $symbol . number_format($amount, 2);
+		$expected = hash_hmac('sha256', $payload, $secret);
+
+		return hash_equals($expected, $signature);
 	}
 
 	/**
-	 * Get or create session ID
+	 * Обработка успешного платежа
+	 * Формат согласно спецификации:
+	 * {
+	 *   "event_type": "payment.succeeded",
+	 *   "email": "user@example.com",
+	 *   "calculation_id": 123,
+	 *   "payment_id": 456,
+	 *   "amount": 999,
+	 *   "currency": "usd",
+	 *   "tier": "standard",
+	 *   "gateway": "stripe",
+	 *   "gateway_payment_id": "pi_xxxxx",
+	 *   "paid_at": "2025-10-26T10:30:00Z"
+	 * }
+	 *
+	 * @param array $data Данные из webhook
 	 */
-	private function get_session_id() {
-		if (!session_id()) {
-			session_start();
+	private function handle_payment_success($data) {
+		$email = $data['email'] ?? null;
+		$calculation_id = $data['calculation_id'] ?? null;
+		$payment_id = $data['payment_id'] ?? null;
+		$amount = $data['amount'] ?? 0;
+		$tier = $data['tier'] ?? 'unknown';
+
+		if (!$email) {
+			error_log('NC Webhook payment.succeeded: No email in data');
+			return;
 		}
 
-		if (empty($_SESSION['nc_session_id'])) {
-			$_SESSION['nc_session_id'] = wp_generate_uuid4();
+		// Логируем успех
+		error_log(sprintf(
+			'NC Webhook payment.succeeded: email=%s, calc_id=%s, payment_id=%s, tier=%s, amount=%s',
+			$email,
+			$calculation_id,
+			$payment_id,
+			$tier,
+			$amount
+		));
+
+		// Обновляем локальную БД
+		if ($calculation_id) {
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'nc_calculations';
+
+			$wpdb->update(
+				$table_name,
+				['pdf_sent' => 1],
+				['calculation_id' => $calculation_id],
+				['%d'],
+				['%s']
+			);
+
+			// Трекаем успешную оплату
+			$analytics_table = $wpdb->prefix . 'nc_analytics';
+			$wpdb->insert(
+				$analytics_table,
+				[
+					'email' => $email,
+					'event_type' => 'payment_completed',
+					'event_data' => json_encode($data),
+					'ip_address' => null,
+					'user_agent' => null,
+					'created_at' => current_time('mysql')
+				],
+				['%s', '%s', '%s', '%s', '%s', '%s']
+			);
 		}
 
-		return $_SESSION['nc_session_id'];
+		// Вызываем WordPress action для дополнительной обработки
+		do_action('numerology_payment_succeeded', $data);
+
+		// Отправляем email с подтверждением (опционально)
+		$this->send_success_email($email, $calculation_id, $tier);
 	}
 
 	/**
-	 * Send PDF to email
+	 * Обработка неудачного платежа
+	 * Формат согласно спецификации:
+	 * {
+	 *   "event_type": "payment.failed",
+	 *   "email": "user@example.com",
+	 *   "calculation_id": 123,
+	 *   "payment_id": 456,
+	 *   "gateway": "stripe",
+	 *   "gateway_payment_id": "pi_xxxxx",
+	 *   "failure_reason": "Card declined",
+	 *   "failed_at": "2025-10-26T10:30:00Z"
+	 * }
+	 *
+	 * @param array $data Данные из webhook
 	 */
-	private function send_pdf_email($email, $calculation) {
-		$subject = __('Your Numerology Compatibility Report', 'numerology-compatibility');
+	private function handle_payment_failure($data) {
+		$email = $data['email'] ?? null;
+		$calculation_id = $data['calculation_id'] ?? null;
+		$reason = $data['failure_reason'] ?? 'Unknown error';
 
-		$message = sprintf(
-			__('Thank you for using our numerology compatibility service!<br><br>Your %s report is attached to this email.<br><br>Best regards,<br>Numerology Team', 'numerology-compatibility'),
-			ucfirst($calculation['package_type'])
+		if (!$email) {
+			error_log('NC Webhook payment.failed: No email in data');
+			return;
+		}
+
+		// Логируем ошибку
+		error_log(sprintf(
+			'NC Webhook payment.failed: email=%s, calc_id=%s, reason=%s',
+			$email,
+			$calculation_id,
+			$reason
+		));
+
+		// Трекаем неудачную попытку оплаты
+		global $wpdb;
+		$analytics_table = $wpdb->prefix . 'nc_analytics';
+		$wpdb->insert(
+			$analytics_table,
+			[
+				'email' => $email,
+				'event_type' => 'payment_failed',
+				'event_data' => json_encode($data),
+				'ip_address' => null,
+				'user_agent' => null,
+				'created_at' => current_time('mysql')
+			],
+			['%s', '%s', '%s', '%s', '%s', '%s']
 		);
 
-		$headers = ['Content-Type: text/html; charset=UTF-8'];
+		// Вызываем WordPress action для дополнительной обработки
+		do_action('numerology_payment_failed', $data);
 
-		// Attachment would be added here from calculation PDF URL
-		wp_mail($email, $subject, $message, $headers);
+		// Отправляем email с уведомлением (опционально)
+		$this->send_failure_email($email, $reason);
 	}
 
 	/**
-	 * Handle successful payment
+	 * Обработка события генерации PDF
+	 * Формат согласно спецификации:
+	 * {
+	 *   "event_type": "pdf.generated",
+	 *   "email": "user@example.com",
+	 *   "calculation_id": 123,
+	 *   "type": "standard",
+	 *   "pdf_url": "https://api.example.com/api/v1/calculations/123/pdf"
+	 * }
+	 *
+	 * @param array $data Данные из webhook
 	 */
-	private function handle_payment_success($payment_intent) {
-		// Log success
-		error_log('Payment successful: ' . $payment_intent['id']);
+	private function handle_pdf_generated($data) {
+		$email = $data['email'] ?? null;
+		$calculation_id = $data['calculation_id'] ?? null;
+		$pdf_url = $data['pdf_url'] ?? null;
 
-		// Send confirmation email
-		$metadata = $payment_intent['metadata'] ?? [];
-		if (!empty($metadata['email'])) {
-			wp_mail(
-				$metadata['email'],
-				__('Payment Successful', 'numerology-compatibility'),
-				sprintf(
-					__('Your payment for %s has been processed successfully. Your PDF report will be sent to this email shortly.', 'numerology-compatibility'),
-					$payment_intent['description']
-				)
-			);
+		if (!$email || !$calculation_id) {
+			error_log('NC Webhook pdf.generated: Missing required fields');
+			return;
 		}
+
+		// Логируем
+		error_log(sprintf(
+			'NC Webhook pdf.generated: email=%s, calc_id=%s, pdf_url=%s',
+			$email,
+			$calculation_id,
+			$pdf_url
+		));
+
+		// Вызываем WordPress action
+		do_action('numerology_pdf_ready', $data);
+
+		// Можно отправить дополнительный email с прямой ссылкой на PDF
+		// (опционально, если бэкенд еще не отправил)
 	}
 
 	/**
-	 * Handle failed payment
+	 * Отправка email об успешной оплате
+	 *
+	 * @param string $email Email получателя
+	 * @param string|null $calculation_id ID расчета
+	 * @param string $tier Тип тарифа
 	 */
-	private function handle_payment_failure($payment_intent) {
-		// Log failure
-		error_log('Payment failed: ' . $payment_intent['id']);
+	private function send_success_email($email, $calculation_id = null, $tier = '') {
+		$subject = __('Payment Successful - Numerology Report', 'numerology-compatibility');
 
-		// Send notification email
-		$metadata = $payment_intent['metadata'] ?? [];
-		if (!empty($metadata['email'])) {
-			wp_mail(
-				$metadata['email'],
-				__('Payment Failed', 'numerology-compatibility'),
-				__('Your payment could not be processed. Please try again or contact support.', 'numerology-compatibility')
-			);
+		$tier_name = ucfirst($tier);
+
+		$message = __('Your payment has been processed successfully!', 'numerology-compatibility') . "\n\n";
+
+		if ($tier) {
+			$message .= sprintf(
+				__('You have purchased the %s compatibility report.', 'numerology-compatibility'),
+				$tier_name
+			) . "\n\n";
 		}
+
+		$message .= __('Your compatibility report will be sent to this email address shortly.', 'numerology-compatibility') . "\n\n";
+
+		if ($calculation_id) {
+			$message .= sprintf(
+				__('Calculation ID: %s', 'numerology-compatibility'),
+				$calculation_id
+			) . "\n\n";
+		}
+
+		$message .= __('Thank you for using our service!', 'numerology-compatibility');
+
+		wp_mail($email, $subject, $message);
+	}
+
+	/**
+	 * Отправка email о неудачной оплате
+	 *
+	 * @param string $email Email получателя
+	 * @param string $reason Причина ошибки
+	 */
+	private function send_failure_email($email, $reason) {
+		$subject = __('Payment Failed - Numerology Report', 'numerology-compatibility');
+
+		$message = __('Unfortunately, your payment could not be processed.', 'numerology-compatibility') . "\n\n";
+		$message .= sprintf(
+			__('Reason: %s', 'numerology-compatibility'),
+			$reason
+		) . "\n\n";
+		$message .= __('Please try again or contact our support team.', 'numerology-compatibility');
+
+		wp_mail($email, $subject, $message);
 	}
 }

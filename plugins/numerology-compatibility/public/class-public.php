@@ -38,26 +38,15 @@ class PublicClass {
 			true
 		);
 
-		// Stripe.js
-		if (get_option('nc_stripe_publishable_key')) {
-			wp_enqueue_script(
-				'stripe-js',
-				'https://js.stripe.com/v3/',
-				[],
-				null,
-				true
-			);
-		}
-
 		// Localize script
 		wp_localize_script($this->plugin_name . '-calculator', 'nc_public', [
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce('nc_ajax_nonce'),
-			'stripe_key' => get_option('nc_stripe_publishable_key'),
 			'i18n' => [
 				'loading' => __('Loading...', 'numerology-compatibility'),
 				'error' => __('An error occurred', 'numerology-compatibility'),
-				'success' => __('Success!', 'numerology-compatibility')
+				'success' => __('Success!', 'numerology-compatibility'),
+				'redirecting' => __('Redirecting to payment...', 'numerology-compatibility')
 			]
 		]);
 	}

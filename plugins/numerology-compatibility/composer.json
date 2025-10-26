@@ -12,7 +12,6 @@
   "require": {
     "php": ">=7.4",
     "guzzlehttp/guzzle": "^7.5",
-    "firebase/php-jwt": "^6.3",
     "monolog/monolog": "^2.8"
   },
   "require-dev": {

@@ -2,6 +2,10 @@
 // plugins/numerology-compatibility/api/class-api-calculations.php
 namespace NC\Api;
 
+/**
+ * Класс для работы с API расчетов нумерологии
+ * Взаимодействует с бэкендом согласно спецификации OpenAPI
+ */
 class ApiCalculations {
 
 	private $client;
@@ -11,77 +15,213 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Perform compatibility calculation
+	 * Бесплатный расчет
+	 * POST /api/v1/calculate/free
+	 *
+	 * @param array $data Данные формы (email, person1_date, person2_date)
+	 * @return array Результат расчета
+	 * @throws \Exception
 	 */
-	public function calculate($data, $package_type = 'free') {
-		// Validate email
-		if (empty($data['email']) || !is_email($data['email'])) {
-			throw new \Exception(__('Valid email is required', 'numerology-compatibility'));
-		}
+	public function calculate_free($data) {
+		$this->validate_calculation_data($data);
 
-		// Validate consent for using other person's data
-		if (empty($data['data_consent']) || empty($data['harm_consent'])) {
-			throw new \Exception(__('Required consents for calculation not provided', 'numerology-compatibility'));
-		}
+		$locale = $this->get_current_locale();
 
-		if (empty($data['entertainment_consent'])) {
-			throw new \Exception(__('You must acknowledge this is for entertainment purposes', 'numerology-compatibility'));
-		}
-
-		// Prepare calculation data
+		// Подготавливаем данные согласно API спецификации
 		$request_data = [
 			'email' => sanitize_email($data['email']),
 			'person1_date' => sanitize_text_field($data['person1_date']),
 			'person2_date' => sanitize_text_field($data['person2_date']),
-			'person1_name' => sanitize_text_field($data['person1_name'] ?? ''),
-			'person2_name' => sanitize_text_field($data['person2_name'] ?? ''),
-			'person1_time' => sanitize_text_field($data['person1_time'] ?? ''),
-			'person2_time' => sanitize_text_field($data['person2_time'] ?? ''),
-			'person1_place' => sanitize_text_field($data['person1_place'] ?? ''),
-			'person2_place' => sanitize_text_field($data['person2_place'] ?? ''),
-			'package_type' => $package_type,
-			'language' => 'en',
-			'format' => 'pdf',
-			'metadata' => [
-				'source' => 'wordpress_plugin',
-				'consent' => [
-					'data_usage' => true,
-					'no_harm' => true,
-					'entertainment_only' => true
-				],
-				'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '',
-				'timestamp' => current_time('mysql')
-			]
+			'locale' => $locale,
 		];
 
-		// Make calculation request
-		$response = $this->client->request('/compatibility/calculate', 'POST', $request_data);
+		// Отправляем запрос на бэкенд
+		$response = $this->client->request('/calculate/free', 'POST', $request_data);
 
-		if (!empty($response['success']) && !empty($response['data'])) {
-			// Store calculation in database
-			$this->store_calculation($response['data'], $data['email']);
+		if (!empty($response)) {
+			// Сохраняем расчет локально
+			$this->store_calculation($response, $data['email'], 'free');
 
-			// Track usage
-			$this->track_usage($package_type, $data['email']);
+			// Трекаем использование
+			$this->track_usage('free', $data['email']);
 
-			return $response['data'];
+			return $response;
 		}
 
 		throw new \Exception(__('Calculation failed', 'numerology-compatibility'));
 	}
 
 	/**
-	 * Get analysis levels information
+	 * Платный расчет - создание Checkout Session
+	 * POST /api/v1/calculate/paid
+	 *
+	 * @param array $data Данные формы
+	 * @param string $tier Тип тарифа (standard|premium)
+	 * @return array {checkout_url, calculation_id} для редиректа на оплату
+	 * @throws \Exception
 	 */
-	public function get_analysis_levels() {
-		$response = $this->client->request('/compatibility/levels', 'GET');
-		return $response['levels'] ?? [];
+	public function calculate_paid($data, $tier) {
+		$this->validate_calculation_data($data);
+		$this->validate_tier($tier);
+
+		$locale = $this->get_current_locale();
+
+		// Формируем success и cancel URLs для редиректа после оплаты
+		$current_url = $this->get_current_page_url();
+		$success_url = add_query_arg(['payment_success' => '1'], $current_url);
+		$cancel_url = add_query_arg(['payment_cancelled' => '1'], $current_url);
+
+		// Подготавливаем данные согласно API спецификации
+		$request_data = [
+			'email' => sanitize_email($data['email']),
+			'person1_date' => sanitize_text_field($data['person1_date']),
+			'person2_date' => sanitize_text_field($data['person2_date']),
+			'tier' => $tier,
+			'locale' => $locale,
+			'success_url' => $success_url,
+			'cancel_url' => $cancel_url,
+		];
+
+		// Отправляем запрос на создание Checkout Session
+		$response = $this->client->request('/calculate/paid', 'POST', $request_data);
+
+		if (!empty($response['checkout_url'])) {
+			// Сохраняем информацию о начале платного расчета
+			$this->track_usage('paid_initiated', $data['email'], [
+				'tier' => $tier,
+				'calculation_id' => $response['calculation_id'] ?? null
+			]);
+
+			return $response;
+		}
+
+		throw new \Exception(__('Failed to create payment session', 'numerology-compatibility'));
 	}
 
 	/**
-	 * Store calculation in local database
+	 * Получить информацию о расчете
+	 * GET /api/v1/calculations/{id}
+	 *
+	 * @param string $calculation_id ID расчета
+	 * @return array Информация о расчете
+	 * @throws \Exception
 	 */
-	private function store_calculation($calculation, $email) {
+	public function get_calculation($calculation_id) {
+		if (empty($calculation_id)) {
+			throw new \Exception(__('Calculation ID is required', 'numerology-compatibility'));
+		}
+
+		$response = $this->client->request('/calculations/' . $calculation_id, 'GET');
+
+		return $response;
+	}
+
+	/**
+	 * Получить URL для скачивания PDF
+	 * GET /api/v1/calculations/{id}/pdf
+	 *
+	 * @param string $calculation_id ID расчета
+	 * @return string URL для скачивания PDF
+	 */
+	public function get_pdf_url($calculation_id) {
+		if (empty($calculation_id)) {
+			throw new \Exception(__('Calculation ID is required', 'numerology-compatibility'));
+		}
+
+		$api_url = get_option('nc_api_url', 'https://api.your-domain.com');
+		return $api_url . '/api/v1/calculations/' . $calculation_id . '/pdf';
+	}
+
+	/**
+	 * Валидация данных для расчета
+	 *
+	 * @param array $data
+	 * @throws \Exception
+	 */
+	private function validate_calculation_data($data) {
+		// Валидация email
+		if (empty($data['email']) || !is_email($data['email'])) {
+			throw new \Exception(__('Valid email is required', 'numerology-compatibility'));
+		}
+
+		// Валидация дат рождения
+		if (empty($data['person1_date']) || empty($data['person2_date'])) {
+			throw new \Exception(__('Both birth dates are required', 'numerology-compatibility'));
+		}
+
+		// Проверка формата дат
+		$date1 = \DateTime::createFromFormat('Y-m-d', $data['person1_date']);
+		$date2 = \DateTime::createFromFormat('Y-m-d', $data['person2_date']);
+
+		if (!$date1 || !$date2) {
+			throw new \Exception(__('Invalid date format. Required: Y-m-d', 'numerology-compatibility'));
+		}
+
+		// Проверка, что даты не в будущем
+		$today = new \DateTime();
+		if ($date1 > $today || $date2 > $today) {
+			throw new \Exception(__('Birth dates cannot be in the future', 'numerology-compatibility'));
+		}
+	}
+
+	/**
+	 * Валидация тарифа
+	 *
+	 * @param string $tier
+	 * @throws \Exception
+	 */
+	private function validate_tier($tier) {
+		$allowed_tiers = ['standard', 'premium'];
+
+		if (!in_array($tier, $allowed_tiers)) {
+			throw new \Exception(
+				sprintf(
+					__('Invalid tier. Allowed: %s', 'numerology-compatibility'),
+					implode(', ', $allowed_tiers)
+				)
+			);
+		}
+	}
+
+	/**
+	 * Получить текущую локаль для API
+	 *
+	 * @return string
+	 */
+	private function get_current_locale() {
+		$wp_locale = get_locale();
+
+		// Конвертируем WordPress локаль в формат API (en|ru)
+		if (strpos($wp_locale, 'ru') === 0) {
+			return 'ru';
+		}
+
+		return 'en';
+	}
+
+	/**
+	 * Получить URL текущей страницы
+	 *
+	 * @return string
+	 */
+	private function get_current_page_url() {
+		global $wp;
+		$current_url = home_url(add_query_arg([], $wp->request));
+
+		// Убираем существующие параметры payment_success и payment_cancelled
+		$current_url = remove_query_arg(['payment_success', 'payment_cancelled', 'session_id', 'calculation_id'], $current_url);
+
+		return $current_url;
+	}
+
+	/**
+	 * Сохранить расчет в локальной БД
+	 *
+	 * @param array $calculation Данные расчета от API
+	 * @param string $email Email пользователя
+	 * @param string $tier Тип расчета
+	 */
+	private function store_calculation($calculation, $email, $tier) {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . 'nc_calculations';
@@ -90,14 +230,14 @@ class ApiCalculations {
 			$table_name,
 			[
 				'email' => $email,
-				'calculation_id' => $calculation['id'],
-				'package_type' => $calculation['package_type'],
-				'person1_date' => $calculation['person1_date'],
-				'person2_date' => $calculation['person2_date'],
-				'person1_name' => $calculation['person1_name'] ?? '',
-				'person2_name' => $calculation['person2_name'] ?? '',
-				'result_summary' => json_encode($calculation['summary'] ?? []),
-				'pdf_sent' => 0,
+				'calculation_id' => $calculation['id'] ?? null,
+				'package_type' => $tier,
+				'person1_date' => $calculation['person1_date'] ?? null,
+				'person2_date' => $calculation['person2_date'] ?? null,
+				'person1_name' => '',
+				'person2_name' => '',
+				'result_summary' => json_encode($calculation),
+				'pdf_sent' => 1,
 				'created_at' => current_time('mysql')
 			],
 			['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s']
@@ -105,9 +245,13 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Track usage for analytics
+	 * Трекинг использования для аналитики
+	 *
+	 * @param string $event_type Тип события
+	 * @param string $email Email пользователя
+	 * @param array $extra_data Дополнительные данные
 	 */
-	private function track_usage($package_type, $email) {
+	private function track_usage($event_type, $email, $extra_data = []) {
 		global $wpdb;
 
 		$table_name = $wpdb->prefix . 'nc_analytics';
@@ -116,8 +260,8 @@ class ApiCalculations {
 			$table_name,
 			[
 				'email' => $email,
-				'event_type' => 'calculation_completed',
-				'event_data' => json_encode(['package_type' => $package_type]),
+				'event_type' => $event_type,
+				'event_data' => json_encode($extra_data),
 				'ip_address' => $_SERVER['REMOTE_ADDR'] ?? null,
 				'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
 				'created_at' => current_time('mysql')

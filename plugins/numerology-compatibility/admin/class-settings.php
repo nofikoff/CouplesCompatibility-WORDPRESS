@@ -20,6 +20,7 @@ class Settings {
         register_setting('nc_settings_api', 'nc_api_url');
         register_setting('nc_settings_api', 'nc_api_key');
         register_setting('nc_settings_api', 'nc_api_secret');
+        register_setting('nc_settings_api', 'nc_webhook_secret'); // Webhook secret для проверки подписи
 
         // Pricing settings
         register_setting('nc_settings_pricing', 'nc_currency');

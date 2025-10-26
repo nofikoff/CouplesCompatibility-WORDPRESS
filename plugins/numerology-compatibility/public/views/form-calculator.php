@@ -102,26 +102,26 @@ $show_prices = $attributes['show_prices'] ?? true;
             <h2><?php _e('Choose Your Report Type', 'numerology-compatibility'); ?></h2>
 
             <div class="nc-packages">
-                <div class="nc-package" data-package="free">
+                <div class="nc-package" data-package="free" data-tier="free">
                     <div class="nc-package-header">
                         <h3><?php _e('Free', 'numerology-compatibility'); ?></h3>
-                        <div class="nc-price">$0</div>
+                        <div class="nc-price"><?php _e('Free', 'numerology-compatibility'); ?></div>
                     </div>
                     <ul class="nc-features">
                         <li><?php _e('Basic compatibility score', 'numerology-compatibility'); ?></li>
                         <li><?php _e('Key personality insights', 'numerology-compatibility'); ?></li>
                         <li><?php _e('PDF report via email', 'numerology-compatibility'); ?></li>
                     </ul>
-                    <button class="nc-btn nc-btn-outline nc-select-package" data-package="free">
-						<?php _e('Select Free', 'numerology-compatibility'); ?>
+                    <button class="nc-btn nc-btn-outline nc-select-package" data-package="free" data-tier="free">
+						<?php _e('Get Free Report', 'numerology-compatibility'); ?>
                     </button>
                 </div>
 
-                <div class="nc-package nc-package-featured" data-package="light">
+                <div class="nc-package nc-package-featured" data-package="standard" data-tier="standard">
                     <div class="nc-badge"><?php _e('Most Popular', 'numerology-compatibility'); ?></div>
                     <div class="nc-package-header">
-                        <h3><?php _e('Light', 'numerology-compatibility'); ?></h3>
-                        <div class="nc-price">$<?php echo get_option('nc_price_light', '19'); ?></div>
+                        <h3><?php _e('Standard', 'numerology-compatibility'); ?></h3>
+                        <div class="nc-price"><?php _e('Paid', 'numerology-compatibility'); ?></div>
                     </div>
                     <ul class="nc-features">
                         <li><?php _e('Full compatibility analysis', 'numerology-compatibility'); ?></li>
@@ -129,77 +129,42 @@ $show_prices = $attributes['show_prices'] ?? true;
                         <li><?php _e('1-2 year forecast', 'numerology-compatibility'); ?></li>
                         <li><?php _e('PDF download + email', 'numerology-compatibility'); ?></li>
                     </ul>
-                    <button class="nc-btn nc-btn-primary nc-select-package" data-package="light">
-						<?php _e('Select Light', 'numerology-compatibility'); ?>
+                    <button class="nc-btn nc-btn-primary nc-select-package" data-package="standard" data-tier="standard">
+						<?php _e('Get Standard Report', 'numerology-compatibility'); ?>
                     </button>
                 </div>
 
-                <div class="nc-package" data-package="pro">
+                <div class="nc-package" data-package="premium" data-tier="premium">
                     <div class="nc-package-header">
-                        <h3><?php _e('Pro', 'numerology-compatibility'); ?></h3>
-                        <div class="nc-price">$<?php echo get_option('nc_price_pro', '49'); ?></div>
+                        <h3><?php _e('Premium', 'numerology-compatibility'); ?></h3>
+                        <div class="nc-price"><?php _e('Paid', 'numerology-compatibility'); ?></div>
                     </div>
                     <ul class="nc-features">
-                        <li><?php _e('Everything in Light', 'numerology-compatibility'); ?></li>
+                        <li><?php _e('Everything in Standard', 'numerology-compatibility'); ?></li>
                         <li><?php _e('Karmic connections', 'numerology-compatibility'); ?></li>
                         <li><?php _e('10-20 year forecast', 'numerology-compatibility'); ?></li>
                         <li><?php _e('Action recommendations', 'numerology-compatibility'); ?></li>
                         <li><?php _e('Priority support', 'numerology-compatibility'); ?></li>
                     </ul>
-                    <button class="nc-btn nc-btn-primary nc-select-package" data-package="pro">
-						<?php _e('Select Pro', 'numerology-compatibility'); ?>
+                    <button class="nc-btn nc-btn-primary nc-select-package" data-package="premium" data-tier="premium">
+						<?php _e('Get Premium Report', 'numerology-compatibility'); ?>
                     </button>
                 </div>
             </div>
         </div>
 	<?php endif; ?>
 
-    <!-- Step 3: Payment (if needed) -->
+    <!-- Step 3: Processing -->
     <div class="nc-step nc-step-3" data-step="3" style="display:none;">
-        <h2><?php _e('Complete Your Payment', 'numerology-compatibility'); ?></h2>
-
-        <div class="nc-payment-summary">
-            <h3><?php _e('Order Summary', 'numerology-compatibility'); ?></h3>
-            <div class="nc-summary-item">
-                <span class="nc-item-name"></span>
-                <span class="nc-item-price"></span>
-            </div>
-            <div class="nc-summary-email">
-                <strong><?php _e('Report will be sent to:', 'numerology-compatibility'); ?></strong>
-                <span class="nc-email-display"></span>
-            </div>
-        </div>
-
-        <div id="nc-stripe-payment-element">
-            <!-- Stripe Payment Element will be mounted here -->
-        </div>
-
-        <div class="nc-payment-errors" role="alert"></div>
-
-        <div class="nc-form-actions">
-            <button id="nc-submit-payment" class="nc-btn nc-btn-primary nc-btn-large">
-                <span class="nc-btn-text"><?php _e('Complete Payment', 'numerology-compatibility'); ?></span>
-                <span class="nc-btn-loading" style="display:none;"><?php _e('Processing...', 'numerology-compatibility'); ?></span>
-            </button>
-        </div>
-
-        <div class="nc-security-badges">
-            <img src="<?php echo NC_PLUGIN_URL; ?>public/assets/images/stripe-badge.png" alt="Stripe">
-            <span><?php _e('Secure payment powered by Stripe', 'numerology-compatibility'); ?></span>
-        </div>
-    </div>
-
-    <!-- Step 4: Processing -->
-    <div class="nc-step nc-step-4" data-step="4" style="display:none;">
         <div class="nc-processing">
             <div class="nc-spinner"></div>
-            <h2><?php _e('Calculating Your Compatibility...', 'numerology-compatibility'); ?></h2>
-            <p><?php _e('Analyzing numerological patterns and creating your personalized report', 'numerology-compatibility'); ?></p>
+            <h2 class="nc-processing-title"><?php _e('Processing...', 'numerology-compatibility'); ?></h2>
+            <p class="nc-processing-message"><?php _e('Please wait...', 'numerology-compatibility'); ?></p>
         </div>
     </div>
 
-    <!-- Step 5: Success -->
-    <div class="nc-step nc-step-5" data-step="5" style="display:none;">
+    <!-- Step 4: Success -->
+    <div class="nc-step nc-step-4" data-step="4" style="display:none;">
         <div class="nc-success">
             <div class="nc-success-icon">✓</div>
             <h2><?php _e('Success!', 'numerology-compatibility'); ?></h2>

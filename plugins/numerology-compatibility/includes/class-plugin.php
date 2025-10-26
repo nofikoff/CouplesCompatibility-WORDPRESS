@@ -78,7 +78,14 @@ class Plugin {
 		// Shortcodes
 		$this->loader->add_action('init', $shortcodes, 'register_shortcodes');
 
-		// AJAX handlers for frontend
+		// AJAX handlers for calculations - новые endpoints
+		$this->loader->add_action('wp_ajax_nc_calculate_free', $ajax_handler, 'handle_free_calculation');
+		$this->loader->add_action('wp_ajax_nopriv_nc_calculate_free', $ajax_handler, 'handle_free_calculation');
+
+		$this->loader->add_action('wp_ajax_nc_calculate_paid', $ajax_handler, 'handle_paid_calculation');
+		$this->loader->add_action('wp_ajax_nopriv_nc_calculate_paid', $ajax_handler, 'handle_paid_calculation');
+
+		// DEPRECATED: Старые endpoints для обратной совместимости
 		$this->loader->add_action('wp_ajax_nc_calculate', $ajax_handler, 'handle_calculation');
 		$this->loader->add_action('wp_ajax_nopriv_nc_calculate', $ajax_handler, 'handle_calculation');
 
@@ -94,11 +101,27 @@ class Plugin {
 	}
 
 	private function define_api_hooks() {
-		// REST API endpoints for webhooks
+		// REST API endpoints for payment webhooks
+		// Бэкенд отправляет уведомления о статусе платежа на эти endpoints
 		add_action('rest_api_init', function() {
-			register_rest_route('numerology/v1', '/stripe-webhook', [
+			// Webhook для Stripe
+			register_rest_route('numerology/v1', '/webhook/stripe', [
 				'methods' => 'POST',
-				'callback' => [new Api\ApiPayments(), 'handle_stripe_webhook'],
+				'callback' => function() {
+					$payments = new Api\ApiPayments();
+					return $payments->handle_webhook('stripe');
+				},
+				'permission_callback' => '__return_true'
+			]);
+
+			// Webhook для других платежных систем (расширение в будущем)
+			register_rest_route('numerology/v1', '/webhook/(?P<gateway>[a-zA-Z0-9-]+)', [
+				'methods' => 'POST',
+				'callback' => function($request) {
+					$gateway = $request->get_param('gateway');
+					$payments = new Api\ApiPayments();
+					return $payments->handle_webhook($gateway);
+				},
 				'permission_callback' => '__return_true'
 			]);
 		});

@@ -8,55 +8,32 @@ use NC\Api\ApiPayments;
 class AjaxHandler {
 
 	/**
-	 * Create payment intent
+	 * Обработка бесплатного расчета
+	 * AJAX action: nc_calculate_free
 	 */
-	public function handle_payment() {
+	public function handle_free_calculation() {
 		try {
-			// Verify nonce
+			// Проверка nonce
 			if (!check_ajax_referer('nc_ajax_nonce', 'nonce', false)) {
 				wp_send_json_error(['message' => __('Security check failed', 'numerology-compatibility')]);
 			}
 
-			// Validate email
-			$email = sanitize_email($_POST['email'] ?? '');
-			if (empty($email) || !is_email($email)) {
-				wp_send_json_error(['message' => __('Valid email is required', 'numerology-compatibility')]);
-			}
-
-			// Validate dates
-			$person1_date = $_POST['person1_date'] ?? '';
-			$person2_date = $_POST['person2_date'] ?? '';
-
-			if (empty($person1_date) || empty($person2_date)) {
-				wp_send_json_error(['message' => __('Both birth dates are required', 'numerology-compatibility')]);
-			}
-
-			// Validate date format
-			$date1 = \DateTime::createFromFormat('Y-m-d', $person1_date);
-			$date2 = \DateTime::createFromFormat('Y-m-d', $person2_date);
-
-			if (!$date1 || !$date2) {
-				wp_send_json_error(['message' => __('Invalid date format', 'numerology-compatibility')]);
-			}
-
-			// Check dates are not in future
-			$today = new \DateTime();
-			if ($date1 > $today || $date2 > $today) {
-				wp_send_json_error(['message' => __('Birth dates cannot be in the future', 'numerology-compatibility')]);
-			}
-
-			// Check consent
+			// Проверка consent
 			if (empty($_POST['data_consent']) || empty($_POST['harm_consent']) || empty($_POST['entertainment_consent'])) {
 				wp_send_json_error(['message' => __('All consent checkboxes must be accepted', 'numerology-compatibility')]);
 			}
 
-			$package_type = $_POST['package_type'] ?? 'free';
+			// Выполняем бесплатный расчет
+			$calc = new ApiCalculations();
+			$result = $calc->calculate_free($_POST);
 
-			// Create payment intent
-			$payments = new ApiPayments();
-			$payment_result = $payments->create_payment_intent($package_type, $_POST);
-
-			wp_send_json_success($payment_result);
+			wp_send_json_success([
+				'calculation' => $result,
+				'message' => sprintf(
+					__('Success! Your free compatibility report has been sent to %s', 'numerology-compatibility'),
+					sanitize_email($_POST['email'] ?? '')
+				)
+			]);
 
 		} catch (\Exception $e) {
 			wp_send_json_error(['message' => $e->getMessage()]);
@@ -64,66 +41,56 @@ class AjaxHandler {
 	}
 
 	/**
-	 * Handle calculation request
+	 * Обработка платного расчета
+	 * AJAX action: nc_calculate_paid
+	 *
+	 * Возвращает checkout_url для редиректа на страницу оплаты
 	 */
-	public function handle_calculation() {
+	public function handle_paid_calculation() {
 		try {
-			// Verify nonce
+			// Проверка nonce
 			if (!check_ajax_referer('nc_ajax_nonce', 'nonce', false)) {
 				wp_send_json_error(['message' => __('Security check failed', 'numerology-compatibility')]);
 			}
 
-			// Validate email
-			$email = sanitize_email($_POST['email'] ?? '');
-			if (empty($email) || !is_email($email)) {
-				wp_send_json_error(['message' => __('Valid email is required', 'numerology-compatibility')]);
-			}
-
-			// Validate dates
-			$person1_date = $_POST['person1_date'] ?? '';
-			$person2_date = $_POST['person2_date'] ?? '';
-
-			if (empty($person1_date) || empty($person2_date)) {
-				wp_send_json_error(['message' => __('Both birth dates are required', 'numerology-compatibility')]);
-			}
-
-			// Validate date format
-			$date1 = \DateTime::createFromFormat('Y-m-d', $person1_date);
-			$date2 = \DateTime::createFromFormat('Y-m-d', $person2_date);
-
-			if (!$date1 || !$date2) {
-				wp_send_json_error(['message' => __('Invalid date format', 'numerology-compatibility')]);
-			}
-
-			// Check dates are not in future
-			$today = new \DateTime();
-			if ($date1 > $today || $date2 > $today) {
-				wp_send_json_error(['message' => __('Birth dates cannot be in the future', 'numerology-compatibility')]);
-			}
-
-			// Check consent
+			// Проверка consent
 			if (empty($_POST['data_consent']) || empty($_POST['harm_consent']) || empty($_POST['entertainment_consent'])) {
 				wp_send_json_error(['message' => __('All consent checkboxes must be accepted', 'numerology-compatibility')]);
 			}
 
-			$package_type = $_POST['package_type'] ?? 'free';
+			// Получаем тип тарифа (standard или premium)
+			$tier = $_POST['tier'] ?? 'standard';
 
-			// Process calculation
+			// Создаем Checkout Session на бэкенде
 			$calc = new ApiCalculations();
-			$result = $calc->calculate($_POST, $package_type);
+			$result = $calc->calculate_paid($_POST, $tier);
 
+			// Возвращаем checkout_url для редиректа
 			wp_send_json_success([
-				'calculation' => $result,
-				'message' => sprintf(
-					__('Success! Your %s compatibility report has been sent to %s', 'numerology-compatibility'),
-					ucfirst($package_type),
-					$email
-				)
+				'checkout_url' => $result['checkout_url'],
+				'calculation_id' => $result['calculation_id'] ?? null,
+				'message' => __('Redirecting to payment...', 'numerology-compatibility')
 			]);
 
 		} catch (\Exception $e) {
 			wp_send_json_error(['message' => $e->getMessage()]);
 		}
+	}
+
+	/**
+	 * DEPRECATED: Старый метод, оставлен для обратной совместимости
+	 * Используйте handle_free_calculation() или handle_paid_calculation()
+	 */
+	public function handle_calculation() {
+		$this->handle_free_calculation();
+	}
+
+	/**
+	 * DEPRECATED: Старый метод, оставлен для обратной совместимости
+	 * Используйте handle_paid_calculation()
+	 */
+	public function handle_payment() {
+		$this->handle_paid_calculation();
 	}
 
 	/**

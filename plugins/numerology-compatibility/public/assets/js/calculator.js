@@ -1,5 +1,6 @@
 /**
  * Calculator JavaScript for Numerology Compatibility Plugin
+ * Рефакторенная версия без Stripe логики
  * plugins/numerology-compatibility/public/assets/js/calculator.js
  */
 
@@ -10,14 +11,11 @@
 
         currentStep: 1,
         selectedPackage: null,
+        selectedTier: null,
         calculationData: {},
-        stripe: null,
-        elements: null,
-        sessionId: null,
 
         init: function() {
             this.bindEvents();
-            this.initializeStripe();
 
             // Get initial package from data attribute
             this.selectedPackage = $('#nc-calculator-wrapper').data('package') || 'auto';
@@ -31,13 +29,11 @@
             });
 
             // Package selection
-            $('.nc-select-package').on('click', function() {
-                CalculatorManager.selectPackage($(this).data('package'));
-            });
-
-            // Payment submission
-            $('#nc-submit-payment').on('click', function() {
-                CalculatorManager.handlePayment();
+            $('.nc-select-package').on('click', function(e) {
+                e.preventDefault();
+                var packageType = $(this).data('package');
+                var tier = $(this).data('tier');
+                CalculatorManager.selectPackage(packageType, tier);
             });
 
             // Email validation
@@ -171,140 +167,38 @@
             return true;
         },
 
-        selectPackage: function(packageType) {
+        selectPackage: function(packageType, tier) {
             this.selectedPackage = packageType;
+            this.selectedTier = tier;
 
             // Update UI
             $('.nc-package').removeClass('nc-selected');
             $('.nc-package[data-package="' + packageType + '"]').addClass('nc-selected');
 
-            // Process calculation
-            this.processCalculation();
-        },
-
-        processCalculation: function() {
-            // Add package type to calculation data
-            this.calculationData.package_type = this.selectedPackage;
-
-            // If free package, process immediately
-            if (this.selectedPackage === 'free') {
-                this.submitCalculation();
+            // Process calculation based on package type
+            if (packageType === 'free') {
+                this.submitFreeCalculation();
             } else {
-                // Show payment step for paid packages
-                this.createPaymentIntent();
+                // Для платных пакетов (standard/premium)
+                this.submitPaidCalculation(tier);
             }
         },
 
-        createPaymentIntent: function() {
+        /**
+         * Бесплатный расчет
+         */
+        submitFreeCalculation: function() {
             // Show processing
-            this.showStep(4);
-
-            // Make AJAX request to create payment intent
-            $.ajax({
-                url: nc_public.ajax_url,
-                type: 'POST',
-                data: {
-                    action: 'nc_create_payment',
-                    ...this.calculationData,
-                    nonce: nc_public.nonce
-                },
-                success: function(response) {
-                    if (response.success) {
-                        CalculatorManager.showPaymentStep(response.data);
-                    } else {
-                        CalculatorManager.showError(response.data.message);
-                        CalculatorManager.showStep(1);
-                    }
-                },
-                error: function() {
-                    CalculatorManager.showError('An error occurred. Please try again.');
-                    CalculatorManager.showStep(1);
-                }
-            });
-        },
-
-        showPaymentStep: function(paymentData) {
-            this.sessionId = paymentData.session_id;
             this.showStep(3);
+            this.updateProcessingMessage('Calculating your compatibility...', 'Please wait...');
 
-            // Update summary
-            $('.nc-item-name').text(this.getPackageName(this.selectedPackage));
-            $('.nc-item-price').text('$' + paymentData.amount);
-            $('.nc-email-display').text(this.calculationData.email);
-
-            // Initialize Stripe payment element
-            if (this.stripe && paymentData.client_secret) {
-                this.initializePaymentElement(paymentData.client_secret);
-            }
-        },
-
-        initializeStripe: function() {
-            if (nc_public.stripe_key) {
-                this.stripe = Stripe(nc_public.stripe_key);
-            }
-        },
-
-        initializePaymentElement: function(clientSecret) {
-            if (!this.stripe) {
-                this.showError('Payment system not initialized');
-                return;
-            }
-
-            const appearance = {
-                theme: 'stripe',
-                variables: {
-                    colorPrimary: '#6B46C1',
-                }
-            };
-
-            this.elements = this.stripe.elements({ clientSecret, appearance });
-
-            const paymentElement = this.elements.create('payment');
-            paymentElement.mount('#nc-stripe-payment-element');
-        },
-
-        handlePayment: async function() {
-            if (!this.stripe || !this.elements) {
-                return;
-            }
-
-            // Show loading
-            $('#nc-submit-payment').prop('disabled', true);
-            $('.nc-btn-text').hide();
-            $('.nc-btn-loading').show();
-
-            const { error } = await this.stripe.confirmPayment({
-                elements: this.elements,
-                confirmParams: {
-                    return_url: window.location.href + '?payment_success=1&session_id=' + this.sessionId,
-                },
-                redirect: 'if_required'
-            });
-
-            if (error) {
-                // Show error
-                $('.nc-payment-errors').text(error.message);
-                $('#nc-submit-payment').prop('disabled', false);
-                $('.nc-btn-text').show();
-                $('.nc-btn-loading').hide();
-            } else {
-                // Payment succeeded, process calculation
-                this.submitCalculation();
-            }
-        },
-
-        submitCalculation: function() {
-            // Show processing
-            this.showStep(4);
-
-            // Submit calculation
+            // Submit free calculation
             $.ajax({
                 url: nc_public.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'nc_calculate',
+                    action: 'nc_calculate_free',
                     ...this.calculationData,
-                    session_id: this.sessionId,
                     nonce: nc_public.nonce
                 },
                 success: function(response) {
@@ -315,15 +209,57 @@
                         CalculatorManager.showStep(1);
                     }
                 },
-                error: function() {
-                    CalculatorManager.showError('Failed to complete calculation');
+                error: function(xhr, status, error) {
+                    console.error('Free calculation error:', error);
+                    CalculatorManager.showError('Failed to complete calculation. Please try again.');
                     CalculatorManager.showStep(1);
                 }
             });
         },
 
+        /**
+         * Платный расчет - создание Checkout Session и редирект
+         */
+        submitPaidCalculation: function(tier) {
+            // Show processing
+            this.showStep(3);
+            this.updateProcessingMessage('Creating payment session...', 'Please wait, you will be redirected to payment page...');
+
+            // Submit paid calculation request
+            $.ajax({
+                url: nc_public.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'nc_calculate_paid',
+                    tier: tier,
+                    ...this.calculationData,
+                    nonce: nc_public.nonce
+                },
+                success: function(response) {
+                    if (response.success && response.data.checkout_url) {
+                        // Редирект на страницу оплаты бэкенда
+                        console.log('Redirecting to checkout:', response.data.checkout_url);
+                        window.location.href = response.data.checkout_url;
+                    } else {
+                        CalculatorManager.showError(response.data.message || 'Failed to create payment session');
+                        CalculatorManager.showStep(1);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Paid calculation error:', error);
+                    CalculatorManager.showError('Failed to create payment session. Please try again.');
+                    CalculatorManager.showStep(1);
+                }
+            });
+        },
+
+        updateProcessingMessage: function(title, message) {
+            $('.nc-processing-title').text(title);
+            $('.nc-processing-message').text(message);
+        },
+
         showSuccess: function(message) {
-            this.showStep(5);
+            this.showStep(4); // Step 4 теперь Success (раньше было 5)
             if (message) {
                 $('.nc-success-message').text(message);
             }
@@ -339,17 +275,17 @@
             switch (packageType) {
                 case 'free':
                     return 'Free Compatibility Report';
-                case 'light':
-                    return 'Light Package Report';
-                case 'pro':
-                    return 'Pro Package Report';
+                case 'standard':
+                    return 'Standard Package Report';
+                case 'premium':
+                    return 'Premium Package Report';
                 default:
                     return 'Compatibility Report';
             }
         },
 
         showError: function(message) {
-            // You can replace this with a better notification system
+            // TODO: Можно заменить на лучшую систему уведомлений
             alert(message);
         },
 
@@ -370,14 +306,15 @@
             CalculatorManager.init();
         }
 
-        // Handle return from Stripe redirect
+        // Handle return from payment (success callback от бэкенда)
+        // Бэкенд редиректит обратно на сайт с параметром ?payment_success=1&calculation_id=xxx
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('payment_success') === '1') {
-            const sessionId = urlParams.get('session_id');
-            if (sessionId) {
-                CalculatorManager.sessionId = sessionId;
-                CalculatorManager.submitCalculation();
-            }
+            // Показываем Success Step
+            CalculatorManager.showSuccess('Your payment was successful! Check your email for the PDF report.');
+        } else if (urlParams.get('payment_cancelled') === '1') {
+            // Пользователь отменил оплату
+            CalculatorManager.showError('Payment was cancelled. Please try again.');
         }
     });
 
