@@ -1,5 +1,6 @@
 /**
  * Calculator JavaScript for Numerology Compatibility Plugin
+ * plugins/numerology-compatibility/public/assets/js/calculator.js
  */
 
 (function($) {
@@ -12,6 +13,7 @@
         calculationData: {},
         stripe: null,
         elements: null,
+        sessionId: null,
 
         init: function() {
             this.bindEvents();
@@ -38,6 +40,11 @@
                 CalculatorManager.handlePayment();
             });
 
+            // Email validation
+            $('#email').on('blur', function() {
+                CalculatorManager.validateEmail($(this));
+            });
+
             // Date validation
             $('input[type="date"]').on('change', function() {
                 CalculatorManager.validateDate($(this));
@@ -55,6 +62,7 @@
 
             // Collect form data
             this.calculationData = {
+                email: $('#email').val(),
                 person1_date: $('#person1_date').val(),
                 person2_date: $('#person2_date').val(),
                 person1_name: $('#person1_name').val(),
@@ -78,6 +86,16 @@
 
         validateCalculationForm: function($form) {
             var isValid = true;
+
+            // Validate email
+            var email = $('#email').val();
+            if (!email) {
+                this.showFieldError($('#email'), 'Email is required');
+                isValid = false;
+            } else if (!this.isValidEmail(email)) {
+                this.showFieldError($('#email'), 'Please enter a valid email address');
+                isValid = false;
+            }
 
             // Validate dates
             var date1 = $('#person1_date').val();
@@ -112,6 +130,28 @@
             return isValid;
         },
 
+        validateEmail: function($field) {
+            var email = $field.val();
+
+            if (!email) {
+                this.showFieldError($field, 'Email is required');
+                return false;
+            }
+
+            if (!this.isValidEmail(email)) {
+                this.showFieldError($field, 'Please enter a valid email address');
+                return false;
+            }
+
+            this.clearFieldError($field);
+            return true;
+        },
+
+        isValidEmail: function(email) {
+            var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        },
+
         validateDate: function($field) {
             var date = new Date($field.val());
             var today = new Date();
@@ -143,44 +183,37 @@
         },
 
         processCalculation: function() {
-            // Check if user is logged in
-            if (!nc_public.is_logged_in && nc_public.require_auth) {
-                // Show auth modal
-                this.showAuthRequired();
-                return;
-            }
-
             // Add package type to calculation data
             this.calculationData.package_type = this.selectedPackage;
 
-            // Show processing
-            this.showStep(5);
+            // If free package, process immediately
+            if (this.selectedPackage === 'free') {
+                this.submitCalculation();
+            } else {
+                // Show payment step for paid packages
+                this.createPaymentIntent();
+            }
+        },
 
-            // Make AJAX request
+        createPaymentIntent: function() {
+            // Show processing
+            this.showStep(4);
+
+            // Make AJAX request to create payment intent
             $.ajax({
                 url: nc_public.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'nc_calculate',
+                    action: 'nc_create_payment',
                     ...this.calculationData,
                     nonce: nc_public.nonce
                 },
                 success: function(response) {
                     if (response.success) {
-                        if (response.data.require_payment) {
-                            // Show payment step
-                            CalculatorManager.showPaymentStep(response.data.payment_data);
-                        } else {
-                            // Show results
-                            CalculatorManager.showResults(response.data.calculation);
-                        }
+                        CalculatorManager.showPaymentStep(response.data);
                     } else {
-                        if (response.data.require_auth) {
-                            CalculatorManager.showAuthRequired();
-                        } else {
-                            CalculatorManager.showError(response.data.message);
-                            CalculatorManager.showStep(1);
-                        }
+                        CalculatorManager.showError(response.data.message);
+                        CalculatorManager.showStep(1);
                     }
                 },
                 error: function() {
@@ -190,22 +223,14 @@
             });
         },
 
-        showAuthRequired: function() {
-            // Show auth modal
-            if (typeof NCAuthManager !== 'undefined') {
-                NCAuthManager.showModal();
-            } else {
-                // Redirect to login page
-                window.location.href = nc_public.login_url + '?redirect=' + encodeURIComponent(window.location.href);
-            }
-        },
-
         showPaymentStep: function(paymentData) {
-            this.showStep(4);
+            this.sessionId = paymentData.session_id;
+            this.showStep(3);
 
             // Update summary
             $('.nc-item-name').text(this.getPackageName(this.selectedPackage));
             $('.nc-item-price').text('$' + paymentData.amount);
+            $('.nc-email-display').text(this.calculationData.email);
 
             // Initialize Stripe payment element
             if (this.stripe && paymentData.client_secret) {
@@ -251,7 +276,7 @@
             const { error } = await this.stripe.confirmPayment({
                 elements: this.elements,
                 confirmParams: {
-                    return_url: nc_public.return_url,
+                    return_url: window.location.href + '?payment_success=1&session_id=' + this.sessionId,
                 },
                 redirect: 'if_required'
             });
@@ -264,62 +289,44 @@
                 $('.nc-btn-loading').hide();
             } else {
                 // Payment succeeded, process calculation
-                this.completeCalculation();
+                this.submitCalculation();
             }
         },
 
-        completeCalculation: function() {
+        submitCalculation: function() {
             // Show processing
-            this.showStep(5);
+            this.showStep(4);
 
-            // Complete the calculation after payment
+            // Submit calculation
             $.ajax({
                 url: nc_public.ajax_url,
                 type: 'POST',
                 data: {
-                    action: 'nc_complete_calculation',
-                    calculation_data: this.calculationData,
+                    action: 'nc_calculate',
+                    ...this.calculationData,
+                    session_id: this.sessionId,
                     nonce: nc_public.nonce
                 },
                 success: function(response) {
                     if (response.success) {
-                        CalculatorManager.showResults(response.data.calculation);
+                        CalculatorManager.showSuccess(response.data.message);
                     } else {
                         CalculatorManager.showError(response.data.message);
+                        CalculatorManager.showStep(1);
                     }
                 },
                 error: function() {
                     CalculatorManager.showError('Failed to complete calculation');
+                    CalculatorManager.showStep(1);
                 }
             });
         },
 
-        showResults: function(calculation) {
-            this.showStep(6);
-
-            // Build results HTML
-            var resultsHtml = '<h2>Your Compatibility Results</h2>';
-            resultsHtml += '<div class="nc-result-content">';
-
-            if (calculation.summary) {
-                resultsHtml += '<div class="nc-summary">' + calculation.summary + '</div>';
+        showSuccess: function(message) {
+            this.showStep(5);
+            if (message) {
+                $('.nc-success-message').text(message);
             }
-
-            if (calculation.compatibility_score) {
-                resultsHtml += '<div class="nc-score">Compatibility Score: <span>' + calculation.compatibility_score + '%</span></div>';
-            }
-
-            // TODO here PD calculation URL needed
-            // TODO here PD calculation URL needed
-            // TODO here PD calculation URL needed
-            // TODO here PD calculation URL needed
-            if (calculation.pdf_url) {
-                resultsHtml += '<a href="' + calculation.pdf_url + '" class="nc-btn nc-btn-primary" download>Download PDF Report</a>';
-            }
-
-            resultsHtml += '</div>';
-
-            $('.nc-result').html(resultsHtml);
         },
 
         showStep: function(step) {
@@ -361,6 +368,16 @@
     $(document).ready(function() {
         if ($('#nc-calculator-wrapper').length) {
             CalculatorManager.init();
+        }
+
+        // Handle return from Stripe redirect
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('payment_success') === '1') {
+            const sessionId = urlParams.get('session_id');
+            if (sessionId) {
+                CalculatorManager.sessionId = sessionId;
+                CalculatorManager.submitCalculation();
+            }
         }
     });
 

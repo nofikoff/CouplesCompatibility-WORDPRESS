@@ -9,4 +9,17 @@ npm run build
 # 3. Настройте API подключение в админке
 
 # 4. Добавьте shortcode на страницу:
+
+
+// Калькулятор с авто-выбором пакета
 [numerology_compatibility]
+
+// Калькулятор с фиксированным пакетом
+[numerology_compatibility package="free"]
+[numerology_compatibility package="light"]
+
+// Прайсинг
+[numerology_pricing highlight="light"]
+
+// GDPR инструменты
+[numerology_gdpr]

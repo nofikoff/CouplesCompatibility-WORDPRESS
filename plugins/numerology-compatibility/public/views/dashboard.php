@@ -1,4 +1,5 @@
 <?php
+// plugins/numerology-compatibility/public/views/dashboard.php
 /**
  * User dashboard template
  */
