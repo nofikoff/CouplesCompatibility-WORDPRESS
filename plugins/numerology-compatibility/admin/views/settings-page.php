@@ -101,14 +101,6 @@ $active_tab = $_GET['tab'] ?? 'general';
                 </tr>
 
                 <tr>
-                    <th scope="row"><?php _e('API Secret', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <input type="password" name="nc_api_secret" value="<?php echo esc_attr(get_option('nc_api_secret')); ?>" class="regular-text">
-                        <p class="description"><?php _e('API secret for request signing', 'numerology-compatibility'); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
                     <th scope="row"><?php _e('Webhook Secret', 'numerology-compatibility'); ?></th>
                     <td>
                         <input type="password" name="nc_webhook_secret" value="<?php echo esc_attr(get_option('nc_webhook_secret')); ?>" class="regular-text">

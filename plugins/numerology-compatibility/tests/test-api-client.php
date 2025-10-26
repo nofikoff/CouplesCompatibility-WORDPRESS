@@ -27,27 +27,6 @@ class TestApiClient extends TestCase {
     }
 
     /**
-     * Test request signing
-     */
-    public function test_request_signing() {
-        // Set test credentials
-        update_option('nc_api_key', 'test_key');
-        update_option('nc_api_secret', 'test_secret');
-
-        $client = new ApiClient();
-
-        // Use reflection to test private method
-        $reflection = new \ReflectionClass($client);
-        $method = $reflection->getMethod('sign_request');
-        $method->setAccessible(true);
-
-        $signature = $method->invoke($client, 'GET', '/test', 1234567890);
-
-        $this->assertIsString($signature);
-        $this->assertEquals(64, strlen($signature)); // SHA256 produces 64 character hex string
-    }
-
-    /**
      * Test error handling
      */
     public function test_error_handling() {

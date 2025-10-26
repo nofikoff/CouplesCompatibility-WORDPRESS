@@ -6,13 +6,11 @@ class ApiClient {
 
 	private $api_url;
 	private $api_key;
-	private $api_secret;
 	private $timeout = 30;
 
 	public function __construct() {
 		$this->api_url = get_option('nc_api_url', 'https://api.your-domain.com');
 		$this->api_key = get_option('nc_api_key', '');
-		$this->api_secret = get_option('nc_api_secret', '');
 	}
 
 	/**
@@ -28,14 +26,6 @@ class ApiClient {
 			'X-Request-ID' => $this->generate_request_id(),
 			'X-Client-Version' => NC_VERSION,
 		];
-
-		// Sign request if secret is available
-		if ($this->api_secret) {
-			$timestamp = time();
-			$signature = $this->sign_request($method, $endpoint, $timestamp);
-			$headers['X-Timestamp'] = $timestamp;
-			$headers['X-Signature'] = $signature;
-		}
 
 		$args = [
 			'method' => $method,
@@ -117,14 +107,6 @@ class ApiClient {
 		}
 
 		return $last_error;
-	}
-
-	/**
-	 * Sign request for security
-	 */
-	private function sign_request($method, $endpoint, $timestamp) {
-		$message = $method . $endpoint . $timestamp;
-		return hash_hmac('sha256', $message, $this->api_secret);
 	}
 
 	/**

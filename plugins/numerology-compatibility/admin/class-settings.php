@@ -17,8 +17,7 @@ class Settings {
         // API settings
         register_setting('nc_settings_api', 'nc_api_url');
         register_setting('nc_settings_api', 'nc_api_key');
-        register_setting('nc_settings_api', 'nc_api_secret');
-        register_setting('nc_settings_api', 'nc_webhook_secret'); // Webhook secret для проверки подписи
+        register_setting('nc_settings_api', 'nc_webhook_secret'); // Webhook secret для проверки подписи входящих от бэкенда
 
         // ПРИМЕЧАНИЕ: Pricing и Payment Gateway настройки убраны
         // Все цены и платежные шлюзы управляются на бэкенде Laravel
