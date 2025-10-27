@@ -38,14 +38,17 @@ class ApiCalculations {
 		// Отправляем запрос на бэкенд
 		$response = $this->client->request('/calculate/free', 'POST', $request_data);
 
-		if (!empty($response)) {
+		// Laravel API возвращает данные в формате {success, message, data}
+		$data_response = $response['data'] ?? [];
+
+		if (!empty($data_response)) {
 			// Сохраняем расчет локально
-			$this->store_calculation($response, $data['email'], 'free');
+			$this->store_calculation($data_response, $data['email'], 'free');
 
 			// Трекаем использование
 			$this->track_usage('free', $data['email']);
 
-			return $response;
+			return $data_response;
 		}
 
 		throw new \Exception(__('Calculation failed', 'numerology-compatibility'));
@@ -85,14 +88,17 @@ class ApiCalculations {
 		// Отправляем запрос на создание Checkout Session
 		$response = $this->client->request('/calculate/paid', 'POST', $request_data);
 
-		if (!empty($response['checkout_url'])) {
+		// Laravel API возвращает данные в формате {success, message, data}
+		$data_response = $response['data'] ?? [];
+
+		if (!empty($data_response['checkout_url'])) {
 			// Сохраняем информацию о начале платного расчета
 			$this->track_usage('paid_initiated', $data['email'], [
 				'tier' => $tier,
-				'calculation_id' => $response['calculation_id'] ?? null
+				'calculation_id' => $data_response['calculation_id'] ?? null
 			]);
 
-			return $response;
+			return $data_response;
 		}
 
 		throw new \Exception(__('Failed to create payment session', 'numerology-compatibility'));
@@ -113,7 +119,8 @@ class ApiCalculations {
 
 		$response = $this->client->request('/calculations/' . $calculation_id, 'GET');
 
-		return $response;
+		// Laravel API возвращает данные в формате {success, data}
+		return $response['data'] ?? [];
 	}
 
 	/**
