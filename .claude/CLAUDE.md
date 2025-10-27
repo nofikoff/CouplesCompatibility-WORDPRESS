@@ -1,24 +1,81 @@
-# Инструкции для Claude Code
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Назначение
-- Плагин к Wordpress для отображения через shortcode формы расчета по нумерологии "Compatibility"
+WordPress плагин для расчета нумерологической совместимости через shortcode `[numerology_calculator]`
 
-## Задачи
-- Получение нумерологических PDF отчетов на основе входных даты рождения
-- Авторизация не нужна, только e-mail обязательное поле
-- Бесплатный минималистичный расчет
-- Платный средний и полный расчеты
-- Примем платежей с возможностью подключить несколько разных платежных шлюзов, для начала Stripe
-- Мультиязычность
+## Ключевые принципы архитектуры
+
+### Разделение ответственности
+- **WordPress плагин** - только UI, валидация форм, вызовы API, прием webhook'ов
+- **Backend (Laravel API)** - вся бизнес-логика, расчеты, платежи, генерация PDF
+- **Никакой авторизации WordPress** - плагин работает для всех посетителей, нужен только email
+
+### Платежи
+- Все настройки платежных шлюзов (Stripe, PayPal, etc) на бэкенде
+- Backend возвращает `checkout_url`, frontend просто делает редирект на этот URL
+- WordPress не знает про конкретные платежные системы, только принимает webhook'и
+- Нет Payment Element, нет специфичного кода платежных систем на фронтенде
+
+## Основная архитектура
+
+### Поток данных
+
+**Бесплатный расчет:**
+```
+User → Form → AJAX (nc_calculate_free) → ApiCalculations::calculate_free()
+→ Backend API /api/v1/calculate/free → Success message
+```
+
+**Платный расчет:**
+```
+User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
+→ ApiCalculations::calculate_paid() → Backend API /api/v1/calculate/paid
+→ Backend returns checkout_url → Frontend redirects: window.location = checkout_url
+→ Payment на стороне backend (любой gateway: Stripe, PayPal, etc)
+→ Backend redirects back с ?payment_success=1
+→ Backend sends webhook → ApiPayments::handle_webhook()
+```
+
+### Ключевые компоненты
+
+**API Layer** (`api/`):
+- `ApiClient` - HTTP клиент с retry логикой, отправляет `X-API-Key` в заголовках
+- `ApiCalculations` - методы `calculate_free()` и `calculate_paid()`, генерирует `success_url`/`cancel_url`
+- `ApiPayments` - обработка webhook'ов от бэкенда, проверка HMAC подписи
+
+**Public Layer** (`public/`):
+- `AjaxHandler` - обработка AJAX запросов (`handle_free_calculation`, `handle_paid_calculation`)
+- `Shortcodes` - регистрация shortcode `[numerology_calculator]`
+- `form-calculator.php` - 4-шаговая форма (даты → пакет → обработка → успех)
+- `calculator.js` - логика формы, редирект на `checkout_url`
+
+**Admin Layer** (`admin/`):
+- Страницы: Dashboard, Settings, Statistics, Calculations, Users, Logs
+- Настройки: General, API Configuration, Localization, Advanced
+- **НЕТ** настроек Pricing и Payment Gateway (управляется на бэкенде)
+
+**Database Layer** (`database/`):
+- Таблицы: `nc_calculations`, `nc_transactions`, `nc_analytics`, `nc_consents`, `nc_api_usage`, `nc_error_logs`
+- Поле `gateway_payment_id` (универсальное, не привязано к Stripe)
+
+### Настройки плагина
+
+**API Configuration:**
+- `nc_api_url` - URL бэкенда
+- `nc_api_key` - идентификатор клиента (отправляется в `X-API-Key`)
+- `nc_webhook_secret` - секрет для проверки HMAC подписи входящих webhook'ов
+
+**Webhook URL:** `/wp-json/numerology/v1/webhook/{gateway}`
+- Примеры: `/webhook/stripe`, `/webhook/paypal`
+- Проверка подписи: `hash_hmac('sha256', $payload, nc_webhook_secret)`
 
 ## Общие правила
+- Комментарии на русском языке
+- PSR-12 стандарт для PHP кода
 - Не читай файлы из .gitignore
-- Пиши комментарии на русском языке
-- Используй PSR-12 стандарт для PHP кода
-- Всегда запускай тесты после изменений
-
-## Структура проекта
-- ./plugins/numerology-compatibility - код плагина тут, остальной код не анализируем
+- Фокус только на `./plugins/numerology-compatibility`
 
 ## API бэкенда (вторая часть проекта, если надо, расширим) openapi: 3.0.3
 info:
