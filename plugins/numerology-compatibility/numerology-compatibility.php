@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name: Numerology Compatibility Calculator
- * Plugin URI: https://your-domain.com/
+ * Plugin URI: https://couplescompatibility.com/
  * Description: Professional numerology compatibility calculator with PDF reports and payment integration
  * Version: 1.0.0
  * Requires at least: 5.8
  * Requires PHP: 7.4
- * Author: Your Name
- * Author URI: https://your-domain.com
+ * Author: Ruslan Novikov
+ * Author URI: https://novikov.ua
  * License: GPL v2 or later
  * Text Domain: numerology-compatibility
  * Domain Path: /languages
