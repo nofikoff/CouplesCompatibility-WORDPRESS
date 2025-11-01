@@ -16,7 +16,6 @@ class Plugin {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-		$this->define_api_hooks();
 	}
 
 	private function load_dependencies() {
@@ -36,7 +35,6 @@ class Plugin {
 		// API classes
 		require_once NC_PLUGIN_DIR . 'api/class-api-client.php';
 		require_once NC_PLUGIN_DIR . 'api/class-api-calculations.php';
-		require_once NC_PLUGIN_DIR . 'api/class-api-payments.php';
 
 		// Database
 		require_once NC_PLUGIN_DIR . 'database/class-database.php';
@@ -100,23 +98,6 @@ class Plugin {
 		$this->loader->add_action('wp_ajax_nopriv_nc_delete_data', $ajax_handler, 'delete_data');
 	}
 
-	private function define_api_hooks() {
-		// REST API endpoints for payment webhooks
-		// Бэкенд отправляет уведомления о статусе платежа на эти endpoints
-		// Поддерживает любые платежные системы: stripe, paypal, и т.д.
-		add_action('rest_api_init', function() {
-			// Универсальный webhook для любых платежных систем
-			register_rest_route('numerology/v1', '/webhook/(?P<gateway>[a-zA-Z0-9-]+)', [
-				'methods' => 'POST',
-				'callback' => function($request) {
-					$gateway = $request->get_param('gateway');
-					$payments = new Api\ApiPayments();
-					return $payments->handle_webhook($gateway);
-				},
-				'permission_callback' => '__return_true'
-			]);
-		});
-	}
 
 	public function run() {
 		$this->loader->run();

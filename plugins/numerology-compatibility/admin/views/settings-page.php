@@ -101,24 +101,6 @@ $active_tab = $_GET['tab'] ?? 'general';
                 </tr>
 
                 <tr>
-                    <th scope="row"><?php _e('Webhook Secret', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <input type="password" name="nc_webhook_secret" value="<?php echo esc_attr(get_option('nc_webhook_secret')); ?>" class="regular-text">
-                        <p class="description">
-                            <?php _e('Secret key for verifying webhook signatures from the backend', 'numerology-compatibility'); ?>
-                        </p>
-                        <p class="description">
-                            <strong><?php _e('Webhook URL Format:', 'numerology-compatibility'); ?></strong><br>
-                            <code><?php echo home_url('/wp-json/numerology/v1/webhook/{gateway}'); ?></code><br>
-                            <em><?php _e('Examples:', 'numerology-compatibility'); ?></em><br>
-                            <code><?php echo home_url('/wp-json/numerology/v1/webhook/stripe'); ?></code> - <?php _e('for Stripe', 'numerology-compatibility'); ?><br>
-                            <code><?php echo home_url('/wp-json/numerology/v1/webhook/paypal'); ?></code> - <?php _e('for PayPal', 'numerology-compatibility'); ?><br>
-                            <small><?php _e('Configure the appropriate URL on your backend for each payment gateway', 'numerology-compatibility'); ?></small>
-                        </p>
-                    </td>
-                </tr>
-
-                <tr>
                     <th scope="row"><?php _e('Connection Test', 'numerology-compatibility'); ?></th>
                     <td>
                         <button type="button" id="nc-test-connection" class="button">
@@ -274,17 +256,6 @@ $active_tab = $_GET['tab'] ?? 'general';
                     $button.prop('disabled', false);
                 }
             });
-        });
-
-        // Copy webhook URL
-        $('.nc-copy-webhook').on('click', function() {
-            var $temp = $('<input>');
-            $('body').append($temp);
-            $temp.val('<?php echo home_url('/wp-json/numerology/v1/stripe-webhook'); ?>').select();
-            document.execCommand('copy');
-            $temp.remove();
-            $(this).text('Copied!');
-            setTimeout(() => $(this).text('Copy'), 2000);
         });
 
         // Export settings

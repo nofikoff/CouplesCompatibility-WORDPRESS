@@ -26,7 +26,6 @@ if ($delete_on_uninstall) {
         // API settings
         'nc_api_url',
         'nc_api_key',
-        'nc_webhook_secret',
 
         // Localization settings
         'nc_default_language',

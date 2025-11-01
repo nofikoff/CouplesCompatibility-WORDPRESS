@@ -8,7 +8,7 @@ WordPress плагин для расчета нумерологической с
 ## Ключевые принципы архитектуры
 
 ### Разделение ответственности
-- **WordPress плагин** - только UI, валидация форм, вызовы API, прием webhook'ов
+- **WordPress плагин** - только UI, валидация форм, вызовы API
 - **Backend (Laravel API)** - вся бизнес-логика, расчеты, платежи, генерация PDF
 - **Никакой авторизации WordPress** - плагин работает для всех посетителей, нужен только email
 
@@ -20,7 +20,7 @@ WordPress плагин для расчета нумерологической с
   - Stripe (USD, EUR, UAH)
 - Все настройки платежных шлюзов на бэкенде
 - Backend возвращает `checkout_url`, frontend просто делает редирект на этот URL
-- WordPress не знает про конкретные платежные системы, только принимает webhook'и
+- WordPress не знает про конкретные платежные системы
 - Нет Payment Element, нет специфичного кода платежных систем на фронтенде
 
 ### Тарифы
@@ -55,7 +55,6 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
   - Success: ?payment_success=1&session_id={ID}&calculation_id={ID}
   - Cancel: ?payment_cancelled=1
 → Frontend polling: GET /api/v1/payments/{id}/status (каждые 3 сек, макс 10 раз)
-→ Backend sends webhook → ApiPayments::handle_webhook()
 → PDF генерируется и отправляется на email
 ```
 
@@ -64,7 +63,6 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 **API Layer** (`api/`):
 - `ApiClient` - HTTP клиент с retry логикой, отправляет `X-API-Key` в заголовках
 - `ApiCalculations` - методы `calculate_free()` и `calculate_paid()`
-- `ApiPayments` - обработка webhook'ов от бэкенда, проверка HMAC подписи
 
 **Public Layer** (`public/`):
 - `AjaxHandler` - обработка AJAX запросов (`handle_free_calculation`, `handle_paid_calculation`)
@@ -93,11 +91,6 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 **API Configuration:**
 - `nc_api_url` - URL бэкенда
 - `nc_api_key` - идентификатор клиента (отправляется в `X-API-Key`)
-- `nc_webhook_secret` - секрет для проверки HMAC подписи входящих webhook'ов
-
-**Webhook URL:** `/wp-json/numerology/v1/webhook/{gateway}`
-- Примеры: `/webhook/stripe`, `/webhook/paypal`
-- Проверка подписи: `hash_hmac('sha256', $payload, nc_webhook_secret)`
 
 ## UI/UX и обработка ошибок
 
