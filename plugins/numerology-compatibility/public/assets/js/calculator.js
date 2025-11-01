@@ -309,21 +309,26 @@
 
                             console.log('Attempt ' + attempts + ': status=' + status + ', isPaid=' + isPaid + ', pdfReady=' + pdfReady);
 
-                            if (isPaid && pdfReady) {
-                                // Платеж успешен и PDF готов
-                                console.log('✓ Payment completed and PDF ready!');
+                            // Проверяем, прошла ли оплата
+                            if (isPaid === true) {
+                                // Оплата прошла успешно
+                                console.log('✓ Payment completed!');
                                 pollingActive = false;
-                                self.showSuccess('Payment successful! Your PDF report is ready. Check your email!');
-                            } else if (status === 'failed') {
-                                // Платеж провалился
-                                console.log('✗ Payment failed');
+                                if (pdfReady) {
+                                    self.showSuccess('Payment successful! Your PDF report is ready. Check your email!');
+                                } else {
+                                    self.showSuccess('Payment successful! Your PDF report will be sent to your email shortly (within 5-10 minutes).');
+                                }
+                            } else if (status === 'failed' || status === 'cancelled') {
+                                // Платеж провалился или был отменен
+                                console.log('✗ Payment failed or cancelled');
                                 pollingActive = false;
                                 self.showError('Payment failed. Please try again.');
-                            } else if (status === 'pending' && attempts >= maxAttempts) {
-                                // Таймаут - платеж все еще в обработке
-                                console.log('⏱ Timeout reached, payment still pending');
+                            } else if (status === 'pending' && isPaid === false && attempts >= maxAttempts) {
+                                // Таймаут - оплата НЕ прошла
+                                console.log('✗ Timeout reached, payment not completed');
                                 pollingActive = false;
-                                self.showSuccess('Payment is processing. Your PDF report will be sent to your email shortly (within 5-10 minutes).');
+                                self.showError('Payment verification timeout. If you completed the payment, please contact support with your payment confirmation.');
                             } else if (status === 'pending') {
                                 // Продолжаем проверку
                                 console.log('⟳ Payment still pending, will check again in 3 seconds...');
