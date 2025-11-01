@@ -685,6 +685,125 @@
     border: 1px solid #EF4444;
 }
 
+/* Success Page */
+.nc-success {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.nc-success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--nc-success);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    margin: 0 auto 20px;
+    animation: scaleIn 0.5s ease-out;
+}
+
+.nc-success h2 {
+    color: var(--nc-text);
+    margin-bottom: 15px;
+}
+
+.nc-success-message {
+    font-size: 18px;
+    color: #6B7280;
+    margin-bottom: 30px;
+}
+
+.nc-success-details {
+    background: var(--nc-light);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.nc-success-details ul {
+    margin-top: 15px;
+    padding-left: 20px;
+}
+
+.nc-success-details li {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+/* Error Page */
+.nc-error-page {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.nc-error-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--nc-danger);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    margin: 0 auto 20px;
+    animation: shake 0.5s ease-out;
+}
+
+.nc-error-page h2 {
+    color: var(--nc-text);
+    margin-bottom: 15px;
+}
+
+.nc-error-page .nc-error-message {
+    font-size: 18px;
+    color: var(--nc-danger);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.nc-error-details {
+    background: #FEE2E2;
+    border: 1px solid #FCA5A5;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 30px 0;
+    color: #991B1B;
+}
+
+.nc-error-details p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Pending Page */
+.nc-pending {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.nc-pending h2 {
+    margin-bottom: 15px;
+}
+
+.nc-pending-message {
+    font-size: 16px;
+    color: #6B7280;
+    margin-bottom: 20px;
+}
+
+.nc-pending-details {
+    margin-top: 30px;
+}
+
+.nc-pending-details small {
+    color: #9CA3AF;
+}
+
 /* Animations */
 @keyframes fadeIn {
     from {
@@ -695,6 +814,23 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
 /* Responsive */

@@ -193,9 +193,28 @@ $show_prices = $attributes['show_prices'] ?? true;
             </div>
 
             <div class="nc-form-actions">
-                <a href="<?php echo home_url('/calculator'); ?>" class="nc-btn nc-btn-primary">
+                <button type="button" class="nc-btn nc-btn-primary nc-btn-restart">
 					<?php _e('Calculate Another', 'numerology-compatibility'); ?>
-                </a>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 6: Error -->
+    <div class="nc-step nc-step-6" data-step="6" style="display:none;">
+        <div class="nc-error-page">
+            <div class="nc-error-icon">✕</div>
+            <h2><?php _e('Oops! Something Went Wrong', 'numerology-compatibility'); ?></h2>
+            <p class="nc-error-message"><?php _e('An error occurred. Please try again.', 'numerology-compatibility'); ?></p>
+
+            <div class="nc-error-details">
+                <p><?php _e('If the problem persists, please contact our support team with your payment confirmation.', 'numerology-compatibility'); ?></p>
+            </div>
+
+            <div class="nc-form-actions">
+                <button type="button" class="nc-btn nc-btn-primary nc-btn-restart">
+					<?php _e('Try Again', 'numerology-compatibility'); ?>
+                </button>
             </div>
         </div>
     </div>

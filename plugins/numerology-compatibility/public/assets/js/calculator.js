@@ -48,6 +48,12 @@
 
             // Auto-format dates
             $('input[type="date"]').attr('max', new Date().toISOString().split('T')[0]);
+
+            // Restart button (Calculate Another)
+            $(document).on('click', '.nc-btn-restart', function(e) {
+                e.preventDefault();
+                CalculatorManager.resetCalculator();
+            });
         },
 
         handleFormSubmit: function($form) {
@@ -206,13 +212,11 @@
                         CalculatorManager.showSuccess(response.data.message);
                     } else {
                         CalculatorManager.showError(response.data.message);
-                        CalculatorManager.showStep(1);
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error('Free calculation error:', error);
                     CalculatorManager.showError('Failed to complete calculation. Please try again.');
-                    CalculatorManager.showStep(1);
                 }
             });
         },
@@ -242,13 +246,11 @@
                         window.location.href = response.data.checkout_url;
                     } else {
                         CalculatorManager.showError(response.data.message || 'Failed to create payment session');
-                        CalculatorManager.showStep(1);
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error('Paid calculation error:', error);
                     CalculatorManager.showError('Failed to create payment session. Please try again.');
-                    CalculatorManager.showStep(1);
                 }
             });
         },
@@ -317,7 +319,6 @@
                                 console.log('✗ Payment failed');
                                 pollingActive = false;
                                 self.showError('Payment failed. Please try again.');
-                                self.showStep(1);
                             } else if (status === 'pending' && attempts >= maxAttempts) {
                                 // Таймаут - платеж все еще в обработке
                                 console.log('⏱ Timeout reached, payment still pending');
@@ -332,7 +333,7 @@
                                 console.log('? Unknown status:', status);
                                 if (attempts >= maxAttempts) {
                                     pollingActive = false;
-                                    self.showSuccess('Payment is being processed. Check your email for the PDF report.');
+                                    self.showError('Unable to determine payment status. Please contact support with your payment confirmation.');
                                 } else {
                                     setTimeout(checkStatus, 3000);
                                 }
@@ -342,7 +343,7 @@
                             console.error('Invalid API response structure:', response);
                             if (attempts >= maxAttempts) {
                                 pollingActive = false;
-                                self.showSuccess('Payment is being processed. Check your email for the PDF report.');
+                                self.showError('Unable to verify payment status. Please contact support with your payment confirmation.');
                             } else {
                                 setTimeout(checkStatus, 3000);
                             }
@@ -353,7 +354,7 @@
 
                         if (attempts >= maxAttempts) {
                             pollingActive = false;
-                            self.showSuccess('Payment is being processed. Check your email for the PDF report.');
+                            self.showError('Unable to verify payment status. Please contact support with your payment confirmation.');
                         } else {
                             console.log('Will retry in 3 seconds...');
                             setTimeout(checkStatus, 3000);
@@ -386,8 +387,10 @@
         },
 
         showError: function(message) {
-            // TODO: Можно заменить на лучшую систему уведомлений
-            alert(message);
+            this.showStep(6); // Step 6 = Error page
+            if (message) {
+                $('.nc-error-message').text(message);
+            }
         },
 
         showFieldError: function($field, message) {
@@ -398,6 +401,34 @@
         clearFieldError: function($field) {
             $field.removeClass('error');
             $field.siblings('.nc-error-message').text('').hide();
+        },
+
+        /**
+         * Сброс калькулятора в начальное состояние
+         */
+        resetCalculator: function() {
+            // Очистить форму
+            $('#nc-calculator-form')[0].reset();
+
+            // Снять галочки
+            $('#data_consent, #harm_consent, #entertainment_consent').prop('checked', false);
+
+            // Очистить все ошибки
+            $('.nc-error-message').text('').hide();
+            $('input, select, textarea').removeClass('error');
+
+            // Сбросить данные
+            this.calculationData = {};
+            this.selectedPackage = $('#nc-calculator-wrapper').data('package') || 'auto';
+            this.selectedTier = null;
+
+            // Убрать выделение пакетов
+            $('.nc-package').removeClass('nc-selected');
+
+            // Вернуться на шаг 1
+            this.showStep(1);
+
+            console.log('Calculator reset to initial state');
         }
     };
 
