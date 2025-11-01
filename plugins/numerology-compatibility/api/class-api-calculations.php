@@ -213,17 +213,17 @@ class ApiCalculations {
 	 * @return string
 	 */
 	private function get_current_page_url() {
-		global $wp;
-		$current_url = home_url(add_query_arg([], $wp->request));
+		// Используем реальный URL из HTTP запроса вместо home_url()
+		// Это позволяет избежать проблем с неправильными настройками WordPress
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+		$host = $_SERVER['HTTP_HOST'];
+		$request_uri = $_SERVER['REQUEST_URI'];
 
-		// Убираем существующие параметры оплаты (Laravel добавит свои)
-		$current_url = remove_query_arg([
-			'payment_success',
-			'payment_cancelled',
-			'payment_id',
-			'calculation_id',
-			'session_id'
-		], $current_url);
+		// Убираем query string если есть
+		$uri = strtok($request_uri, '?');
+
+		// Формируем базовый URL без параметров
+		$current_url = $protocol . '://' . $host . $uri;
 
 		return $current_url;
 	}
