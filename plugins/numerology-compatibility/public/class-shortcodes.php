@@ -36,54 +36,65 @@ class Shortcodes {
 	public function render_pricing($atts) {
 		$attributes = shortcode_atts([
 			'style' => 'cards',
-			'highlight' => 'light'
+			'highlight' => 'standard',
+			'calculator_url' => '' // URL страницы с калькулятором (опционально)
 		], $atts);
+
+		// Если calculator_url не указан, используем якорь на текущей странице
+		$base_url = !empty($attributes['calculator_url'])
+			? esc_url($attributes['calculator_url'])
+			: '#nc-calculator-wrapper';
 
 		ob_start();
 		?>
         <div class="nc-pricing-table nc-style-<?php echo esc_attr($attributes['style']); ?>">
+            <!-- Free Package -->
             <div class="nc-pricing-card <?php echo $attributes['highlight'] === 'free' ? 'nc-featured' : ''; ?>">
                 <h3><?php _e('Free', 'numerology-compatibility'); ?></h3>
                 <div class="nc-price">$0</div>
                 <ul class="nc-features">
                     <li><?php _e('Basic compatibility score', 'numerology-compatibility'); ?></li>
-                    <li><?php _e('Key insights', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('3 positions analysis', 'numerology-compatibility'); ?></li>
                     <li><?php _e('PDF via email', 'numerology-compatibility'); ?></li>
                 </ul>
-                <a href="<?php echo home_url('/calculator?package=free'); ?>" class="nc-btn nc-btn-outline">
+                <a href="<?php echo $base_url; ?>" class="nc-btn nc-btn-outline nc-package-link" data-package="free">
 					<?php _e('Get Free Report', 'numerology-compatibility'); ?>
                 </a>
             </div>
 
-            <div class="nc-pricing-card <?php echo $attributes['highlight'] === 'light' ? 'nc-featured' : ''; ?>">
-				<?php if ($attributes['highlight'] === 'light'): ?>
+            <!-- Standard Package -->
+            <div class="nc-pricing-card <?php echo $attributes['highlight'] === 'standard' ? 'nc-featured' : ''; ?>">
+				<?php if ($attributes['highlight'] === 'standard'): ?>
                     <div class="nc-badge"><?php _e('Most Popular', 'numerology-compatibility'); ?></div>
 				<?php endif; ?>
-                <h3><?php _e('Light', 'numerology-compatibility'); ?></h3>
-                <div class="nc-price">$<?php echo get_option('nc_price_light', 19); ?></div>
+                <h3><?php _e('Standard', 'numerology-compatibility'); ?></h3>
+                <div class="nc-price">$9.99</div>
                 <ul class="nc-features">
-                    <li><?php _e('Full compatibility analysis', 'numerology-compatibility'); ?></li>
-                    <li><?php _e('1-2 year forecast', 'numerology-compatibility'); ?></li>
-                    <li><?php _e('Detailed PDF report', 'numerology-compatibility'); ?></li>
-                    <li><?php _e('Email delivery', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('Full compatibility matrix', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('7 positions analysis', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('Personal analysis', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('Relationship dynamics', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('Advanced PDF report', 'numerology-compatibility'); ?></li>
                 </ul>
-                <a href="<?php echo home_url('/calculator?package=light'); ?>" class="nc-btn nc-btn-primary">
-					<?php _e('Get Light Report', 'numerology-compatibility'); ?>
+                <a href="<?php echo $base_url; ?>" class="nc-btn nc-btn-primary nc-package-link" data-package="standard">
+					<?php _e('Get Standard Report', 'numerology-compatibility'); ?>
                 </a>
             </div>
 
-            <div class="nc-pricing-card <?php echo $attributes['highlight'] === 'pro' ? 'nc-featured' : ''; ?>">
-                <h3><?php _e('Pro', 'numerology-compatibility'); ?></h3>
-                <div class="nc-price">$<?php echo get_option('nc_price_pro', 49); ?></div>
+            <!-- Premium Package -->
+            <div class="nc-pricing-card <?php echo $attributes['highlight'] === 'premium' ? 'nc-featured' : ''; ?>">
+                <h3><?php _e('Premium', 'numerology-compatibility'); ?></h3>
+                <div class="nc-price">$19.99</div>
                 <ul class="nc-features">
-                    <li><?php _e('Everything in Light', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('Everything in Standard', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('9 positions analysis', 'numerology-compatibility'); ?></li>
                     <li><?php _e('Karmic connections', 'numerology-compatibility'); ?></li>
-                    <li><?php _e('10-20 year forecast', 'numerology-compatibility'); ?></li>
-                    <li><?php _e('Action recommendations', 'numerology-compatibility'); ?></li>
-                    <li><?php _e('Priority support', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('Timeline predictions', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('Color therapy recommendations', 'numerology-compatibility'); ?></li>
+                    <li><?php _e('Premium PDF with charts', 'numerology-compatibility'); ?></li>
                 </ul>
-                <a href="<?php echo home_url('/calculator?package=pro'); ?>" class="nc-btn nc-btn-primary">
-					<?php _e('Get Pro Report', 'numerology-compatibility'); ?>
+                <a href="<?php echo $base_url; ?>" class="nc-btn nc-btn-primary nc-package-link" data-package="premium">
+					<?php _e('Get Premium Report', 'numerology-compatibility'); ?>
                 </a>
             </div>
         </div>
