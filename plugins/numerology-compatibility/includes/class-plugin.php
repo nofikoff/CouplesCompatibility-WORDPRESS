@@ -36,9 +36,6 @@ class Plugin {
 		require_once NC_PLUGIN_DIR . 'api/class-api-client.php';
 		require_once NC_PLUGIN_DIR . 'api/class-api-calculations.php';
 
-		// Database
-		require_once NC_PLUGIN_DIR . 'database/class-database.php';
-
 		$this->loader = new Loader();
 	}
 

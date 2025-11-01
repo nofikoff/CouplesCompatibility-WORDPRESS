@@ -4,7 +4,7 @@ namespace NC;
 class Activator {
 
     /**
-     * Plugin activation - упрощенная версия для отладки
+     * Plugin activation
      */
     public static function activate() {
         error_log('NC Activator: Starting activation...');
@@ -16,51 +16,21 @@ class Activator {
         }
         error_log('NC Activator: PHP version check passed');
 
-        // 2. Создание таблиц - упрощенная версия
-        self::create_tables();
-        error_log('NC Activator: Tables created');
-
-        // 3. Установка базовых опций
+        // 2. Установка базовых опций
         self::set_default_options();
         error_log('NC Activator: Options set');
 
-        // 4. Создание директорий
+        // 3. Создание директорий
         self::create_directories();
         error_log('NC Activator: Directories created');
 
-        // 5. Flush rewrite rules
+        // 4. Flush rewrite rules
         flush_rewrite_rules();
         error_log('NC Activator: Rewrite rules flushed');
 
-        // 6. Установка флага для редиректа
+        // 5. Установка флага для редиректа
         set_transient('nc_activation_redirect', true, 30);
         error_log('NC Activator: Activation completed successfully');
-    }
-
-    /**
-     * Создание таблиц
-     */
-    private static function create_tables() {
-        global $wpdb;
-
-        $charset_collate = $wpdb->get_charset_collate();
-
-        // Простая таблица для тестирования
-        $table_name = $wpdb->prefix . 'nc_calculations';
-
-        $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-            user_id bigint(20) UNSIGNED NOT NULL,
-            calculation_id varchar(255) NOT NULL,
-            created_at datetime DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id)
-        ) $charset_collate;";
-
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-        dbDelta($sql);
-
-        // Сохраняем версию БД
-        update_option('nc_db_version', '1.0.0');
     }
 
     /**

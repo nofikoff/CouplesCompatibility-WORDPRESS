@@ -11,8 +11,7 @@
   ],
   "require": {
     "php": ">=7.4",
-    "guzzlehttp/guzzle": "^7.5",
-    "monolog/monolog": "^2.8"
+    "guzzlehttp/guzzle": "^7.5"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
@@ -24,15 +23,13 @@
       "NC\\": "includes/",
       "NC\\Admin\\": "admin/",
       "NC\\PublicSite\\": "public/",
-      "NC\\Api\\": "api/",
-      "NC\\Database\\": "database/"
+      "NC\\Api\\": "api/"
     },
     "exclude-from-classmap": [
       "includes/",
       "admin/",
       "public/",
-      "api/",
-      "database/"
+      "api/"
     ]
   },
   "autoload-dev": {

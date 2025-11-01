@@ -42,12 +42,6 @@ class ApiCalculations {
 		$data_response = $response['data'] ?? [];
 
 		if (!empty($data_response)) {
-			// Сохраняем расчет локально
-			$this->store_calculation($data_response, $data['email'], 'free');
-
-			// Трекаем использование
-			$this->track_usage('free', $data['email']);
-
 			return $data_response;
 		}
 
@@ -85,12 +79,6 @@ class ApiCalculations {
 		$data_response = $response['data'] ?? [];
 
 		if (!empty($data_response['checkout_url'])) {
-			// Сохраняем информацию о начале платного расчета
-			$this->track_usage('paid_initiated', $data['email'], [
-				'tier' => $tier,
-				'calculation_id' => $data_response['calculation_id'] ?? null
-			]);
-
 			return $data_response;
 		}
 
@@ -197,62 +185,5 @@ class ApiCalculations {
 		}
 
 		return 'en';
-	}
-
-
-	/**
-	 * Сохранить расчет в локальной БД
-	 *
-	 * @param array $calculation Данные расчета от API
-	 * @param string $email Email пользователя
-	 * @param string $tier Тип расчета
-	 */
-	private function store_calculation($calculation, $email, $tier) {
-		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'nc_calculations';
-
-		$wpdb->insert(
-			$table_name,
-			[
-				'email' => $email,
-				'calculation_id' => $calculation['id'] ?? null,
-				'package_type' => $tier,
-				'person1_date' => $calculation['person1_date'] ?? null,
-				'person2_date' => $calculation['person2_date'] ?? null,
-				'person1_name' => '',
-				'person2_name' => '',
-				'result_summary' => json_encode($calculation),
-				'pdf_sent' => 1,
-				'created_at' => current_time('mysql')
-			],
-			['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s']
-		);
-	}
-
-	/**
-	 * Трекинг использования для аналитики
-	 *
-	 * @param string $event_type Тип события
-	 * @param string $email Email пользователя
-	 * @param array $extra_data Дополнительные данные
-	 */
-	private function track_usage($event_type, $email, $extra_data = []) {
-		global $wpdb;
-
-		$table_name = $wpdb->prefix . 'nc_analytics';
-
-		$wpdb->insert(
-			$table_name,
-			[
-				'email' => $email,
-				'event_type' => $event_type,
-				'event_data' => json_encode($extra_data),
-				'ip_address' => $_SERVER['REMOTE_ADDR'] ?? null,
-				'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
-				'created_at' => current_time('mysql')
-			],
-			['%s', '%s', '%s', '%s', '%s', '%s']
-		);
 	}
 }
