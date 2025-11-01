@@ -259,10 +259,111 @@
         },
 
         showSuccess: function(message) {
-            this.showStep(4); // Step 4 теперь Success (раньше было 5)
+            this.showStep(5); // Step 5 = Success
             if (message) {
                 $('.nc-success-message').text(message);
             }
+        },
+
+        /**
+         * Показать PENDING шаг и начать polling статуса платежа
+         */
+        showPendingStep: function(paymentId, calculationId) {
+            this.showStep(4); // Step 4 = PENDING (Verifying Payment)
+            this.startPaymentPolling(paymentId, calculationId);
+        },
+
+        /**
+         * Polling статуса платежа (каждые 3 секунды, максимум 30 секунд)
+         */
+        startPaymentPolling: function(paymentId, calculationId) {
+            var maxAttempts = 10; // 10 попыток * 3 секунды = 30 секунд
+            var attempts = 0;
+            var self = this;
+            var pollingActive = true;
+
+            console.log('Starting payment polling for payment_id:', paymentId, 'calculation_id:', calculationId);
+
+            var checkStatus = function() {
+                if (!pollingActive) {
+                    console.log('Polling stopped (flag was set to false)');
+                    return;
+                }
+
+                attempts++;
+                console.log('Payment status check attempt', attempts + '/' + maxAttempts);
+
+                $.ajax({
+                    url: nc_public.api_base_url + '/payments/' + paymentId + '/status',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('API Response:', response);
+
+                        if (response.success && response.data) {
+                            var status = response.data.status;
+                            var isPaid = response.data.is_paid;
+                            var pdfReady = response.data.pdf_ready;
+
+                            console.log('Attempt ' + attempts + ': status=' + status + ', isPaid=' + isPaid + ', pdfReady=' + pdfReady);
+
+                            if (isPaid && pdfReady) {
+                                // Платеж успешен и PDF готов
+                                console.log('✓ Payment completed and PDF ready!');
+                                pollingActive = false;
+                                self.showSuccess('Payment successful! Your PDF report is ready. Check your email!');
+                            } else if (status === 'failed') {
+                                // Платеж провалился
+                                console.log('✗ Payment failed');
+                                pollingActive = false;
+                                self.showError('Payment failed. Please try again.');
+                                self.showStep(1);
+                            } else if (status === 'pending' && attempts >= maxAttempts) {
+                                // Таймаут - платеж все еще в обработке
+                                console.log('⏱ Timeout reached, payment still pending');
+                                pollingActive = false;
+                                self.showSuccess('Payment is processing. Your PDF report will be sent to your email shortly (within 5-10 minutes).');
+                            } else if (status === 'pending') {
+                                // Продолжаем проверку
+                                console.log('⟳ Payment still pending, will check again in 3 seconds...');
+                                setTimeout(checkStatus, 3000);
+                            } else {
+                                // Неизвестный статус
+                                console.log('? Unknown status:', status);
+                                if (attempts >= maxAttempts) {
+                                    pollingActive = false;
+                                    self.showSuccess('Payment is being processed. Check your email for the PDF report.');
+                                } else {
+                                    setTimeout(checkStatus, 3000);
+                                }
+                            }
+                        } else {
+                            // Ошибка API response structure
+                            console.error('Invalid API response structure:', response);
+                            if (attempts >= maxAttempts) {
+                                pollingActive = false;
+                                self.showSuccess('Payment is being processed. Check your email for the PDF report.');
+                            } else {
+                                setTimeout(checkStatus, 3000);
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Payment status check error:', error, 'Status:', xhr.status);
+
+                        if (attempts >= maxAttempts) {
+                            pollingActive = false;
+                            self.showSuccess('Payment is being processed. Check your email for the PDF report.');
+                        } else {
+                            console.log('Will retry in 3 seconds...');
+                            setTimeout(checkStatus, 3000);
+                        }
+                    }
+                });
+            };
+
+            // Начать первую проверку сразу
+            checkStatus();
         },
 
         showStep: function(step) {
@@ -310,11 +411,31 @@
         // Бэкенд редиректит обратно на сайт с параметром ?payment_success=1&calculation_id=xxx
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('payment_success') === '1') {
-            // Показываем Success Step
-            CalculatorManager.showSuccess('Your payment was successful! Check your email for the PDF report.');
+            const paymentId = urlParams.get('payment_id');
+            const calculationId = urlParams.get('calculation_id');
+
+            // Очищаем URL чтобы при обновлении страницы не начинался polling заново
+            if (window.history && window.history.replaceState) {
+                const cleanUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            }
+
+            if (paymentId) {
+                // Показываем PENDING Step и начинаем polling
+                CalculatorManager.showPendingStep(paymentId, calculationId);
+            } else {
+                // Fallback если нет payment_id
+                CalculatorManager.showSuccess('Your payment was successful! Check your email for the PDF report.');
+            }
         } else if (urlParams.get('payment_cancelled') === '1') {
             // Пользователь отменил оплату
             CalculatorManager.showError('Payment was cancelled. Please try again.');
+
+            // Очищаем URL
+            if (window.history && window.history.replaceState) {
+                const cleanUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            }
         }
     });
 

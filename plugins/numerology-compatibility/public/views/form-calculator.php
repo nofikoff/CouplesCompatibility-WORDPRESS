@@ -163,8 +163,21 @@ $show_prices = $attributes['show_prices'] ?? true;
         </div>
     </div>
 
-    <!-- Step 4: Success -->
+    <!-- Step 4: Payment Pending (Verifying Payment) -->
     <div class="nc-step nc-step-4" data-step="4" style="display:none;">
+        <div class="nc-pending">
+            <div class="nc-spinner"></div>
+            <h2><?php _e('Verifying Payment...', 'numerology-compatibility'); ?></h2>
+            <p class="nc-pending-message"><?php _e('Please wait while we confirm your payment. This usually takes a few seconds.', 'numerology-compatibility'); ?></p>
+
+            <div class="nc-pending-details">
+                <p><small><?php _e('Do not close this page. You will be redirected automatically.', 'numerology-compatibility'); ?></small></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 5: Success -->
+    <div class="nc-step nc-step-5" data-step="5" style="display:none;">
         <div class="nc-success">
             <div class="nc-success-icon">✓</div>
             <h2><?php _e('Success!', 'numerology-compatibility'); ?></h2>

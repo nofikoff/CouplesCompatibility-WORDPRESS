@@ -70,8 +70,9 @@ class ApiCalculations {
 		$locale = $this->get_current_locale();
 
 		// Формируем success и cancel URLs для редиректа после оплаты
+		// Laravel сам добавит payment_success, payment_id и calculation_id
 		$current_url = $this->get_current_page_url();
-		$success_url = add_query_arg(['payment_success' => '1'], $current_url);
+		$success_url = $current_url; // Laravel добавит параметры
 		$cancel_url = add_query_arg(['payment_cancelled' => '1'], $current_url);
 
 		// Подготавливаем данные согласно API спецификации
@@ -215,8 +216,14 @@ class ApiCalculations {
 		global $wp;
 		$current_url = home_url(add_query_arg([], $wp->request));
 
-		// Убираем существующие параметры payment_success и payment_cancelled
-		$current_url = remove_query_arg(['payment_success', 'payment_cancelled', 'session_id', 'calculation_id'], $current_url);
+		// Убираем существующие параметры оплаты (Laravel добавит свои)
+		$current_url = remove_query_arg([
+			'payment_success',
+			'payment_cancelled',
+			'payment_id',
+			'calculation_id',
+			'session_id'
+		], $current_url);
 
 		return $current_url;
 	}

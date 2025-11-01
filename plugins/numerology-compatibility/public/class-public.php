@@ -42,6 +42,7 @@ class PublicClass {
 		wp_localize_script($this->plugin_name . '-calculator', 'nc_public', [
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce('nc_ajax_nonce'),
+			'api_base_url' => rtrim(get_option('nc_api_url', 'http://localhost:8088'), '/') . '/api/v1',
 			'i18n' => [
 				'loading' => __('Loading...', 'numerology-compatibility'),
 				'error' => __('An error occurred', 'numerology-compatibility'),
