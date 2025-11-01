@@ -16,6 +16,22 @@ $active_tab = $_GET['tab'] ?? 'general';
 <div class="wrap">
     <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
 
+    <!-- Shortcode Info -->
+    <div class="notice notice-success" style="padding: 15px; margin-top: 20px; border-left: 4px solid #46b450;">
+        <h3 style="margin-top: 0;">
+            <?php _e('🎯 How to Display the Calculator', 'numerology-compatibility'); ?>
+        </h3>
+        <p style="font-size: 14px; margin-bottom: 10px;">
+            <?php _e('Use the following shortcode to display the numerology calculator form on any page or post:', 'numerology-compatibility'); ?>
+        </p>
+        <p style="background: #fff; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 16px; font-weight: bold; color: #2271b1;">
+            [numerology_calculator]
+        </p>
+        <p style="font-size: 13px; color: #666; margin-bottom: 0;">
+            <?php _e('Example: Create a new page, paste the shortcode, and publish. The calculator will appear automatically.', 'numerology-compatibility'); ?>
+        </p>
+    </div>
+
     <!-- Tabs -->
     <nav class="nav-tab-wrapper">
         <a href="?page=nc-settings&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">
