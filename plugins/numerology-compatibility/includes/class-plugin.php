@@ -61,7 +61,6 @@ class Plugin {
 
 		// AJAX handlers for admin
 		$this->loader->add_action('wp_ajax_nc_test_api_connection', $plugin_settings, 'test_api_connection');
-		$this->loader->add_action('wp_ajax_nc_get_statistics', $plugin_admin, 'get_statistics');
 	}
 
 	private function define_public_hooks() {

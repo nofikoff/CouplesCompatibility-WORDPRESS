@@ -78,8 +78,9 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 - Обработка ошибок - вместо `alert()` показывается Step 6 с понятным сообщением
 
 **Admin Layer** (`admin/`):
-- Страницы: Dashboard, Settings, Statistics, Calculations, Users, Logs
+- Страница: Settings (только настройки плагина)
 - Настройки: General, API Configuration, Localization, Advanced
+- **НЕТ** Dashboard, Statistics, Calculations - все данные хранятся на бэкенде Laravel
 - **НЕТ** настроек Pricing и Payment Gateway (управляется на бэкенде)
 
 **Database Layer** (`database/`):
