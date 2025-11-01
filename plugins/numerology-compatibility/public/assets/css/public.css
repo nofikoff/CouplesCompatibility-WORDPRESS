@@ -78,7 +78,6 @@
 .nc-field input[type="email"],
 .nc-field input[type="date"],
 .nc-field input[type="time"],
-.nc-field input[type="password"],
 .nc-field select {
     width: 100%;
     padding: 10px 12px;
@@ -343,76 +342,6 @@
     cursor: pointer;
     color: #9CA3AF;
     z-index: 1;
-}
-
-/* Auth Modal */
-.nc-auth-container {
-    padding: 40px;
-}
-
-.nc-auth-tabs {
-    display: flex;
-    border-bottom: 2px solid var(--nc-light);
-    margin-bottom: 30px;
-}
-
-.nc-tab {
-    flex: 1;
-    padding: 12px;
-    background: none;
-    border: none;
-    font-size: 16px;
-    color: #9CA3AF;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.nc-tab.nc-tab-active {
-    color: var(--nc-primary);
-    border-bottom: 2px solid var(--nc-primary);
-    margin-bottom: -2px;
-}
-
-.nc-tab-content {
-    display: none;
-}
-
-.nc-tab-content.nc-active {
-    display: block;
-    animation: fadeIn 0.3s;
-}
-
-.nc-divider {
-    text-align: center;
-    margin: 20px 0;
-    position: relative;
-}
-
-.nc-divider span {
-    background: white;
-    padding: 0 15px;
-    color: #9CA3AF;
-}
-
-.nc-divider:before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    height: 1px;
-    background: var(--nc-border);
-}
-
-.nc-auth-switch {
-    text-align: center;
-    margin-top: 20px;
-    color: #6B7280;
-}
-
-.nc-auth-switch a {
-    color: var(--nc-primary);
-    text-decoration: none;
 }
 
 /* Processing */
@@ -853,9 +782,5 @@
 
     .nc-modal-content {
         margin: 20px;
-    }
-
-    .nc-auth-container {
-        padding: 20px;
     }
 }

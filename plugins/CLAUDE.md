@@ -13,10 +13,25 @@ WordPress плагин для расчета нумерологической с
 - **Никакой авторизации WordPress** - плагин работает для всех посетителей, нужен только email
 
 ### Платежи
-- Все настройки платежных шлюзов (Stripe, PayPal, etc) на бэкенде
+- **Модель**: Однократная оплата за расчет (НЕТ подписок)
+- **Без регистрации**: Только email + даты рождения
+- **Платежные системы**:
+  - Monobank (по умолчанию, только UAH)
+  - Stripe (USD, EUR, UAH)
+- Все настройки платежных шлюзов на бэкенде
 - Backend возвращает `checkout_url`, frontend просто делает редирект на этот URL
 - WordPress не знает про конкретные платежные системы, только принимает webhook'и
 - Нет Payment Element, нет специфичного кода платежных систем на фронтенде
+
+### Тарифы
+- **Free**: $0 - 3 позиции анализа, базовый compatibility score
+- **Standard**: $9.99 (999 центов) - 7 позиций, полная матрица совместимости, персональный анализ
+- **Premium**: $19.99 (1999 центов) - 9 позиций, полный нумерологический анализ, прогнозы, премиум PDF
+
+### Локализация
+- Поддерживаемые языки: `en` (English), `ru` (Русский), `uk` (Українська)
+- Локализация применяется к: описаниям чисел, сообщениям API, PDF отчетам, email письмам
+- По умолчанию: `en`
 
 ## Основная архитектура
 
@@ -32,10 +47,16 @@ User → Form → AJAX (nc_calculate_free) → ApiCalculations::calculate_free()
 ```
 User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 → ApiCalculations::calculate_paid() → Backend API /api/v1/calculate/paid
-→ Backend returns checkout_url → Frontend redirects: window.location = checkout_url
-→ Payment на стороне backend (любой gateway: Stripe, PayPal, etc)
-→ Backend redirects back с ?payment_success=1
+  Request: { email, person1_date, person2_date, tier, locale, success_url, cancel_url }
+→ Backend creates Payment & returns checkout_url
+→ Frontend redirects: window.location = checkout_url
+→ Payment на стороне backend (Monobank или Stripe)
+→ Backend redirects back:
+  - Success: ?payment_success=1&session_id={ID}&calculation_id={ID}
+  - Cancel: ?payment_cancelled=1
+→ Frontend polling: GET /api/v1/payments/{id}/status (каждые 3 сек, макс 10 раз)
 → Backend sends webhook → ApiPayments::handle_webhook()
+→ PDF генерируется и отправляется на email
 ```
 
 ### Ключевые компоненты
@@ -130,24 +151,68 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 - `.nc-pending` - страница ожидания проверки платежа
 - `.nc-btn-restart` - кнопка сброса формы (используется на Success и Error страницах)
 
+## Форматы данных
+
+### Даты рождения
+- **Формат**: `YYYY-MM-DD` (ISO 8601)
+- **Валидация**: должна быть в прошлом (до сегодняшнего дня)
+- **Пример**: `"1990-05-15"`
+
+### Email
+- **Формат**: Стандартный email
+- **Обязательное поле** для бесплатного и платного расчета
+
+### Tier (тип пакета)
+- `free` - бесплатный расчет (3 позиции)
+- `standard` - стандартный пакет ($9.99, 7 позиций)
+- `premium` - премиум пакет ($19.99, 9 позиций)
+
 ## Общие правила
 - Комментарии на русском языке
 - PSR-12 стандарт для PHP кода
 - Не читай файлы из .gitignore
 - Фокус только на `./plugins/numerology-compatibility`
 
-## API бэкенда (вторая часть проекта, если надо, расширим) openapi: 3.0.3
-info:
-  title: 'Numerology API Documentation'
-  description: ''
-  version: 1.0.0
-servers:
-  -
-    url: 'http://localhost:8088/'
-tags:
-  -
-    name: Endpoints
-    description: ''
+## API бэкенда - основные endpoints
+
+### Base URL
+- **Production**: `https://api.your-domain.com/api/v1`
+- **Development**: `http://localhost:8088/api/v1`
+
+### 1. POST /v1/calculate/free - Бесплатный расчет
+**Request**: `{ email, person1_date, person2_date, locale? }`
+**Response**: `{ success, message, data: { calculation_id, type: "free", result, pdf_url } }`
+
+### 2. POST /v1/calculate/paid - Платный расчет
+**Request**: `{ email, person1_date, person2_date, tier, locale?, success_url?, cancel_url? }`
+**Response**: `{ success, message, data: { calculation_id, payment_id, checkout_url, amount, currency, tier } }`
+**Действие**: `window.location.href = checkout_url`
+
+### 3. GET /v1/payments/{id}/status - Статус платежа
+**Response**: `{ success, data: { payment_id, calculation_id, status, amount, currency, gateway, paid_at } }`
+**Status**: `pending | succeeded | failed | cancelled`
+
+### 4. GET /v1/calculations/{id}/pdf - Скачать PDF
+**Response**: PDF файл или `425 Too Early` если еще генерируется
+
+### 5. GET /v1/calculations/{id} - Информация о расчете
+**Response**: Детали расчета с результатами
+
+## URL параметры после оплаты
+- **Success**: `?payment_success=1&session_id={ID}&calculation_id={ID}`
+- **Cancel**: `?payment_cancelled=1`
+
+## HTTP коды ошибок
+- `200` - Успех
+- `422` - Ошибка валидации (возвращает `{ success: false, errors: {...} }`)
+- `404` - Не найдено
+- `425` - PDF еще генерируется
+- `500` - Ошибка сервера
+
+---
+
+## Полная OpenAPI спецификация (reference)
+
 paths:
   /api/v1/calculate/free:
     post:
