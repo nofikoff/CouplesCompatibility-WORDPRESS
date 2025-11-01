@@ -48,8 +48,15 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 **Public Layer** (`public/`):
 - `AjaxHandler` - обработка AJAX запросов (`handle_free_calculation`, `handle_paid_calculation`)
 - `Shortcodes` - регистрация shortcode `[numerology_calculator]`
-- `form-calculator.php` - 4-шаговая форма (даты → пакет → обработка → успех)
-- `calculator.js` - логика формы, редирект на `checkout_url`
+- `form-calculator.php` - многошаговая форма с 6 шагами:
+  - **Step 1**: Ввод данных (email, даты рождения, согласия)
+  - **Step 2**: Выбор пакета (free/standard/premium)
+  - **Step 3**: Обработка (показ спиннера)
+  - **Step 4**: Pending - проверка статуса платежа (polling каждые 3 сек, макс 10 попыток)
+  - **Step 5**: Success - успешное завершение
+  - **Step 6**: Error - страница ошибки (красная иконка, кнопка "Try Again")
+- `calculator.js` - логика формы, редирект на `checkout_url`, polling статуса платежа
+- Обработка ошибок - вместо `alert()` показывается Step 6 с понятным сообщением
 
 **Admin Layer** (`admin/`):
 - Страницы: Dashboard, Settings, Statistics, Calculations, Users, Logs
@@ -70,6 +77,58 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 **Webhook URL:** `/wp-json/numerology/v1/webhook/{gateway}`
 - Примеры: `/webhook/stripe`, `/webhook/paypal`
 - Проверка подписи: `hash_hmac('sha256', $payload, nc_webhook_secret)`
+
+## UI/UX и обработка ошибок
+
+### Обработка ошибок
+- **Никаких `alert()` всплывающих окон** - все ошибки показываются через UI
+- При ошибках API, таймаутах или недоступности сервера показывается **Step 6 (Error Page)**
+- Страница ошибки включает:
+  - Красную иконку ✕ с анимацией "shake"
+  - Понятное сообщение об ошибке
+  - Инструкцию связаться с поддержкой если проблема повторяется
+  - Кнопку "Try Again" для сброса формы и возврата к Step 1
+
+### Проверка статуса платежа (Payment Polling)
+После успешного редиректа с платежной страницы (`?payment_success=1`):
+1. Показывается Step 4 (Pending) со спиннером
+2. Каждые 3 секунды делается запрос к API: `GET /api/v1/payments/{id}/status`
+3. Максимум 10 попыток (30 секунд)
+4. Варианты завершения:
+   - **Успех**: `isPaid=true && pdfReady=true` → Step 5 (Success)
+   - **Провал**: `status=failed` → Step 6 (Error)
+   - **Таймаут (pending после 10 попыток)**: Step 5 с сообщением "PDF придет на email в течение 5-10 минут"
+   - **API недоступен/ошибка (после 10 попыток)**: Step 6 (Error) с сообщением связаться с поддержкой
+
+### Сброс формы
+- Кнопка "Calculate Another" на Step 5 (Success)
+- Кнопка "Try Again" на Step 6 (Error)
+- Обе кнопки вызывают `resetCalculator()`:
+  - Очищает все поля формы
+  - Снимает галочки с чекбоксов
+  - Удаляет ошибки валидации
+  - Сбрасывает внутреннее состояние
+  - Возвращает на Step 1
+- **Важно**: виджет работает через шорткод, поэтому НЕ делается переход на другую страницу
+
+### CSS стили и анимации
+**Цветовая схема** (`:root` переменные):
+- `--nc-primary: #6B46C1` - основной фиолетовый
+- `--nc-secondary: #F59E0B` - вторичный оранжевый
+- `--nc-success: #10B981` - зеленый для успеха
+- `--nc-danger: #EF4444` - красный для ошибок
+
+**Анимации**:
+- `fadeIn` - плавное появление (для всех шагов)
+- `scaleIn` - появление с масштабированием (для иконки успеха)
+- `shake` - тряска влево-вправо (для иконки ошибки)
+- `spin` - вращение (для спиннера)
+
+**Ключевые CSS классы**:
+- `.nc-success` / `.nc-success-icon` - страница успеха с зеленой иконкой ✓
+- `.nc-error-page` / `.nc-error-icon` - страница ошибки с красной иконкой ✕
+- `.nc-pending` - страница ожидания проверки платежа
+- `.nc-btn-restart` - кнопка сброса формы (используется на Success и Error страницах)
 
 ## Общие правила
 - Комментарии на русском языке
