@@ -82,10 +82,7 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 - Настройки: General, API Configuration, Localization, Advanced
 - **НЕТ** Dashboard, Statistics, Calculations - все данные хранятся на бэкенде Laravel
 - **НЕТ** настроек Pricing и Payment Gateway (управляется на бэкенде)
-
-**Database Layer** (`database/`):
-- Таблицы: `nc_calculations`, `nc_transactions`, `nc_analytics`, `nc_consents`, `nc_api_usage`, `nc_error_logs`
-- Поле `gateway_payment_id` (универсальное, не привязано к Stripe)
+- **НЕТ** локальной базы данных - все данные хранятся на бэкенде Laravel
 
 ### Настройки плагина
 
