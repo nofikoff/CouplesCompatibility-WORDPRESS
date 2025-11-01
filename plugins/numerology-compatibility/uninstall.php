@@ -14,8 +14,6 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 $delete_on_uninstall = get_option('nc_delete_on_uninstall', false);
 
 if ($delete_on_uninstall) {
-    global $wpdb;
-
     // Delete plugin options
     $options = [
         // General settings
@@ -37,32 +35,15 @@ if ($delete_on_uninstall) {
         'nc_debug_mode',
         'nc_cache_duration',
         'nc_rate_limit',
-        'nc_delete_on_uninstall',
-        'nc_db_version'
+        'nc_delete_on_uninstall'
     ];
 
     foreach ($options as $option) {
         delete_option($option);
     }
 
-    // Delete database tables
-    $tables = [
-        $wpdb->prefix . 'nc_calculations',
-        $wpdb->prefix . 'nc_consents',
-        $wpdb->prefix . 'nc_api_usage',
-        $wpdb->prefix . 'nc_transactions',
-        $wpdb->prefix . 'nc_analytics',
-        $wpdb->prefix . 'nc_error_logs'
-    ];
-
-    foreach ($tables as $table) {
-        $wpdb->query("DROP TABLE IF EXISTS $table");
-    }
-
-    // Delete user meta
-    $wpdb->query("DELETE FROM {$wpdb->usermeta} WHERE meta_key LIKE 'nc_%'");
-
     // Delete transients
+    global $wpdb;
     $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_nc_%'");
     $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_nc_%'");
 
