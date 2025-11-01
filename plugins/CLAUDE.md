@@ -366,35 +366,6 @@ paths:
         required: true
         schema:
           type: string
-  /api/v1/webhooks/stripe:
-    post:
-      summary: 'Обработать webhook от Stripe'
-      operationId: WebhookStripe
-      description: 'POST /api/v1/webhooks/stripe'
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      security: []
-  '/api/v1/webhooks/{gateway}':
-    post:
-      summary: 'Обработать webhook от других платежных систем (будущее расширение)'
-      operationId: Webhook
-      description: 'POST /api/v1/webhooks/{gateway}'
-      parameters: []
-      responses: {  }
-      tags:
-        - Endpoints
-      security: []
-    parameters:
-      -
-        in: path
-        name: gateway
-        description: ''
-        example: architecto
-        required: true
-        schema:
-          type: string
   /api/partner/calculate:
     post:
       summary: 'Партнерский расчет (требует API ключ)'
