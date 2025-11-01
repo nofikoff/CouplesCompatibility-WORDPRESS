@@ -105,8 +105,7 @@ $active_tab = $_GET['tab'] ?? 'general';
                     <td>
                         <input type="password" name="nc_webhook_secret" value="<?php echo esc_attr(get_option('nc_webhook_secret')); ?>" class="regular-text">
                         <p class="description">
-                            <?php _e('Secret key for verifying webhook signatures from the backend', 'numerology-compatibility'); ?><br>
-                            <?php _e('Must match WORDPRESS_WEBHOOK_SECRET in backend .env', 'numerology-compatibility'); ?>
+                            <?php _e('Secret key for verifying webhook signatures from the backend', 'numerology-compatibility'); ?>
                         </p>
                         <p class="description">
                             <strong><?php _e('Webhook URL Format:', 'numerology-compatibility'); ?></strong><br>
