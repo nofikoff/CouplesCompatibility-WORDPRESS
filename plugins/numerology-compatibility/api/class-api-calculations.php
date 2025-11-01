@@ -69,12 +69,6 @@ class ApiCalculations {
 
 		$locale = $this->get_current_locale();
 
-		// Формируем success и cancel URLs для редиректа после оплаты
-		// Laravel сам добавит payment_success, payment_id и calculation_id
-		$current_url = $this->get_current_page_url();
-		$success_url = $current_url; // Laravel добавит параметры
-		$cancel_url = add_query_arg(['payment_cancelled' => '1'], $current_url);
-
 		// Подготавливаем данные согласно API спецификации
 		$request_data = [
 			'email' => sanitize_email($data['email']),
@@ -82,8 +76,6 @@ class ApiCalculations {
 			'person2_date' => sanitize_text_field($data['person2_date']),
 			'tier' => $tier,
 			'locale' => $locale,
-			'success_url' => $success_url,
-			'cancel_url' => $cancel_url,
 		];
 
 		// Отправляем запрос на создание Checkout Session
@@ -207,26 +199,6 @@ class ApiCalculations {
 		return 'en';
 	}
 
-	/**
-	 * Получить URL текущей страницы
-	 *
-	 * @return string
-	 */
-	private function get_current_page_url() {
-		// Используем реальный URL из HTTP запроса вместо home_url()
-		// Это позволяет избежать проблем с неправильными настройками WordPress
-		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-		$host = $_SERVER['HTTP_HOST'];
-		$request_uri = $_SERVER['REQUEST_URI'];
-
-		// Убираем query string если есть
-		$uri = strtok($request_uri, '?');
-
-		// Формируем базовый URL без параметров
-		$current_url = $protocol . '://' . $host . $uri;
-
-		return $current_url;
-	}
 
 	/**
 	 * Сохранить расчет в локальной БД

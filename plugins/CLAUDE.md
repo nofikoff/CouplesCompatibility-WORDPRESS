@@ -47,7 +47,7 @@ User → Form → AJAX (nc_calculate_free) → ApiCalculations::calculate_free()
 ```
 User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 → ApiCalculations::calculate_paid() → Backend API /api/v1/calculate/paid
-  Request: { email, person1_date, person2_date, tier, locale, success_url, cancel_url }
+  Request: { email, person1_date, person2_date, tier, locale }
 → Backend creates Payment & returns checkout_url
 → Frontend redirects: window.location = checkout_url
 → Payment на стороне backend (Monobank или Stripe)
@@ -63,7 +63,7 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 
 **API Layer** (`api/`):
 - `ApiClient` - HTTP клиент с retry логикой, отправляет `X-API-Key` в заголовках
-- `ApiCalculations` - методы `calculate_free()` и `calculate_paid()`, генерирует `success_url`/`cancel_url`
+- `ApiCalculations` - методы `calculate_free()` и `calculate_paid()`
 - `ApiPayments` - обработка webhook'ов от бэкенда, проверка HMAC подписи
 
 **Public Layer** (`public/`):
@@ -305,16 +305,6 @@ paths:
                   enum:
                     - en
                     - ru
-                success_url:
-                  type: string
-                  description: 'Must be a valid URL.'
-                  example: 'http://bailey.com/'
-                  nullable: true
-                cancel_url:
-                  type: string
-                  description: 'Must be a valid URL.'
-                  example: 'http://rempel.com/sunt-nihil-accusantium-harum-mollitia'
-                  nullable: true
               required:
                 - email
                 - person1_date
