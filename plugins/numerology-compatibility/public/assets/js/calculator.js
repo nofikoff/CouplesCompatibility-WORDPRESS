@@ -505,125 +505,24 @@
         },
 
         /**
-         * НОВЫЙ МЕТОД: Проверка готовности PDF
-         * Проверяет каждые 3 секунды через прямой запрос к PDF URL
+         * УПРОЩЕННАЯ проверка готовности PDF
+         * Просто показываем ссылку сразу - пользователь сам решит когда кликать
          */
         checkPdfStatus: function() {
-            var attempts = 0;
-            var maxAttempts = 20; // 60 секунд (3 сек * 20)
             var self = this;
 
-            console.log('Starting PDF status check for URL:', self.pdfUrl);
+            console.log('PDF URL:', self.pdfUrl);
 
-            // Показываем сообщение о генерации
+            // Показываем сообщение что PDF генерируется
+            $('.nc-pdf-generating').html('Your PDF report is being generated. This usually takes 5-10 seconds.');
             $('.nc-pdf-generating').show();
-            $('#nc-pdf-download-link').hide();
 
-            var checkPdf = function() {
-                attempts++;
-                console.log('PDF check attempt', attempts + '/' + maxAttempts);
+            // Показываем ссылку СРАЗУ
+            $('#nc-pdf-download-link')
+                .attr('href', self.pdfUrl)
+                .show();
 
-                if (!self.pdfUrl) {
-                    console.warn('PDF URL not available');
-                    $('.nc-pdf-generating').html('PDF URL not available. Please contact support.');
-                    return;
-                }
-
-                // Проверяем доступность PDF через обычный GET запрос с обработкой ошибок
-                $.ajax({
-                    url: self.pdfUrl,
-                    type: 'GET',
-                    dataType: 'json', // Ожидаем JSON в случае ошибки
-                    timeout: 5000,
-                    xhrFields: {
-                        responseType: 'blob' // Для успешного ответа (PDF файл)
-                    },
-                    success: function(data, textStatus, xhr) {
-                        // Проверяем, что это действительно PDF (не JSON ошибка)
-                        var contentType = xhr.getResponseHeader('Content-Type');
-                        if (contentType && contentType.indexOf('application/pdf') !== -1) {
-                            // PDF готов!
-                            console.log('✓ PDF is ready for download');
-                            $('#nc-pdf-download-link')
-                                .attr('href', self.pdfUrl)
-                                .show();
-                            $('.nc-pdf-generating').hide();
-                        } else {
-                            // Получили JSON - скорее всего ошибка
-                            console.log('⟳ PDF still generating...');
-                            if (attempts < maxAttempts) {
-                                setTimeout(checkPdf, 3000);
-                            } else {
-                                console.log('⏱ Timeout reached');
-                                $('.nc-pdf-generating').html('PDF is taking longer than expected. You can try downloading it below or request via email.');
-                                $('#nc-pdf-download-link')
-                                    .attr('href', self.pdfUrl)
-                                    .show();
-                            }
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log('PDF check response status:', xhr.status);
-
-                        if (xhr.status === 425) {
-                            // 425 Too Early - PDF еще генерируется
-                            console.log('⟳ PDF is being generated (425), will check again in 3 seconds...');
-                            if (attempts < maxAttempts) {
-                                setTimeout(checkPdf, 3000);
-                            } else {
-                                console.log('⏱ Timeout reached, showing link anyway');
-                                $('.nc-pdf-generating').html('PDF is taking longer than expected. You can try downloading it below or request via email.');
-                                $('#nc-pdf-download-link')
-                                    .attr('href', self.pdfUrl)
-                                    .show();
-                            }
-                        } else if (xhr.status === 404) {
-                            // 404 - PDF или расчет не найден
-                            console.error('✗ PDF or calculation not found (404)');
-                            if (attempts < maxAttempts) {
-                                setTimeout(checkPdf, 3000);
-                            } else {
-                                $('.nc-pdf-generating').html('PDF not found. Please contact support or request via email below.');
-                            }
-                        } else if (xhr.status === 0) {
-                            // CORS, Mixed Content или network error
-                            console.error('✗ Network/CORS/Mixed Content error');
-
-                            if (attempts < 5) {
-                                // Первые несколько попыток - пробуем снова
-                                console.log('⟳ Retrying... (attempt ' + attempts + ')');
-                                setTimeout(checkPdf, 3000);
-                            } else {
-                                // После нескольких попыток - показываем сообщение об ошибке
-                                console.error('✗ Persistent network error - likely Mixed Content blocking');
-                                $('.nc-pdf-generating').html(
-                                    '<strong style="color: #e74c3c;">Unable to load PDF due to security restrictions.</strong><br>' +
-                                    'Please request PDF via email below.'
-                                );
-                                // НЕ показываем кнопку скачивания, т.к. она все равно не сработает
-                                $('#nc-pdf-download-link').hide();
-                            }
-                        } else {
-                            // Другая ошибка
-                            console.error('PDF check error:', xhr.status);
-                            if (attempts < maxAttempts) {
-                                setTimeout(checkPdf, 3000);
-                            } else {
-                                $('.nc-pdf-generating').html(
-                                    '<strong style="color: #e67e22;">Unable to verify PDF status.</strong><br>' +
-                                    'You can try downloading below or request via email.'
-                                );
-                                $('#nc-pdf-download-link')
-                                    .attr('href', self.pdfUrl)
-                                    .show();
-                            }
-                        }
-                    }
-                });
-            };
-
-            // Начать первую проверку сразу
-            checkPdf();
+            console.log('PDF download link is ready');
         },
 
         /**
