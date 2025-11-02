@@ -586,15 +586,22 @@
                                 $('.nc-pdf-generating').html('PDF not found. Please contact support or request via email below.');
                             }
                         } else if (xhr.status === 0) {
-                            // CORS или network error - попробуем еще раз
-                            console.log('⟳ Network/CORS issue, retrying...');
-                            if (attempts < maxAttempts) {
+                            // CORS, Mixed Content или network error
+                            console.error('✗ Network/CORS/Mixed Content error');
+
+                            if (attempts < 5) {
+                                // Первые несколько попыток - пробуем снова
+                                console.log('⟳ Retrying... (attempt ' + attempts + ')');
                                 setTimeout(checkPdf, 3000);
                             } else {
-                                $('.nc-pdf-generating').html('Unable to verify PDF status. Please try downloading below or request via email.');
-                                $('#nc-pdf-download-link')
-                                    .attr('href', self.pdfUrl)
-                                    .show();
+                                // После нескольких попыток - показываем сообщение об ошибке
+                                console.error('✗ Persistent network error - likely Mixed Content blocking');
+                                $('.nc-pdf-generating').html(
+                                    '<strong style="color: #e74c3c;">Unable to load PDF due to security restrictions.</strong><br>' +
+                                    'Please request PDF via email below.'
+                                );
+                                // НЕ показываем кнопку скачивания, т.к. она все равно не сработает
+                                $('#nc-pdf-download-link').hide();
                             }
                         } else {
                             // Другая ошибка
@@ -602,7 +609,10 @@
                             if (attempts < maxAttempts) {
                                 setTimeout(checkPdf, 3000);
                             } else {
-                                $('.nc-pdf-generating').html('Unable to verify PDF status. Please try downloading below or request via email.');
+                                $('.nc-pdf-generating').html(
+                                    '<strong style="color: #e67e22;">Unable to verify PDF status.</strong><br>' +
+                                    'You can try downloading below or request via email.'
+                                );
                                 $('#nc-pdf-download-link')
                                     .attr('href', self.pdfUrl)
                                     .show();
