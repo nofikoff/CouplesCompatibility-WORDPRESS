@@ -18,18 +18,16 @@ class ApiCalculations {
 	 * Бесплатный расчет
 	 * POST /api/v1/calculate/free
 	 *
-	 * - Email ОПЦИОНАЛЬНЫЙ (можно не указывать)
+	 * - Email ОТСУТСТВУЕТ на этом шаге (запрашивается после расчета)
 	 * - Бэкенд возвращает secret_code для доступа к расчету
 	 * - Бэкенд возвращает pdf_url для скачивания PDF
-	 * - Email НЕ отправляется автоматически
 	 *
-	 * @param array $data Данные формы (email [optional], person1_date, person2_date)
+	 * @param array $data Данные формы (person1_date, person2_date)
 	 * @return array Результат расчета с secret_code и pdf_url
 	 * @throws \Exception
 	 */
 	public function calculate_free($data) {
-		// Email НЕ обязателен для бесплатного расчета
-		$this->validate_calculation_data($data, false);
+		$this->validate_calculation_data($data);
 
 		$locale = $this->get_current_locale();
 
@@ -39,11 +37,6 @@ class ApiCalculations {
 			'person2_date' => sanitize_text_field($data['person2_date']),
 			'locale' => $locale,
 		];
-
-		// Email опционально (добавляем только если указан)
-		if (!empty($data['email'])) {
-			$request_data['email'] = sanitize_email($data['email']);
-		}
 
 		// Отправляем запрос на бэкенд
 		$response = $this->client->request('/calculate/free', 'POST', $request_data);
@@ -62,21 +55,22 @@ class ApiCalculations {
 	 * Платный расчет - создание Checkout Session
 	 * POST /api/v1/calculate/paid
 	 *
-	 * @param array $data Данные формы
+	 * - Email ОТСУТСТВУЕТ на этом шаге (запрашивается ПОСЛЕ оплаты)
+	 * - Бэкенд возвращает secret_code для доступа к расчету
+	 * - После оплаты пользователь может указать email для отправки PDF + чека
+	 *
+	 * @param array $data Данные формы (person1_date, person2_date)
 	 * @param string $tier Тип тарифа (standard|premium)
-	 * @return array {checkout_url, calculation_id} для редиректа на оплату
+	 * @return array {checkout_url, calculation_id, secret_code} для редиректа на оплату
 	 * @throws \Exception
 	 */
 	public function calculate_paid($data, $tier) {
-		// Для платных расчетов email ОБЯЗАТЕЛЕН
-		$this->validate_calculation_data($data, true);
+		$this->validate_calculation_data($data);
 		$this->validate_tier($tier);
 
 		$locale = $this->get_current_locale();
 
-		// Подготавливаем данные согласно API спецификации
 		$request_data = [
-			'email' => sanitize_email($data['email']),
 			'person1_date' => sanitize_text_field($data['person1_date']),
 			'person2_date' => sanitize_text_field($data['person2_date']),
 			'tier' => $tier,
@@ -133,24 +127,12 @@ class ApiCalculations {
 
 	/**
 	 * Валидация данных для расчета
+	 * Email НЕ проверяется, т.к. он ВСЕГДА отсутствует на первом шаге
 	 *
-	 * @param array $data
-	 * @param bool $email_required Email обязателен или нет
+	 * @param array $data Данные формы (person1_date, person2_date)
 	 * @throws \Exception
 	 */
-	private function validate_calculation_data($data, $email_required = false) {
-		// Валидация email (теперь опциональная для бесплатного расчета)
-		if ($email_required) {
-			if (empty($data['email']) || !is_email($data['email'])) {
-				throw new \Exception(__('Valid email is required', 'numerology-compatibility'));
-			}
-		} else {
-			// Если email указан, проверяем его валидность
-			if (!empty($data['email']) && !is_email($data['email'])) {
-				throw new \Exception(__('Invalid email format', 'numerology-compatibility'));
-			}
-		}
-
+	private function validate_calculation_data($data) {
 		// Валидация дат рождения
 		if (empty($data['person1_date']) || empty($data['person2_date'])) {
 			throw new \Exception(__('Both birth dates are required', 'numerology-compatibility'));

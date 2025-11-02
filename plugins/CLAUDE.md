@@ -10,11 +10,11 @@ WordPress плагин для расчета нумерологической с
 ### Разделение ответственности
 - **WordPress плагин** - только UI, валидация форм, вызовы API
 - **Backend (Laravel API)** - вся бизнес-логика, расчеты, платежи, генерация PDF
-- **Никакой авторизации WordPress** - плагин работает для всех посетителей, нужен только email
+- **Никакой авторизации WordPress** - плагин работает для всех посетителей, email опционален
 
 ### Платежи
 - **Модель**: Однократная оплата за расчет (НЕТ подписок)
-- **Без регистрации**: Только email + даты рождения
+- **Без регистрации**: Только даты рождения (email запрашивается на последнем шаге для отправки результатов)
 - **Платежные системы**:
   - Monobank (по умолчанию, только UAH)
   - Stripe (USD, EUR, UAH)
@@ -39,23 +39,36 @@ WordPress плагин для расчета нумерологической с
 
 **Бесплатный расчет:**
 ```
-User → Form → AJAX (nc_calculate_free) → ApiCalculations::calculate_free()
-→ Backend API /api/v1/calculate/free → Success message
+User → Form (Step 1: даты рождения) → Select tier "Free" (Step 2)
+→ AJAX (nc_calculate_free) → ApiCalculations::calculate_free()
+→ Backend API /api/v1/calculate/free
+  Request: { person1_date, person2_date, locale }
+  Response: { calculation_id, secret_code, result, pdf_url }
+→ Step 5 (Success): показывается результат расчета + форма "Отправить PDF на email"
+→ Пользователь вводит email (опционально)
+→ AJAX POST /api/v1/calculations/send-email
+  Request: { secret_code, email }
+→ PDF отправляется на email
 ```
 
 **Платный расчет:**
 ```
-User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
-→ ApiCalculations::calculate_paid() → Backend API /api/v1/calculate/paid
-  Request: { email, person1_date, person2_date, tier, locale }
-→ Backend creates Payment & returns checkout_url
+User → Form (Step 1: даты рождения) → Select tier (standard/premium) (Step 2)
+→ AJAX (nc_calculate_paid) → ApiCalculations::calculate_paid()
+→ Backend API /api/v1/calculate/paid
+  Request: { person1_date, person2_date, tier, locale, success_url?, cancel_url? }
+  Response: { calculation_id, payment_id, secret_code, checkout_url }
 → Frontend redirects: window.location = checkout_url
 → Payment на стороне backend (Monobank или Stripe)
 → Backend redirects back:
-  - Success: ?payment_success=1&session_id={ID}&calculation_id={ID}
+  - Success: ?payment_success=1&payment_id={ID}&calculation_id={ID}
   - Cancel: ?payment_cancelled=1
-→ Frontend polling: GET /api/v1/payments/{id}/status (каждые 3 сек, макс 10 раз)
-→ PDF генерируется и отправляется на email
+→ Step 4 (Pending): Frontend polling GET /api/v1/payments/{id}/status (каждые 3 сек, макс 10 раз)
+→ Step 5 (Success): PDF сгенерирован + форма "Отправить чек и PDF на email"
+→ Пользователь вводит email
+→ AJAX POST /api/v1/calculations/send-email
+  Request: { secret_code, email }
+→ PDF + чек об оплате отправляются на email
 ```
 
 ### Ключевые компоненты
@@ -65,17 +78,20 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 - `ApiCalculations` - методы `calculate_free()` и `calculate_paid()`
 
 **Public Layer** (`public/`):
-- `AjaxHandler` - обработка AJAX запросов (`handle_free_calculation`, `handle_paid_calculation`)
+- `AjaxHandler` - обработка AJAX запросов (`handle_free_calculation`, `handle_paid_calculation`, `handle_send_email`)
 - `Shortcodes` - регистрация shortcode `[numerology_calculator]`
-- `form-calculator.php` - многошаговая форма с 6 шагами:
-  - **Step 1**: Ввод данных (email, даты рождения, согласия)
+- `form-calculator.php` - многошаговая форма с 7 шагами:
+  - **Step 1**: Ввод данных (даты рождения, согласия) - БЕЗ email
   - **Step 2**: Выбор пакета (free/standard/premium)
   - **Step 3**: Обработка (показ спиннера)
-  - **Step 4**: Pending - проверка статуса платежа (polling каждые 3 сек, макс 10 попыток)
-  - **Step 5**: Success - успешное завершение
-  - **Step 6**: Error - страница ошибки (красная иконка, кнопка "Try Again")
-- `calculator.js` - логика формы, редирект на `checkout_url`, polling статуса платежа
-- Обработка ошибок - вместо `alert()` показывается Step 6 с понятным сообщением
+  - **Step 4**: Pending - проверка статуса платежа для платных (polling каждые 3 сек, макс 10 попыток)
+  - **Step 5**: Success - успешное завершение, результат расчета
+  - **Step 6**: Email Form - форма для ввода email (опционально):
+    - Бесплатный: "Отправить PDF на email"
+    - Платный: "Отправить чек об оплате и PDF расчет на email"
+  - **Step 7**: Error - страница ошибки (красная иконка, кнопка "Try Again")
+- `calculator.js` - логика формы, редирект на `checkout_url`, polling статуса платежа, отправка email
+- Обработка ошибок - вместо `alert()` показывается Step 7 с понятным сообщением
 
 **Admin Layer** (`admin/`):
 - Страница: Settings (только настройки плагина)
@@ -94,7 +110,7 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 
 ### Обработка ошибок
 - **Никаких `alert()` всплывающих окон** - все ошибки показываются через UI
-- При ошибках API, таймаутах или недоступности сервера показывается **Step 6 (Error Page)**
+- При ошибках API, таймаутах или недоступности сервера показывается **Step 7 (Error Page)**
 - Страница ошибки включает:
   - Красную иконку ✕ с анимацией "shake"
   - Понятное сообщение об ошибке
@@ -107,19 +123,27 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 2. Каждые 3 секунды делается запрос к API: `GET /api/v1/payments/{id}/status`
 3. Максимум 10 попыток (30 секунд)
 4. Варианты завершения:
-   - **Успех**: `isPaid=true && pdfReady=true` → Step 5 (Success)
-   - **Провал**: `status=failed` → Step 6 (Error)
-   - **Таймаут (pending после 10 попыток)**: Step 5 с сообщением "PDF придет на email в течение 5-10 минут"
-   - **API недоступен/ошибка (после 10 попыток)**: Step 6 (Error) с сообщением связаться с поддержкой
+   - **Успех**: `isPaid=true && pdfReady=true` → Step 5 (Success) с результатом
+   - **Провал**: `status=failed` → Step 7 (Error)
+   - **Таймаут (pending после 10 попыток)**: Step 5 с сообщением "PDF генерируется"
+   - **API недоступен/ошибка (после 10 попыток)**: Step 7 (Error) с сообщением связаться с поддержкой
+
+### Отправка email (опционально)
+После успешного расчета (Step 5) показывается форма для ввода email:
+- **Для бесплатного**: "Получить PDF отчет на email" (опционально)
+- **Для платного**: "Получить чек об оплате и PDF расчет на email" (опционально)
+- После ввода email → AJAX вызов `POST /api/v1/calculations/send-email` с `secret_code` и `email`
+- Backend отправляет PDF (и чек для платных) на указанный email
+- Пользователь может пропустить этот шаг и просто скачать PDF по ссылке
 
 ### Сброс формы
 - Кнопка "Calculate Another" на Step 5 (Success)
-- Кнопка "Try Again" на Step 6 (Error)
+- Кнопка "Try Again" на Step 7 (Error)
 - Обе кнопки вызывают `resetCalculator()`:
   - Очищает все поля формы
   - Снимает галочки с чекбоксов
   - Удаляет ошибки валидации
-  - Сбрасывает внутреннее состояние
+  - Сбрасывает внутреннее состояние (включая secret_code)
   - Возвращает на Step 1
 - **Важно**: виджет работает через шорткод, поэтому НЕ делается переход на другую страницу
 
@@ -151,7 +175,13 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 
 ### Email
 - **Формат**: Стандартный email
-- **Обязательное поле** для бесплатного и платного расчета
+- **Опциональное поле**: запрашивается на последнем шаге (Step 6) после успешного расчета
+- **Назначение**: отправка PDF отчета (и чека для платных) на email
+
+### Secret Code
+- **Формат**: 32-символьная строка (hex)
+- **Генерируется**: автоматически при создании расчета
+- **Назначение**: безопасный доступ к расчету для отправки PDF на email
 
 ### Tier (тип пакета)
 - `free` - бесплатный расчет (3 позиции)
@@ -171,26 +201,34 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 - **Development**: `http://localhost:8088/api/v1`
 
 ### 1. POST /v1/calculate/free - Бесплатный расчет
-**Request**: `{ email, person1_date, person2_date, locale? }`
-**Response**: `{ success, message, data: { calculation_id, type: "free", result, pdf_url } }`
+**Request**: `{ person1_date, person2_date, locale? }`
+**Response**: `{ success, message, data: { calculation_id, secret_code, type: "free", result, pdf_url } }`
+**Примечание**: Email НЕ требуется, возвращается `secret_code` для последующей отправки PDF
 
 ### 2. POST /v1/calculate/paid - Платный расчет
-**Request**: `{ email, person1_date, person2_date, tier, locale?, success_url?, cancel_url? }`
-**Response**: `{ success, message, data: { calculation_id, payment_id, checkout_url, amount, currency, tier } }`
+**Request**: `{ person1_date, person2_date, tier, locale?, success_url?, cancel_url? }`
+**Response**: `{ success, message, data: { calculation_id, payment_id, secret_code, checkout_url, amount, currency, tier } }`
 **Действие**: `window.location.href = checkout_url`
+**Примечание**: Email НЕ требуется, возвращается `secret_code` для последующей отправки PDF + чека
 
-### 3. GET /v1/payments/{id}/status - Статус платежа
-**Response**: `{ success, data: { payment_id, calculation_id, status, amount, currency, gateway, paid_at } }`
-**Status**: `pending | succeeded | failed | cancelled`
+### 3. POST /v1/calculations/send-email - Отправить PDF на email
+**Request**: `{ secret_code, email }`
+**Response**: `{ success, message, data: { calculation_id, email, pdf_url } }`
+**HTTP Codes**: `200` OK, `404` расчет не найден, `425 Too Early` PDF еще не готов
+**Примечание**: Отправляет PDF (и чек для платных) на указанный email
 
-### 4. GET /v1/calculations/{id}/pdf - Скачать PDF
+### 4. GET /v1/payments/{id}/status - Статус платежа
+**Response**: `{ success, data: { payment_id, calculation_id, status, is_paid, pdf_ready, pdf_url, amount, currency, tier, paid_at } }`
+**Status**: `pending | completed | failed | cancelled`
+
+### 5. GET /v1/calculations/{id}/pdf - Скачать PDF
 **Response**: PDF файл или `425 Too Early` если еще генерируется
 
-### 5. GET /v1/calculations/{id} - Информация о расчете
+### 6. GET /v1/calculations/{id} - Информация о расчете
 **Response**: Детали расчета с результатами
 
 ## URL параметры после оплаты
-- **Success**: `?payment_success=1&session_id={ID}&calculation_id={ID}`
+- **Success**: `?payment_success=1&payment_id={ID}&calculation_id={ID}`
 - **Cancel**: `?payment_cancelled=1`
 
 ## HTTP коды ошибок
@@ -207,9 +245,9 @@ User → Form → Select tier (standard/premium) → AJAX (nc_calculate_paid)
 paths:
   /api/v1/calculate/free:
     post:
-      summary: 'Бесплатный расчет'
+      summary: 'Бесплатный расчет (без email)'
       operationId: ''
-      description: 'POST /api/v1/calculate/free'
+      description: 'POST /api/v1/calculate/free - Email НЕ требуется, возвращается secret_code'
       parameters: []
       responses: {  }
       tags:
@@ -221,39 +259,34 @@ paths:
             schema:
               type: object
               properties:
-                email:
-                  type: string
-                  description: 'Must be a valid email address.'
-                  example: gbailey@example.net
-                  nullable: false
                 person1_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>. Must be a date before <code>today</code>.'
-                  example: '2021-11-19'
+                  example: '1990-05-15'
                   nullable: false
                 person2_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>. Must be a date before <code>today</code>.'
-                  example: '2021-11-19'
+                  example: '1992-08-20'
                   nullable: false
                 locale:
                   type: string
-                  description: ''
-                  example: ru
+                  description: 'Язык расчета'
+                  example: en
                   nullable: true
                   enum:
                     - en
                     - ru
+                    - uk
               required:
-                - email
                 - person1_date
                 - person2_date
       security: []
   /api/v1/calculate/paid:
     post:
-      summary: 'Платный расчет - создание Checkout Session'
+      summary: 'Платный расчет (без email)'
       operationId: CheckoutSession
-      description: 'POST /api/v1/calculate/paid'
+      description: 'POST /api/v1/calculate/paid - Email НЕ требуется, возвращается secret_code и checkout_url'
       parameters: []
       responses: {  }
       tags:
@@ -265,24 +298,19 @@ paths:
             schema:
               type: object
               properties:
-                email:
-                  type: string
-                  description: 'Must be a valid email address.'
-                  example: gbailey@example.net
-                  nullable: false
                 person1_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>. Must be a date before <code>today</code>.'
-                  example: '2021-11-19'
+                  example: '1990-05-15'
                   nullable: false
                 person2_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>. Must be a date before <code>today</code>.'
-                  example: '2021-11-19'
+                  example: '1992-08-20'
                   nullable: false
                 tier:
                   type: string
-                  description: ''
+                  description: 'Тип пакета'
                   example: premium
                   nullable: false
                   enum:
@@ -290,17 +318,63 @@ paths:
                     - premium
                 locale:
                   type: string
-                  description: ''
+                  description: 'Язык расчета'
                   example: en
                   nullable: true
                   enum:
                     - en
                     - ru
+                    - uk
+                success_url:
+                  type: string
+                  description: 'URL для редиректа после успешной оплаты'
+                  example: 'https://example.com/success'
+                  nullable: true
+                cancel_url:
+                  type: string
+                  description: 'URL для редиректа при отмене оплаты'
+                  example: 'https://example.com/cancel'
+                  nullable: true
               required:
-                - email
                 - person1_date
                 - person2_date
                 - tier
+      security: []
+  /api/v1/calculations/send-email:
+    post:
+      summary: 'Отправить PDF на email'
+      operationId: SendEmail
+      description: 'POST /api/v1/calculations/send-email - Отправить PDF (и чек для платных) на указанный email'
+      parameters: []
+      responses:
+        200:
+          description: 'Email отправлен'
+        404:
+          description: 'Расчет не найден'
+        425:
+          description: 'PDF еще не готов'
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                secret_code:
+                  type: string
+                  description: 'Секретный код расчета (32 символа)'
+                  example: 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6'
+                  nullable: false
+                email:
+                  type: string
+                  description: 'Email для отправки PDF'
+                  example: 'user@example.com'
+                  nullable: false
+              required:
+                - secret_code
+                - email
       security: []
   '/api/v1/calculations/{id}':
     get:
@@ -383,21 +457,22 @@ paths:
                 person1_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>. Must be a date before <code>today</code>.'
-                  example: '2021-11-19'
+                  example: '1990-05-15'
                   nullable: false
                 person2_date:
                   type: string
                   description: 'Must be a valid date in the format <code>Y-m-d</code>. Must be a date before <code>today</code>.'
-                  example: '2021-11-19'
+                  example: '1992-08-20'
                   nullable: false
                 locale:
                   type: string
-                  description: ''
+                  description: 'Язык расчета'
                   example: en
                   nullable: true
                   enum:
                     - en
                     - ru
+                    - uk
               required:
                 - person1_date
                 - person2_date
