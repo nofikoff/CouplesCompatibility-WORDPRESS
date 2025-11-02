@@ -336,10 +336,32 @@
                                 // Оплата прошла успешно
                                 console.log('✓ Payment completed!');
                                 pollingActive = false;
-                                if (pdfReady) {
-                                    self.showSuccess('Payment successful! Your PDF report is ready. Check your email!');
+
+                                // НОВОЕ: Сохраняем secret_code и pdf_url из ответа API
+                                self.secretCode = response.data.secret_code || null;
+                                self.pdfUrl = response.data.pdf_url || null;
+
+                                console.log('Payment data saved:', {
+                                    secret_code: self.secretCode,
+                                    pdf_url: self.pdfUrl,
+                                    pdf_ready: pdfReady
+                                });
+
+                                if (pdfReady && self.pdfUrl) {
+                                    // PDF готов - показываем Success с ссылкой на скачивание
+                                    self.showSuccess('Payment successful! Your PDF report is ready.');
+
+                                    // Сразу показываем ссылку на скачивание (без ожидания)
+                                    $('#nc-pdf-download-link')
+                                        .attr('href', self.pdfUrl)
+                                        .show();
+                                    $('.nc-pdf-generating').hide();
                                 } else {
-                                    self.showSuccess('Payment successful! Your PDF report will be sent to your email shortly (within 5-10 minutes).');
+                                    // PDF еще генерируется
+                                    self.showSuccess('Payment successful! Your PDF report is being generated...');
+
+                                    // Запускаем проверку готовности PDF
+                                    self.checkPdfStatus();
                                 }
                             } else if (status === 'failed' || status === 'cancelled') {
                                 // Платеж провалился или был отменен
