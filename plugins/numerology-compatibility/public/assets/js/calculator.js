@@ -234,10 +234,15 @@
                         CalculatorManager.showSuccess(response.data.message);
 
                         // НОВОЕ: Начинаем проверку готовности PDF
-                        if (CalculatorManager.pdfUrl) {
+                        // Проверяем что pdf_url не пустой (не null, не "", не undefined)
+                        if (CalculatorManager.pdfUrl && CalculatorManager.pdfUrl.length > 0) {
+                            console.log('Starting PDF status check...');
                             CalculatorManager.checkPdfStatus();
                         } else {
-                            console.error('PDF URL is missing in response!');
+                            console.error('PDF URL is missing or empty in response!', {
+                                pdf_url: CalculatorManager.pdfUrl,
+                                response: response.data
+                            });
                             $('.nc-pdf-generating').html('PDF URL not available. Please contact support.');
                         }
                     } else {

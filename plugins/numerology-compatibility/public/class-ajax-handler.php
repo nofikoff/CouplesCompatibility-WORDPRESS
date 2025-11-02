@@ -35,8 +35,8 @@ class AjaxHandler {
 			// Возвращаем результат с secret_code и pdf_url
 			wp_send_json_success([
 				'calculation' => $result,
-				'secret_code' => $result['secret_code'] ?? '',
-				'pdf_url' => $result['pdf_url'] ?? '',
+				'secret_code' => $result['secret_code'] ?? null,
+				'pdf_url' => $result['pdf_url'] ?? null, // ВАЖНО: не заменяем на пустую строку!
 				'message' => __('Calculation completed! PDF report is being generated and will be available shortly.', 'numerology-compatibility')
 			]);
 
