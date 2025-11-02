@@ -501,7 +501,7 @@
 
         /**
          * НОВЫЙ МЕТОД: Проверка готовности PDF
-         * Проверяет каждые 3 секунды через HEAD request, доступен ли PDF для скачивания
+         * Проверяет каждые 3 секунды через прямой запрос к PDF URL
          */
         checkPdfStatus: function() {
             var attempts = 0;
@@ -524,29 +524,48 @@
                     return;
                 }
 
-                // Проверяем доступность PDF через HEAD request
+                // Проверяем доступность PDF через обычный GET запрос с обработкой ошибок
                 $.ajax({
                     url: self.pdfUrl,
-                    type: 'HEAD',
+                    type: 'GET',
+                    dataType: 'json', // Ожидаем JSON в случае ошибки
                     timeout: 5000,
-                    success: function() {
-                        // PDF готов!
-                        console.log('✓ PDF is ready for download');
-                        $('#nc-pdf-download-link')
-                            .attr('href', self.pdfUrl)
-                            .show();
-                        $('.nc-pdf-generating').hide();
+                    xhrFields: {
+                        responseType: 'blob' // Для успешного ответа (PDF файл)
                     },
-                    error: function(xhr) {
-                        console.log('PDF not ready yet, status:', xhr.status);
-
-                        if (xhr.status === 425) {
-                            // 425 Too Early - PDF еще генерируется
-                            console.log('⟳ PDF is being generated, will check again in 3 seconds...');
+                    success: function(data, textStatus, xhr) {
+                        // Проверяем, что это действительно PDF (не JSON ошибка)
+                        var contentType = xhr.getResponseHeader('Content-Type');
+                        if (contentType && contentType.indexOf('application/pdf') !== -1) {
+                            // PDF готов!
+                            console.log('✓ PDF is ready for download');
+                            $('#nc-pdf-download-link')
+                                .attr('href', self.pdfUrl)
+                                .show();
+                            $('.nc-pdf-generating').hide();
+                        } else {
+                            // Получили JSON - скорее всего ошибка
+                            console.log('⟳ PDF still generating...');
                             if (attempts < maxAttempts) {
                                 setTimeout(checkPdf, 3000);
                             } else {
-                                // Таймаут - показываем ссылку и сообщение
+                                console.log('⏱ Timeout reached');
+                                $('.nc-pdf-generating').html('PDF is taking longer than expected. You can try downloading it below or request via email.');
+                                $('#nc-pdf-download-link')
+                                    .attr('href', self.pdfUrl)
+                                    .show();
+                            }
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log('PDF check response status:', xhr.status);
+
+                        if (xhr.status === 425) {
+                            // 425 Too Early - PDF еще генерируется
+                            console.log('⟳ PDF is being generated (425), will check again in 3 seconds...');
+                            if (attempts < maxAttempts) {
+                                setTimeout(checkPdf, 3000);
+                            } else {
                                 console.log('⏱ Timeout reached, showing link anyway');
                                 $('.nc-pdf-generating').html('PDF is taking longer than expected. You can try downloading it below or request via email.');
                                 $('#nc-pdf-download-link')
@@ -554,12 +573,23 @@
                                     .show();
                             }
                         } else if (xhr.status === 404) {
-                            // PDF не найден
-                            console.error('✗ PDF not found (404)');
+                            // 404 - PDF или расчет не найден
+                            console.error('✗ PDF or calculation not found (404)');
                             if (attempts < maxAttempts) {
                                 setTimeout(checkPdf, 3000);
                             } else {
-                                $('.nc-pdf-generating').html('PDF generation failed. Please contact support or request via email below.');
+                                $('.nc-pdf-generating').html('PDF not found. Please contact support or request via email below.');
+                            }
+                        } else if (xhr.status === 0) {
+                            // CORS или network error - попробуем еще раз
+                            console.log('⟳ Network/CORS issue, retrying...');
+                            if (attempts < maxAttempts) {
+                                setTimeout(checkPdf, 3000);
+                            } else {
+                                $('.nc-pdf-generating').html('Unable to verify PDF status. Please try downloading below or request via email.');
+                                $('#nc-pdf-download-link')
+                                    .attr('href', self.pdfUrl)
+                                    .show();
                             }
                         } else {
                             // Другая ошибка
