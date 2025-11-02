@@ -22,19 +22,7 @@ $show_prices = $attributes['show_prices'] ?? true;
 
         <form id="nc-calculator-form" class="nc-form">
 
-            <!-- Email Field -->
-            <div class="nc-form-group nc-email-group">
-                <h3><?php _e('Your Email', 'numerology-compatibility'); ?></h3>
-                <p class="nc-help-text"><?php _e('PDF report will be sent to this address', 'numerology-compatibility'); ?></p>
-
-                <div class="nc-field nc-required">
-                    <label for="email"><?php _e('Email Address', 'numerology-compatibility'); ?></label>
-                    <input type="email" id="email" name="email" required
-                           placeholder="your@email.com"
-                           autocomplete="email">
-                    <span class="nc-error-message"></span>
-                </div>
-            </div>
+            <!-- Email поле убрано - теперь запрашивается опционально после расчета -->
 
             <div class="nc-form-row">
                 <!-- Partner 1 -->
@@ -181,19 +169,45 @@ $show_prices = $attributes['show_prices'] ?? true;
         <div class="nc-success">
             <div class="nc-success-icon">✓</div>
             <h2><?php _e('Success!', 'numerology-compatibility'); ?></h2>
-            <p class="nc-success-message"><?php _e('Your compatibility report has been generated and sent to your email.', 'numerology-compatibility'); ?></p>
+            <p class="nc-success-message"><?php _e('Your compatibility report has been generated!', 'numerology-compatibility'); ?></p>
 
-            <div class="nc-success-details">
-                <p><strong><?php _e('What happens next:', 'numerology-compatibility'); ?></strong></p>
-                <ul>
-                    <li><?php _e('Check your email inbox (and spam folder)', 'numerology-compatibility'); ?></li>
-                    <li><?php _e('Your PDF report should arrive within 5 minutes', 'numerology-compatibility'); ?></li>
-                    <li><?php _e('If you don\'t receive it, contact our support', 'numerology-compatibility'); ?></li>
-                </ul>
+            <!-- PDF Download Link -->
+            <div class="nc-pdf-download" style="margin: 20px 0;">
+                <a href="#" id="nc-pdf-download-link" class="nc-btn nc-btn-primary nc-btn-large" target="_blank" style="display:none;">
+                    📄 <?php _e('Download PDF Report', 'numerology-compatibility'); ?>
+                </a>
+                <p class="nc-pdf-generating" style="color: #666;">
+                    <?php _e('PDF is being generated... Please wait.', 'numerology-compatibility'); ?>
+                </p>
             </div>
 
-            <div class="nc-form-actions">
-                <button type="button" class="nc-btn nc-btn-primary nc-btn-restart">
+            <!-- Email Form (Optional) -->
+            <div class="nc-email-form" style="margin: 30px 0; padding: 20px; background: #f8f8f8; border-radius: 8px;">
+                <h3><?php _e('Send Report to Email?', 'numerology-compatibility'); ?></h3>
+                <p><?php _e('Optionally, you can receive this report via email:', 'numerology-compatibility'); ?></p>
+
+                <form id="nc-send-email-form" class="nc-form">
+                    <div class="nc-field">
+                        <label for="email-after-calc"><?php _e('Email Address', 'numerology-compatibility'); ?></label>
+                        <input type="email" id="email-after-calc" name="email"
+                               placeholder="your@email.com"
+                               autocomplete="email"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                        <span class="nc-error-message"></span>
+                    </div>
+
+                    <button type="submit" class="nc-btn nc-btn-secondary" style="margin-top: 10px;">
+                        📧 <?php _e('Send to Email', 'numerology-compatibility'); ?>
+                    </button>
+
+                    <p class="nc-email-sent-message" style="display:none; color: #10B981; margin-top: 10px;">
+                        ✓ <?php _e('Email sent successfully!', 'numerology-compatibility'); ?>
+                    </p>
+                </form>
+            </div>
+
+            <div class="nc-form-actions" style="margin-top: 20px;">
+                <button type="button" class="nc-btn nc-btn-outline nc-btn-restart">
 					<?php _e('Calculate Another', 'numerology-compatibility'); ?>
                 </button>
             </div>

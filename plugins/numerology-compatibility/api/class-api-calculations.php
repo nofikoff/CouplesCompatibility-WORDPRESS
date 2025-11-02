@@ -18,22 +18,32 @@ class ApiCalculations {
 	 * Бесплатный расчет
 	 * POST /api/v1/calculate/free
 	 *
-	 * @param array $data Данные формы (email, person1_date, person2_date)
-	 * @return array Результат расчета
+	 * - Email ОПЦИОНАЛЬНЫЙ (можно не указывать)
+	 * - Бэкенд возвращает secret_code для доступа к расчету
+	 * - Бэкенд возвращает pdf_url для скачивания PDF
+	 * - Email НЕ отправляется автоматически
+	 *
+	 * @param array $data Данные формы (email [optional], person1_date, person2_date)
+	 * @return array Результат расчета с secret_code и pdf_url
 	 * @throws \Exception
 	 */
 	public function calculate_free($data) {
-		$this->validate_calculation_data($data);
+		// Email НЕ обязателен для бесплатного расчета
+		$this->validate_calculation_data($data, false);
 
 		$locale = $this->get_current_locale();
 
 		// Подготавливаем данные согласно API спецификации
 		$request_data = [
-			'email' => sanitize_email($data['email']),
 			'person1_date' => sanitize_text_field($data['person1_date']),
 			'person2_date' => sanitize_text_field($data['person2_date']),
 			'locale' => $locale,
 		];
+
+		// Email опционально (добавляем только если указан)
+		if (!empty($data['email'])) {
+			$request_data['email'] = sanitize_email($data['email']);
+		}
 
 		// Отправляем запрос на бэкенд
 		$response = $this->client->request('/calculate/free', 'POST', $request_data);
@@ -58,7 +68,8 @@ class ApiCalculations {
 	 * @throws \Exception
 	 */
 	public function calculate_paid($data, $tier) {
-		$this->validate_calculation_data($data);
+		// Для платных расчетов email ОБЯЗАТЕЛЕН
+		$this->validate_calculation_data($data, true);
 		$this->validate_tier($tier);
 
 		$locale = $this->get_current_locale();
@@ -124,12 +135,20 @@ class ApiCalculations {
 	 * Валидация данных для расчета
 	 *
 	 * @param array $data
+	 * @param bool $email_required Email обязателен или нет
 	 * @throws \Exception
 	 */
-	private function validate_calculation_data($data) {
-		// Валидация email
-		if (empty($data['email']) || !is_email($data['email'])) {
-			throw new \Exception(__('Valid email is required', 'numerology-compatibility'));
+	private function validate_calculation_data($data, $email_required = false) {
+		// Валидация email (теперь опциональная для бесплатного расчета)
+		if ($email_required) {
+			if (empty($data['email']) || !is_email($data['email'])) {
+				throw new \Exception(__('Valid email is required', 'numerology-compatibility'));
+			}
+		} else {
+			// Если email указан, проверяем его валидность
+			if (!empty($data['email']) && !is_email($data['email'])) {
+				throw new \Exception(__('Invalid email format', 'numerology-compatibility'));
+			}
 		}
 
 		// Валидация дат рождения
@@ -179,11 +198,56 @@ class ApiCalculations {
 	private function get_current_locale() {
 		$wp_locale = get_locale();
 
-		// Конвертируем WordPress локаль в формат API (en|ru)
+		// Конвертируем WordPress локаль в формат API (en|ru|uk)
 		if (strpos($wp_locale, 'ru') === 0) {
 			return 'ru';
 		}
 
+		if (strpos($wp_locale, 'uk') === 0) {
+			return 'uk';
+		}
+
 		return 'en';
+	}
+
+	/**
+	 * Отправить PDF отчет на email по секретному коду
+	 * POST /api/v1/calculations/send-email
+	 *
+	 * НОВЫЙ ENDPOINT для отправки PDF на email после расчета
+	 *
+	 * @param string $secret_code Секретный код расчета
+	 * @param string $email Email для отправки
+	 * @return array Результат отправки
+	 * @throws \Exception
+	 */
+	public function send_email($secret_code, $email) {
+		// Валидация секретного кода
+		if (empty($secret_code) || strlen($secret_code) !== 32) {
+			throw new \Exception(__('Invalid secret code', 'numerology-compatibility'));
+		}
+
+		// Валидация email
+		if (empty($email) || !is_email($email)) {
+			throw new \Exception(__('Valid email is required', 'numerology-compatibility'));
+		}
+
+		// Подготавливаем данные
+		$request_data = [
+			'secret_code' => sanitize_text_field($secret_code),
+			'email' => sanitize_email($email),
+		];
+
+		// Отправляем запрос на бэкенд
+		$response = $this->client->request('/calculations/send-email', 'POST', $request_data);
+
+		// Laravel API возвращает данные в формате {success, message, data}
+		$data_response = $response['data'] ?? [];
+
+		if (!empty($data_response)) {
+			return $data_response;
+		}
+
+		throw new \Exception(__('Failed to send email', 'numerology-compatibility'));
 	}
 }

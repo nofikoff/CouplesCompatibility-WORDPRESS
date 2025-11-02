@@ -79,6 +79,10 @@ class Plugin {
 		$this->loader->add_action('wp_ajax_nc_calculate_paid', $ajax_handler, 'handle_paid_calculation');
 		$this->loader->add_action('wp_ajax_nopriv_nc_calculate_paid', $ajax_handler, 'handle_paid_calculation');
 
+		// Отправка PDF на email по секретному коду
+		$this->loader->add_action('wp_ajax_nc_send_email', $ajax_handler, 'handle_send_email');
+		$this->loader->add_action('wp_ajax_nopriv_nc_send_email', $ajax_handler, 'handle_send_email');
+
 		// DEPRECATED: Старые endpoints для обратной совместимости
 		$this->loader->add_action('wp_ajax_nc_calculate', $ajax_handler, 'handle_calculation');
 		$this->loader->add_action('wp_ajax_nopriv_nc_calculate', $ajax_handler, 'handle_calculation');

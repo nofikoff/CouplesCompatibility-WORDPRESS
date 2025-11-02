@@ -10,6 +10,11 @@ class AjaxHandler {
 	/**
 	 * Обработка бесплатного расчета
 	 * AJAX action: nc_calculate_free
+	 *
+	 * НОВОЕ ПОВЕДЕНИЕ:
+	 * - Email НЕ требуется на этом шаге (убран из формы)
+	 * - Возвращает secret_code и pdf_url
+	 * - Email НЕ отправляется автоматически
 	 */
 	public function handle_free_calculation() {
 		try {
@@ -23,16 +28,16 @@ class AjaxHandler {
 				wp_send_json_error(['message' => __('All consent checkboxes must be accepted', 'numerology-compatibility')]);
 			}
 
-			// Выполняем бесплатный расчет
+			// Выполняем бесплатный расчет (БЕЗ email)
 			$calc = new ApiCalculations();
 			$result = $calc->calculate_free($_POST);
 
+			// Возвращаем результат с secret_code и pdf_url
 			wp_send_json_success([
 				'calculation' => $result,
-				'message' => sprintf(
-					__('Success! Your free compatibility report has been sent to %s', 'numerology-compatibility'),
-					sanitize_email($_POST['email'] ?? '')
-				)
+				'secret_code' => $result['secret_code'] ?? '',
+				'pdf_url' => $result['pdf_url'] ?? '',
+				'message' => __('Calculation completed! PDF report is being generated and will be available shortly.', 'numerology-compatibility')
 			]);
 
 		} catch (\Exception $e) {
@@ -91,6 +96,47 @@ class AjaxHandler {
 	 */
 	public function handle_payment() {
 		$this->handle_paid_calculation();
+	}
+
+	/**
+	 * Отправить PDF отчет на email
+	 * AJAX action: nc_send_email
+	 *
+	 * НОВЫЙ ОБРАБОТЧИК для отправки PDF на email после расчета
+	 * Принимает secret_code и email, отправляет PDF на указанный адрес
+	 */
+	public function handle_send_email() {
+		try {
+			// Проверка nonce
+			if (!check_ajax_referer('nc_ajax_nonce', 'nonce', false)) {
+				wp_send_json_error(['message' => __('Security check failed', 'numerology-compatibility')]);
+			}
+
+			// Получаем данные
+			$secret_code = sanitize_text_field($_POST['secret_code'] ?? '');
+			$email = sanitize_email($_POST['email'] ?? '');
+
+			// Валидация
+			if (empty($secret_code)) {
+				wp_send_json_error(['message' => __('Secret code is required', 'numerology-compatibility')]);
+			}
+
+			if (empty($email) || !is_email($email)) {
+				wp_send_json_error(['message' => __('Valid email is required', 'numerology-compatibility')]);
+			}
+
+			// Отправляем email через API
+			$calc = new ApiCalculations();
+			$result = $calc->send_email($secret_code, $email);
+
+			wp_send_json_success([
+				'message' => __('PDF report will be sent to your email shortly!', 'numerology-compatibility'),
+				'data' => $result
+			]);
+
+		} catch (\Exception $e) {
+			wp_send_json_error(['message' => $e->getMessage()]);
+		}
 	}
 
 	/**

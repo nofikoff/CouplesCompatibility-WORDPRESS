@@ -13,6 +13,8 @@
         selectedPackage: null,
         selectedTier: null,
         calculationData: {},
+        secretCode: null,  // НОВОЕ: секретный код для доступа к расчету
+        pdfUrl: null,      // НОВОЕ: ссылка на PDF
 
         init: function() {
             this.bindEvents();
@@ -36,9 +38,15 @@
                 CalculatorManager.selectPackage(packageType, tier);
             });
 
-            // Email validation
-            $('#email').on('blur', function() {
-                CalculatorManager.validateEmail($(this));
+            // УДАЛЕНО: Email validation на Step 1 (email теперь опциональный на Step 5)
+            // $('#email').on('blur', function() {
+            //     CalculatorManager.validateEmail($(this));
+            // });
+
+            // НОВОЕ: Обработчик формы отправки email на Step 5
+            $(document).on('submit', '#nc-send-email-form', function(e) {
+                e.preventDefault();
+                CalculatorManager.handleSendEmail($(this));
             });
 
             // Date validation
@@ -62,17 +70,17 @@
                 return;
             }
 
-            // Collect form data
+            // Collect form data (БЕЗ email - он теперь опциональный на Step 5)
             this.calculationData = {
-                email: $('#email').val(),
+                // email: $('#email').val(),  // УДАЛЕНО
                 person1_date: $('#person1_date').val(),
                 person2_date: $('#person2_date').val(),
-                person1_name: $('#person1_name').val(),
-                person2_name: $('#person2_name').val(),
-                person1_time: $('#person1_time').val(),
-                person2_time: $('#person2_time').val(),
-                person1_place: $('#person1_place').val(),
-                person2_place: $('#person2_place').val(),
+                person1_name: $('#person1_name').val() || '',
+                person2_name: $('#person2_name').val() || '',
+                person1_time: $('#person1_time').val() || '',
+                person2_time: $('#person2_time').val() || '',
+                person1_place: $('#person1_place').val() || '',
+                person2_place: $('#person2_place').val() || '',
                 data_consent: $('#data_consent').is(':checked'),
                 harm_consent: $('#harm_consent').is(':checked'),
                 entertainment_consent: $('#entertainment_consent').is(':checked')
@@ -89,15 +97,15 @@
         validateCalculationForm: function($form) {
             var isValid = true;
 
-            // Validate email
-            var email = $('#email').val();
-            if (!email) {
-                this.showFieldError($('#email'), 'Email is required');
-                isValid = false;
-            } else if (!this.isValidEmail(email)) {
-                this.showFieldError($('#email'), 'Please enter a valid email address');
-                isValid = false;
-            }
+            // УДАЛЕНО: Email validation (email теперь не требуется на Step 1)
+            // var email = $('#email').val();
+            // if (!email) {
+            //     this.showFieldError($('#email'), 'Email is required');
+            //     isValid = false;
+            // } else if (!this.isValidEmail(email)) {
+            //     this.showFieldError($('#email'), 'Please enter a valid email address');
+            //     isValid = false;
+            // }
 
             // Validate dates
             var date1 = $('#person1_date').val();
@@ -192,6 +200,7 @@
 
         /**
          * Бесплатный расчет
+         * ОБНОВЛЕНО: Теперь сохраняет secret_code и pdf_url, проверяет готовность PDF
          */
         submitFreeCalculation: function() {
             // Show processing
@@ -209,7 +218,20 @@
                 },
                 success: function(response) {
                     if (response.success) {
+                        // НОВОЕ: Сохраняем secret_code и pdf_url
+                        CalculatorManager.secretCode = response.data.secret_code || null;
+                        CalculatorManager.pdfUrl = response.data.pdf_url || null;
+
+                        console.log('Calculation completed:', {
+                            secret_code: CalculatorManager.secretCode,
+                            pdf_url: CalculatorManager.pdfUrl
+                        });
+
+                        // Показываем Step 5 (Success)
                         CalculatorManager.showSuccess(response.data.message);
+
+                        // НОВОЕ: Начинаем проверку готовности PDF
+                        CalculatorManager.checkPdfStatus();
                     } else {
                         CalculatorManager.showError(response.data.message);
                     }
@@ -427,13 +449,124 @@
             this.selectedPackage = $('#nc-calculator-wrapper').data('package') || 'auto';
             this.selectedTier = null;
 
+            // НОВОЕ: Очистить secret_code и pdfUrl
+            this.secretCode = null;
+            this.pdfUrl = null;
+
             // Убрать выделение пакетов
             $('.nc-package').removeClass('nc-selected');
+
+            // НОВОЕ: Очистить форму отправки email
+            if ($('#nc-send-email-form').length) {
+                $('#nc-send-email-form')[0].reset();
+                $('.nc-email-sent-message').hide();
+                $('#nc-send-email-form button[type="submit"]').prop('disabled', false);
+            }
 
             // Вернуться на шаг 1
             this.showStep(1);
 
             console.log('Calculator reset to initial state');
+        },
+
+        /**
+         * НОВЫЙ МЕТОД: Проверка готовности PDF
+         * Проверяет каждые 3 секунды, доступен ли PDF для скачивания
+         */
+        checkPdfStatus: function() {
+            var attempts = 0;
+            var maxAttempts = 10; // 30 секунд (3 сек * 10)
+            var self = this;
+
+            // Показываем сообщение о генерации
+            $('.nc-pdf-generating').show();
+            $('#nc-pdf-download-link').hide();
+
+            var interval = setInterval(function() {
+                attempts++;
+
+                if (!self.pdfUrl) {
+                    console.warn('PDF URL not available');
+                    clearInterval(interval);
+                    return;
+                }
+
+                // Пробуем получить PDF (HEAD request через проверку через img tag trick или просто показываем ссылку)
+                // Для упрощения - просто показываем ссылку после небольшой задержки
+                if (attempts >= 2) { // Подождем ~6 секунд
+                    // PDF должен быть готов, показываем ссылку
+                    $('#nc-pdf-download-link')
+                        .attr('href', self.pdfUrl)
+                        .show();
+                    $('.nc-pdf-generating').hide();
+                    clearInterval(interval);
+
+                    console.log('PDF is ready for download');
+                }
+
+                if (attempts >= maxAttempts) {
+                    // Показать сообщение о задержке
+                    $('.nc-pdf-generating').html('PDF will be available shortly. You can also request it by email below.');
+                    $('#nc-pdf-download-link')
+                        .attr('href', self.pdfUrl)
+                        .show();
+                    clearInterval(interval);
+                }
+            }, 3000); // Проверка каждые 3 секунды
+        },
+
+        /**
+         * НОВЫЙ МЕТОД: Отправка PDF на email
+         * Вызывается при submit формы отправки email на Step 5
+         */
+        handleSendEmail: function(form) {
+            var email = form.find('#email-after-calc').val();
+            var self = this;
+
+            // Валидация email
+            if (!email || !this.isValidEmail(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            // Проверка secret_code
+            if (!this.secretCode) {
+                alert('Secret code not found. Please recalculate.');
+                return;
+            }
+
+            // Блокируем кнопку
+            var submitBtn = form.find('button[type="submit"]');
+            submitBtn.prop('disabled', true).text('Sending...');
+
+            // Отправляем запрос на бэкенд
+            $.ajax({
+                url: nc_public.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'nc_send_email',
+                    nonce: nc_public.nonce,
+                    secret_code: this.secretCode,
+                    email: email
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Показываем сообщение об успехе
+                        $('.nc-email-sent-message').show();
+                        submitBtn.text('Sent!').prop('disabled', true);
+
+                        console.log('Email sent successfully to:', email);
+                    } else {
+                        alert(response.data.message || 'Failed to send email. Please try again.');
+                        submitBtn.prop('disabled', false).text('📧 Send to Email');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Email sending error:', error);
+                    alert('Failed to send email. Please try again.');
+                    submitBtn.prop('disabled', false).text('📧 Send to Email');
+                }
+            });
         }
     };
 
