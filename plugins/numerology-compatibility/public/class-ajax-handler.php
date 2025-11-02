@@ -33,10 +33,12 @@ class AjaxHandler {
 			$result = $calc->calculate_free($_POST);
 
 			// Возвращаем результат с secret_code и pdf_url
+			// ПРИМЕЧАНИЕ: calculation_id и другие данные уже в $result от backend
 			wp_send_json_success([
-				'calculation' => $result,
+				'calculation_id' => $result['calculation_id'] ?? null,
 				'secret_code' => $result['secret_code'] ?? null,
 				'pdf_url' => $result['pdf_url'] ?? null, // ВАЖНО: не заменяем на пустую строку!
+				'type' => $result['type'] ?? 'free',
 				'message' => __('Calculation completed! PDF report is being generated and will be available shortly.', 'numerology-compatibility')
 			]);
 
