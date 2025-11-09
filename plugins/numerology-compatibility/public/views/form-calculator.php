@@ -17,9 +17,6 @@ $show_prices = $attributes['show_prices'] ?? true;
 
     <!-- Step 1: Input Form -->
     <div class="nc-step nc-step-1 nc-active" data-step="1">
-        <h2><?php _e('Discover Your Relationship Compatibility', 'numerology-compatibility'); ?></h2>
-        <p class="nc-subtitle"><?php _e('Enter birth dates to reveal deep insights based on Numerology', 'numerology-compatibility'); ?></p>
-
         <form id="nc-calculator-form" class="nc-form">
 
             <!-- Email поле убрано - теперь запрашивается опционально после расчета -->
