@@ -53,11 +53,6 @@ $show_prices = $attributes['show_prices'] ?? true;
             <div class="nc-consent-group">
                 <div class="nc-checkbox-group">
                     <label class="nc-checkbox">
-                        <input type="checkbox" name="data_consent" id="data_consent" required>
-                        <span>Я имею разрешение использовать данные о дате рождения этого человека для анализа совместимости *</span>
-                    </label>
-
-                    <label class="nc-checkbox">
                         <input type="checkbox" name="harm_consent" id="harm_consent" required>
                         <span>Я не буду использовать эту информацию для причинения вреда, преследования или принятия решений, влияющих на этого человека, без его ведома *</span>
                     </label>
