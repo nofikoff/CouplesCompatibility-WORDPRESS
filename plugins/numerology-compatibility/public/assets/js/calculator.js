@@ -81,7 +81,6 @@
                 person2_time: $('#person2_time').val() || '',
                 person1_place: $('#person1_place').val() || '',
                 person2_place: $('#person2_place').val() || '',
-                data_consent: $('#data_consent').is(':checked'),
                 harm_consent: $('#harm_consent').is(':checked'),
                 entertainment_consent: $('#entertainment_consent').is(':checked')
             };
@@ -122,18 +121,13 @@
             }
 
             // Validate consents
-            if (!$('#data_consent').is(':checked')) {
-                this.showError('You must confirm you have permission to use this data');
-                isValid = false;
-            }
-
             if (!$('#harm_consent').is(':checked')) {
-                this.showError('You must agree not to use this information to harm others');
+                this.showError('Вы должны согласиться не использовать эту информацию для причинения вреда другим');
                 isValid = false;
             }
 
             if (!$('#entertainment_consent').is(':checked')) {
-                this.showError('You must acknowledge this is for entertainment purposes');
+                this.showError('Вы должны подтвердить, что это исключительно в развлекательных целях');
                 isValid = false;
             }
 
@@ -473,7 +467,7 @@
             $('#nc-calculator-form')[0].reset();
 
             // Снять галочки
-            $('#data_consent, #harm_consent, #entertainment_consent').prop('checked', false);
+            $('#harm_consent, #entertainment_consent').prop('checked', false);
 
             // Очистить все ошибки
             $('.nc-error-message').text('').hide();
