@@ -1,0 +1,382 @@
+# Copyright (C) 2025 Numerology Compatibility
+# This file is distributed under the same license as the Numerology Compatibility plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Numerology Compatibility 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/numerology-compatibility\n"
+"POT-Creation-Date: 2025-01-13 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Manual\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: numerology-compatibility.php:38
+#, php-format
+msgid "Numerology Compatibility requires PHP %s or higher. Your version: %s"
+msgstr ""
+
+#: api/class-api-calculations.php:51
+msgid "Calculation failed"
+msgstr ""
+
+#: api/class-api-calculations.php:90
+msgid "Failed to create payment session"
+msgstr ""
+
+#: api/class-api-calculations.php:103
+#: api/class-api-calculations.php:121
+msgid "Calculation ID is required"
+msgstr ""
+
+#: api/class-api-calculations.php:138
+msgid "Both birth dates are required"
+msgstr ""
+
+#: api/class-api-calculations.php:146
+msgid "Invalid date format. Required: Y-m-d"
+msgstr ""
+
+#: api/class-api-calculations.php:152
+msgid "Birth dates cannot be in the future"
+msgstr ""
+
+#: api/class-api-calculations.php:168
+#, php-format
+msgid "Invalid tier. Allowed: %s"
+msgstr ""
+
+#: api/class-api-calculations.php:209
+msgid "Invalid secret code"
+msgstr ""
+
+#: api/class-api-calculations.php:214
+msgid "Valid email is required"
+msgstr ""
+
+#: api/class-api-calculations.php:233
+msgid "Failed to send email"
+msgstr ""
+
+#: api/class-api-client.php:64
+msgid "Payment required"
+msgstr ""
+
+#: api/class-api-client.php:69
+#, php-format
+msgid "Rate limit exceeded. Try again in %d seconds"
+msgstr ""
+
+#: api/class-api-client.php:74
+msgid "Validation failed"
+msgstr ""
+
+#: api/class-api-client.php:75
+msgid "Validation error: "
+msgstr ""
+
+#: api/class-api-client.php:78
+msgid "Unknown error occurred"
+msgstr ""
+
+#: api/class-api-client.php:79
+msgid "API error: "
+msgstr ""
+
+#: api/class-api-client.php:127
+msgid "Connection successful"
+msgstr ""
+
+#: public/views/form-calculator.php:27
+msgid "Partner 1"
+msgstr ""
+
+#: public/views/form-calculator.php:30
+#: public/views/form-calculator.php:43
+msgid "Date of Birth"
+msgstr ""
+
+#: public/views/form-calculator.php:40
+msgid "Partner 2"
+msgstr ""
+
+#: public/views/form-calculator.php:57
+msgid "I will not use this information to harm, harass, or make decisions affecting this person without their knowledge"
+msgstr ""
+
+#: public/views/form-calculator.php:62
+msgid "I understand this is for entertainment and self-reflection purposes only"
+msgstr ""
+
+#: public/views/form-calculator.php:69
+msgid "Continue"
+msgstr ""
+
+#: public/views/form-calculator.php:78
+msgid "Choose Your Report Type"
+msgstr ""
+
+#: public/views/form-calculator.php:83
+#: public/views/form-calculator.php:84
+#: public/class-shortcodes.php:53
+msgid "Free"
+msgstr ""
+
+#: public/views/form-calculator.php:87
+#: public/class-shortcodes.php:56
+msgid "Basic compatibility score"
+msgstr ""
+
+#: public/views/form-calculator.php:88
+msgid "Key personality insights"
+msgstr ""
+
+#: public/views/form-calculator.php:89
+msgid "PDF report via email"
+msgstr ""
+
+#: public/views/form-calculator.php:92
+#: public/class-shortcodes.php:61
+msgid "Get Free Report"
+msgstr ""
+
+#: public/views/form-calculator.php:97
+#: public/class-shortcodes.php:68
+msgid "Most Popular"
+msgstr ""
+
+#: public/views/form-calculator.php:99
+#: public/class-shortcodes.php:70
+msgid "Standard"
+msgstr ""
+
+#: public/views/form-calculator.php:100
+#: public/views/form-calculator.php:116
+msgid "Paid"
+msgstr ""
+
+#: public/views/form-calculator.php:103
+msgid "Full compatibility analysis"
+msgstr ""
+
+#: public/views/form-calculator.php:104
+msgid "Relationship dynamics"
+msgstr ""
+
+#: public/views/form-calculator.php:105
+msgid "1-2 year forecast"
+msgstr ""
+
+#: public/views/form-calculator.php:106
+msgid "PDF download + email"
+msgstr ""
+
+#: public/views/form-calculator.php:109
+msgid "Get Standard Report"
+msgstr ""
+
+#: public/views/form-calculator.php:115
+msgid "Premium"
+msgstr ""
+
+#: public/views/form-calculator.php:119
+msgid "Everything in Standard"
+msgstr ""
+
+#: public/views/form-calculator.php:120
+msgid "Karmic connections"
+msgstr ""
+
+#: public/views/form-calculator.php:121
+msgid "10-20 year forecast"
+msgstr ""
+
+#: public/views/form-calculator.php:122
+msgid "Action recommendations"
+msgstr ""
+
+#: public/views/form-calculator.php:123
+msgid "Priority support"
+msgstr ""
+
+#: public/views/form-calculator.php:126
+msgid "Get Premium Report"
+msgstr ""
+
+#: public/views/form-calculator.php:137
+msgid "Processing..."
+msgstr ""
+
+#: public/views/form-calculator.php:138
+msgid "Please wait..."
+msgstr ""
+
+#: public/views/form-calculator.php:146
+msgid "Verifying Payment..."
+msgstr ""
+
+#: public/views/form-calculator.php:147
+msgid "Please wait while we confirm your payment. This usually takes a few seconds."
+msgstr ""
+
+#: public/views/form-calculator.php:150
+msgid "Do not close this page. You will be redirected automatically."
+msgstr ""
+
+#: public/views/form-calculator.php:159
+#: public/class-public.php:49
+msgid "Success!"
+msgstr ""
+
+#: public/views/form-calculator.php:160
+msgid "Your compatibility report has been generated!"
+msgstr ""
+
+#: public/views/form-calculator.php:165
+msgid "Download PDF Report"
+msgstr ""
+
+#: public/views/form-calculator.php:168
+msgid "PDF is being generated... Please wait."
+msgstr ""
+
+#: public/views/form-calculator.php:174
+msgid "Send Report to Email?"
+msgstr ""
+
+#: public/views/form-calculator.php:175
+msgid "Optionally, you can receive this report via email:"
+msgstr ""
+
+#: public/views/form-calculator.php:179
+msgid "Email Address"
+msgstr ""
+
+#: public/views/form-calculator.php:188
+msgid "Send to Email"
+msgstr ""
+
+#: public/views/form-calculator.php:192
+msgid "Email sent successfully!"
+msgstr ""
+
+#: public/views/form-calculator.php:199
+msgid "Calculate Another"
+msgstr ""
+
+#: public/views/form-calculator.php:209
+msgid "Oops! Something Went Wrong"
+msgstr ""
+
+#: public/views/form-calculator.php:210
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: public/views/form-calculator.php:213
+msgid "If the problem persists, please contact our support team with your payment confirmation."
+msgstr ""
+
+#: public/views/form-calculator.php:218
+msgid "Try Again"
+msgstr ""
+
+#: admin/class-settings.php:42
+#: admin/class-settings.php:46
+#: public/class-ajax-handler.php:23
+#: public/class-ajax-handler.php:60
+#: public/class-ajax-handler.php:114
+#: public/class-ajax-handler.php:151
+#: public/class-ajax-handler.php:204
+msgid "Security check failed"
+msgstr ""
+
+#: admin/class-settings.php:46
+msgid "Permission denied"
+msgstr ""
+
+#: public/class-public.php:47
+msgid "Loading..."
+msgstr ""
+
+#: public/class-public.php:48
+msgid "An error occurred"
+msgstr ""
+
+#: public/class-public.php:50
+#: public/class-ajax-handler.php:79
+msgid "Redirecting to payment..."
+msgstr ""
+
+#: public/class-ajax-handler.php:28
+#: public/class-ajax-handler.php:65
+msgid "All consent checkboxes must be accepted"
+msgstr ""
+
+#: public/class-ajax-handler.php:42
+msgid "Calculation completed! PDF report is being generated and will be available shortly."
+msgstr ""
+
+#: public/class-ajax-handler.php:123
+msgid "Secret code is required"
+msgstr ""
+
+#: public/class-ajax-handler.php:127
+#: public/class-ajax-handler.php:157
+#: public/class-ajax-handler.php:211
+msgid "Valid email is required"
+msgstr ""
+
+#: public/class-ajax-handler.php:135
+msgid "PDF report will be sent to your email shortly!"
+msgstr ""
+
+#: public/class-ajax-handler.php:170
+msgid "No data found for this email"
+msgstr ""
+
+#: public/class-ajax-handler.php:215
+msgid "Please type DELETE to confirm"
+msgstr ""
+
+#: public/class-ajax-handler.php:237
+msgid "All your data has been permanently deleted"
+msgstr ""
+
+#: public/class-shortcodes.php:57
+msgid "3 positions analysis"
+msgstr ""
+
+#: public/class-shortcodes.php:58
+msgid "PDF via email"
+msgstr ""
+
+#: public/class-shortcodes.php:73
+msgid "Full compatibility matrix"
+msgstr ""
+
+#: public/class-shortcodes.php:74
+msgid "7 positions analysis"
+msgstr ""
+
+#. JavaScript strings (to be localized via wp_localize_script)
+msgid "Birth date is required"
+msgstr ""
+
+msgid "You must agree not to use this information to harm others"
+msgstr ""
+
+msgid "You must acknowledge this is for entertainment purposes"
+msgstr ""
+
+msgid "Please enter a valid email address"
+msgstr ""
+
+msgid "Payment failed. Please try again."
+msgstr ""
+
+msgid "Payment verification timed out. Please contact support if you were charged."
+msgstr ""

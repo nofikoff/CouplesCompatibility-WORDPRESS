@@ -47,7 +47,14 @@ class PublicClass {
 				'loading' => __('Loading...', 'numerology-compatibility'),
 				'error' => __('An error occurred', 'numerology-compatibility'),
 				'success' => __('Success!', 'numerology-compatibility'),
-				'redirecting' => __('Redirecting to payment...', 'numerology-compatibility')
+				'redirecting' => __('Redirecting to payment...', 'numerology-compatibility'),
+				'birth_date_required' => __('Birth date is required', 'numerology-compatibility'),
+				'email_required' => __('Email is required', 'numerology-compatibility'),
+				'valid_email_required' => __('Please enter a valid email address', 'numerology-compatibility'),
+				'harm_consent_required' => __('You must agree not to use this information to harm others', 'numerology-compatibility'),
+				'entertainment_consent_required' => __('You must acknowledge this is for entertainment purposes', 'numerology-compatibility'),
+				'payment_failed' => __('Payment failed. Please try again.', 'numerology-compatibility'),
+				'payment_timeout' => __('Payment verification timed out. Please contact support if you were charged.', 'numerology-compatibility')
 			]
 		]);
 	}

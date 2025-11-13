@@ -48,19 +48,9 @@ $show_prices = $attributes['show_prices'] ?? true;
                     </div>
                 </div>
             </div>
-
             <!-- Consent checkboxes for calculation -->
             <div class="nc-consent-group">
-                <div class="nc-alert nc-alert-warning">
-                    <strong>⚠️ <?php _e("You're entering another person's data:", 'numerology-compatibility'); ?></strong>
-                </div>
-
                 <div class="nc-checkbox-group">
-                    <label class="nc-checkbox">
-                        <input type="checkbox" name="data_consent" id="data_consent" required>
-                        <span><?php _e("I have permission to use this person's birth data for compatibility analysis", 'numerology-compatibility'); ?> *</span>
-                    </label>
-
                     <label class="nc-checkbox">
                         <input type="checkbox" name="harm_consent" id="harm_consent" required>
                         <span><?php _e("I will not use this information to harm, harass, or make decisions affecting this person without their knowledge", 'numerology-compatibility'); ?> *</span>

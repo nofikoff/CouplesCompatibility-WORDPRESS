@@ -24,7 +24,7 @@ class AjaxHandler {
 			}
 
 			// Проверка consent
-			if (empty($_POST['data_consent']) || empty($_POST['harm_consent']) || empty($_POST['entertainment_consent'])) {
+			if (empty($_POST['harm_consent']) || empty($_POST['entertainment_consent'])) {
 				wp_send_json_error(['message' => __('All consent checkboxes must be accepted', 'numerology-compatibility')]);
 			}
 
@@ -61,7 +61,7 @@ class AjaxHandler {
 			}
 
 			// Проверка consent
-			if (empty($_POST['data_consent']) || empty($_POST['harm_consent']) || empty($_POST['entertainment_consent'])) {
+			if (empty($_POST['harm_consent']) || empty($_POST['entertainment_consent'])) {
 				wp_send_json_error(['message' => __('All consent checkboxes must be accepted', 'numerology-compatibility')]);
 			}
 

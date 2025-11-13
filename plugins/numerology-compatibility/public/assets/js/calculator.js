@@ -112,28 +112,23 @@
             var date2 = $('#person2_date').val();
 
             if (!date1) {
-                this.showFieldError($('#person1_date'), 'Birth date is required');
+                this.showFieldError($('#person1_date'), nc_public.i18n.birth_date_required);
                 isValid = false;
             }
 
             if (!date2) {
-                this.showFieldError($('#person2_date'), 'Birth date is required');
+                this.showFieldError($('#person2_date'), nc_public.i18n.birth_date_required);
                 isValid = false;
             }
 
             // Validate consents
-            if (!$('#data_consent').is(':checked')) {
-                this.showError('You must confirm you have permission to use this data');
-                isValid = false;
-            }
-
             if (!$('#harm_consent').is(':checked')) {
-                this.showError('You must agree not to use this information to harm others');
+                this.showError(nc_public.i18n.harm_consent_required);
                 isValid = false;
             }
 
             if (!$('#entertainment_consent').is(':checked')) {
-                this.showError('You must acknowledge this is for entertainment purposes');
+                this.showError(nc_public.i18n.entertainment_consent_required);
                 isValid = false;
             }
 
@@ -144,12 +139,12 @@
             var email = $field.val();
 
             if (!email) {
-                this.showFieldError($field, 'Email is required');
+                this.showFieldError($field, nc_public.i18n.email_required);
                 return false;
             }
 
             if (!this.isValidEmail(email)) {
-                this.showFieldError($field, 'Please enter a valid email address');
+                this.showFieldError($field, nc_public.i18n.valid_email_required);
                 return false;
             }
 
@@ -380,12 +375,12 @@
                                 // Платеж провалился или был отменен
                                 console.log('✗ Payment failed or cancelled');
                                 pollingActive = false;
-                                self.showError('Payment failed. Please try again.');
+                                self.showError(nc_public.i18n.payment_failed);
                             } else if (status === 'pending' && isPaid === false && attempts >= maxAttempts) {
                                 // Таймаут - оплата НЕ прошла
                                 console.log('✗ Timeout reached, payment not completed');
                                 pollingActive = false;
-                                self.showError('Payment verification timeout. If you completed the payment, please contact support with your payment confirmation.');
+                                self.showError(nc_public.i18n.payment_timeout);
                             } else if (status === 'pending') {
                                 // Продолжаем проверку
                                 console.log('⟳ Payment still pending, will check again in 3 seconds...');

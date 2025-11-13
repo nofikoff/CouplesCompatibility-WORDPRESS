@@ -1,0 +1,383 @@
+# Copyright (C) 2025 Numerology Compatibility
+# This file is distributed under the same license as the Numerology Compatibility plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Numerology Compatibility 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/numerology-compatibility\n"
+"POT-Creation-Date: 2025-01-13 12:00+0000\n"
+"PO-Revision-Date: 2025-01-13 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Manual\n"
+
+#: numerology-compatibility.php:38
+#, php-format
+msgid "Numerology Compatibility requires PHP %s or higher. Your version: %s"
+msgstr "C<5@>;>38O A>2<5AB8<>AB8 B@51C5B PHP %s 8;8 2KH5. 0H0 25@A8O: %s"
+
+#: api/class-api-calculations.php:51
+msgid "Calculation failed"
+msgstr " 0AG5B =5 C40;AO"
+
+#: api/class-api-calculations.php:90
+msgid "Failed to create payment session"
+msgstr "5 C40;>AL A>740BL ?;0B56=CN A5AA8N"
+
+#: api/class-api-calculations.php:103
+#: api/class-api-calculations.php:121
+msgid "Calculation ID is required"
+msgstr ""@51C5BAO ID @0AG5B0"
+
+#: api/class-api-calculations.php:138
+msgid "Both birth dates are required"
+msgstr ""@51CNBAO >15 40BK @>645=8O"
+
+#: api/class-api-calculations.php:146
+msgid "Invalid date format. Required: Y-m-d"
+msgstr "525@=K9 D>@<0B 40BK. "@51C5BAO: --"
+
+#: api/class-api-calculations.php:152
+msgid "Birth dates cannot be in the future"
+msgstr "0BK @>645=8O =5 <>3CB 1KBL 2 1C4CI5<"
+
+#: api/class-api-calculations.php:168
+#, php-format
+msgid "Invalid tier. Allowed: %s"
+msgstr "525@=K9 B0@8D. >?CAB8<K5: %s"
+
+#: api/class-api-calculations.php:209
+msgid "Invalid secret code"
+msgstr "525@=K9 A5:@5B=K9 :>4"
+
+#: api/class-api-calculations.php:214
+msgid "Valid email is required"
+msgstr ""@51C5BAO 459AB28B5;L=K9 email"
+
+#: api/class-api-calculations.php:233
+msgid "Failed to send email"
+msgstr "5 C40;>AL >B?@028BL email"
+
+#: api/class-api-client.php:64
+msgid "Payment required"
+msgstr ""@51C5BAO >?;0B0"
+
+#: api/class-api-client.php:69
+#, php-format
+msgid "Rate limit exceeded. Try again in %d seconds"
+msgstr "@52KH5= ;8<8B 70?@>A>2. >?@>1C9B5 A=>20 G5@57 %d A5:C=4"
+
+#: api/class-api-client.php:74
+msgid "Validation failed"
+msgstr "H81:0 20;840F88"
+
+#: api/class-api-client.php:75
+msgid "Validation error: "
+msgstr "H81:0 20;840F88: "
+
+#: api/class-api-client.php:78
+msgid "Unknown error occurred"
+msgstr "@>87>H;0 =58725AB=0O >H81:0"
+
+#: api/class-api-client.php:79
+msgid "API error: "
+msgstr "H81:0 API: "
+
+#: api/class-api-client.php:127
+msgid "Connection successful"
+msgstr ">4:;NG5=85 CA?5H=>"
+
+#: public/views/form-calculator.php:27
+msgid "Partner 1"
+msgstr "0@B=5@ 1"
+
+#: public/views/form-calculator.php:30
+#: public/views/form-calculator.php:43
+msgid "Date of Birth"
+msgstr "0B0 @>645=8O"
+
+#: public/views/form-calculator.php:40
+msgid "Partner 2"
+msgstr "0@B=5@ 2"
+
+#: public/views/form-calculator.php:57
+msgid "I will not use this information to harm, harass, or make decisions affecting this person without their knowledge"
+msgstr "/ =5 1C4C 8A?>;L7>20BL MBC 8=D>@<0F8N 4;O ?@8G8=5=8O 2@540, ?@5A;54>20=8O 8;8 ?@8=OB8O @5H5=89, 2;8ONI8E =0 MB>3> G5;>25:0, 157 53> 254><0"
+
+#: public/views/form-calculator.php:62
+msgid "I understand this is for entertainment and self-reflection purposes only"
+msgstr "/ ?>=8<0N, GB> MB> B>;L:> 4;O @072;5G5=8O 8 A0<>@5D;5:A88"
+
+#: public/views/form-calculator.php:69
+msgid "Continue"
+msgstr "@>4>;68BL"
+
+#: public/views/form-calculator.php:78
+msgid "Choose Your Report Type"
+msgstr "K15@8B5 B8? >BG5B0"
+
+#: public/views/form-calculator.php:83
+#: public/views/form-calculator.php:84
+#: public/class-shortcodes.php:53
+msgid "Free"
+msgstr "5A?;0B=>"
+
+#: public/views/form-calculator.php:87
+#: public/class-shortcodes.php:56
+msgid "Basic compatibility score"
+msgstr "07>20O >F5=:0 A>2<5AB8<>AB8"
+
+#: public/views/form-calculator.php:88
+msgid "Key personality insights"
+msgstr ";NG52K5 >A>15==>AB8 ;8G=>AB8"
+
+#: public/views/form-calculator.php:89
+msgid "PDF report via email"
+msgstr "PDF >BG5B =0 email"
+
+#: public/views/form-calculator.php:92
+#: public/class-shortcodes.php:61
+msgid "Get Free Report"
+msgstr ">;CG8BL 15A?;0B=K9 >BG5B"
+
+#: public/views/form-calculator.php:97
+#: public/class-shortcodes.php:68
+msgid "Most Popular"
+msgstr "!0<K9 ?>?C;O@=K9"
+
+#: public/views/form-calculator.php:99
+#: public/class-shortcodes.php:70
+msgid "Standard"
+msgstr "!B0=40@B"
+
+#: public/views/form-calculator.php:100
+#: public/views/form-calculator.php:116
+msgid "Paid"
+msgstr ";0B=K9"
+
+#: public/views/form-calculator.php:103
+msgid "Full compatibility analysis"
+msgstr ">;=K9 0=0;87 A>2<5AB8<>AB8"
+
+#: public/views/form-calculator.php:104
+msgid "Relationship dynamics"
+msgstr "8=0<8:0 >B=>H5=89"
+
+#: public/views/form-calculator.php:105
+msgid "1-2 year forecast"
+msgstr "@>3=>7 =0 1-2 3>40"
+
+#: public/views/form-calculator.php:106
+msgid "PDF download + email"
+msgstr "!:0G0BL PDF + email"
+
+#: public/views/form-calculator.php:109
+msgid "Get Standard Report"
+msgstr ">;CG8BL AB0=40@B=K9 >BG5B"
+
+#: public/views/form-calculator.php:115
+msgid "Premium"
+msgstr "@5<8C<"
+
+#: public/views/form-calculator.php:119
+msgid "Everything in Standard"
+msgstr "A5 87 !B0=40@B0"
+
+#: public/views/form-calculator.php:120
+msgid "Karmic connections"
+msgstr "0@<8G5A:85 A2O78"
+
+#: public/views/form-calculator.php:121
+msgid "10-20 year forecast"
+msgstr "@>3=>7 =0 10-20 ;5B"
+
+#: public/views/form-calculator.php:122
+msgid "Action recommendations"
+msgstr " 5:><5=40F88 : 459AB28N"
+
+#: public/views/form-calculator.php:123
+msgid "Priority support"
+msgstr "@8>@8B5B=0O ?>445@6:0"
+
+#: public/views/form-calculator.php:126
+msgid "Get Premium Report"
+msgstr ">;CG8BL ?@5<8C< >BG5B"
+
+#: public/views/form-calculator.php:137
+msgid "Processing..."
+msgstr "1@01>B:0..."
+
+#: public/views/form-calculator.php:138
+msgid "Please wait..."
+msgstr ">60;C9AB0, ?>4>648B5..."
+
+#: public/views/form-calculator.php:146
+msgid "Verifying Payment..."
+msgstr "@>25@:0 >?;0BK..."
+
+#: public/views/form-calculator.php:147
+msgid "Please wait while we confirm your payment. This usually takes a few seconds."
+msgstr ">60;C9AB0, ?>4>648B5, ?>:0 <K ?>4B25@6405< 20HC >?;0BC. 1KG=> MB> 70=8<05B =5A:>;L:> A5:C=4."
+
+#: public/views/form-calculator.php:150
+msgid "Do not close this page. You will be redirected automatically."
+msgstr "5 70:@K209B5 MBC AB@0=8FC. K 1C45B5 ?5@5=0?@02;5=K 02B><0B8G5A:8."
+
+#: public/views/form-calculator.php:159
+#: public/class-public.php:49
+msgid "Success!"
+msgstr "#A?5H=>!"
+
+#: public/views/form-calculator.php:160
+msgid "Your compatibility report has been generated!"
+msgstr "0H >BG5B > A>2<5AB8<>AB8 A>740=!"
+
+#: public/views/form-calculator.php:165
+msgid "Download PDF Report"
+msgstr "!:0G0BL PDF >BG5B"
+
+#: public/views/form-calculator.php:168
+msgid "PDF is being generated... Please wait."
+msgstr "PDF 35=5@8@C5BAO... >60;C9AB0, ?>4>648B5."
+
+#: public/views/form-calculator.php:174
+msgid "Send Report to Email?"
+msgstr "B?@028BL >BG5B =0 email?"
+
+#: public/views/form-calculator.php:175
+msgid "Optionally, you can receive this report via email:"
+msgstr "@8 65;0=88 2K <>65B5 ?>;CG8BL MB>B >BG5B =0 email:"
+
+#: public/views/form-calculator.php:179
+msgid "Email Address"
+msgstr "Email 04@5A"
+
+#: public/views/form-calculator.php:188
+msgid "Send to Email"
+msgstr "B?@028BL =0 email"
+
+#: public/views/form-calculator.php:192
+msgid "Email sent successfully!"
+msgstr "Email CA?5H=> >B?@02;5=!"
+
+#: public/views/form-calculator.php:199
+msgid "Calculate Another"
+msgstr " 0AAG8B0BL 5I5 @07"
+
+#: public/views/form-calculator.php:209
+msgid "Oops! Something Went Wrong"
+msgstr "#?A! 'B>-B> ?>H;> =5 B0:"
+
+#: public/views/form-calculator.php:210
+msgid "An error occurred. Please try again."
+msgstr "@>87>H;0 >H81:0. >60;C9AB0, ?>?@>1C9B5 A=>20."
+
+#: public/views/form-calculator.php:213
+msgid "If the problem persists, please contact our support team with your payment confirmation."
+msgstr "A;8 ?@>1;5<0 =5 8AG5705B, ?>60;C9AB0, A2O68B5AL A =0H59 A;C61>9 ?>445@6:8 A ?>4B25@645=85< >?;0BK."
+
+#: public/views/form-calculator.php:218
+msgid "Try Again"
+msgstr ">?@>1>20BL A=>20"
+
+#: admin/class-settings.php:42
+#: admin/class-settings.php:46
+#: public/class-ajax-handler.php:23
+#: public/class-ajax-handler.php:60
+#: public/class-ajax-handler.php:114
+#: public/class-ajax-handler.php:151
+#: public/class-ajax-handler.php:204
+msgid "Security check failed"
+msgstr "@>25@:0 157>?0A=>AB8 =5 ?@>945=0"
+
+#: admin/class-settings.php:46
+msgid "Permission denied"
+msgstr ">ABC? 70?@5I5="
+
+#: public/class-public.php:47
+msgid "Loading..."
+msgstr "03@C7:0..."
+
+#: public/class-public.php:48
+msgid "An error occurred"
+msgstr "@>87>H;0 >H81:0"
+
+#: public/class-public.php:50
+#: public/class-ajax-handler.php:79
+msgid "Redirecting to payment..."
+msgstr "5@5=0?@02;5=85 =0 >?;0BC..."
+
+#: public/class-ajax-handler.php:28
+#: public/class-ajax-handler.php:65
+msgid "All consent checkboxes must be accepted"
+msgstr "A5 A>3;0A8O 4>;6=K 1KBL ?@8=OBK"
+
+#: public/class-ajax-handler.php:42
+msgid "Calculation completed! PDF report is being generated and will be available shortly."
+msgstr " 0AG5B 7025@H5=! PDF >BG5B 35=5@8@C5BAO 8 A:>@> 1C45B 4>ABC?5=."
+
+#: public/class-ajax-handler.php:123
+msgid "Secret code is required"
+msgstr ""@51C5BAO A5:@5B=K9 :>4"
+
+#: public/class-ajax-handler.php:127
+#: public/class-ajax-handler.php:157
+#: public/class-ajax-handler.php:211
+msgid "Valid email is required"
+msgstr ""@51C5BAO 459AB28B5;L=K9 email"
+
+#: public/class-ajax-handler.php:135
+msgid "PDF report will be sent to your email shortly!"
+msgstr "PDF >BG5B A:>@> 1C45B >B?@02;5= =0 20H email!"
+
+#: public/class-ajax-handler.php:170
+msgid "No data found for this email"
+msgstr "0==K5 4;O MB>3> email =5 =0945=K"
+
+#: public/class-ajax-handler.php:215
+msgid "Please type DELETE to confirm"
+msgstr ">60;C9AB0, 22548B5 DELETE 4;O ?>4B25@645=8O"
+
+#: public/class-ajax-handler.php:237
+msgid "All your data has been permanently deleted"
+msgstr "A5 20H8 40==K5 1K;8 1572>72@0B=> C40;5=K"
+
+#: public/class-shortcodes.php:57
+msgid "3 positions analysis"
+msgstr "=0;87 3 ?>78F89"
+
+#: public/class-shortcodes.php:58
+msgid "PDF via email"
+msgstr "PDF =0 email"
+
+#: public/class-shortcodes.php:73
+msgid "Full compatibility matrix"
+msgstr ">;=0O <0B@8F0 A>2<5AB8<>AB8"
+
+#: public/class-shortcodes.php:74
+msgid "7 positions analysis"
+msgstr "=0;87 7 ?>78F89"
+
+#. JavaScript strings (to be localized via wp_localize_script)
+msgid "Birth date is required"
+msgstr ""@51C5BAO 40B0 @>645=8O"
+
+msgid "You must agree not to use this information to harm others"
+msgstr "K 4>;6=K A>3;0A8BLAO =5 8A?>;L7>20BL MBC 8=D>@<0F8N 4;O ?@8G8=5=8O 2@540 4@C38<"
+
+msgid "You must acknowledge this is for entertainment purposes"
+msgstr "K 4>;6=K ?@87=0BL, GB> MB> B>;L:> 4;O @072;5G5=8O"
+
+msgid "Please enter a valid email address"
+msgstr ">60;C9AB0, 22548B5 459AB28B5;L=K9 email 04@5A"
+
+msgid "Payment failed. Please try again."
+msgstr ";0B56 =5 ?@>H5;. >60;C9AB0, ?>?@>1C9B5 A=>20."
+
+msgid "Payment verification timed out. Please contact support if you were charged."
+msgstr "@52KH5=> 2@5<O >6840=8O ?>4B25@645=8O ?;0B560. >60;C9AB0, A2O68B5AL A ?>445@6:>9, 5A;8 A 20A A?8A0;8 A@54AB20."
