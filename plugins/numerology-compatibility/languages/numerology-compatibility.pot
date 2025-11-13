@@ -1,0 +1,602 @@
+# Copyright (C) 2025 Numerology Compatibility Calculator
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Numerology Compatibility Calculator 1.0.0\n"
+"Report-Msgid-Bugs-To: https://novikov.ua\n"
+"POT-Creation-Date: 2025-01-13 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Manual\n"
+"X-Domain: numerology-compatibility\n"
+
+#: numerology-compatibility.php:38
+msgid "Numerology Compatibility requires PHP %s or higher. Your version: %s"
+msgstr ""
+
+#: public/class-ajax-handler.php:23
+#: public/class-ajax-handler.php:60
+#: public/class-ajax-handler.php:114
+#: public/class-ajax-handler.php:151
+#: public/class-ajax-handler.php:204
+msgid "Security check failed"
+msgstr ""
+
+#: public/class-ajax-handler.php:28
+#: public/class-ajax-handler.php:65
+msgid "All consent checkboxes must be accepted"
+msgstr ""
+
+#: public/class-ajax-handler.php:42
+msgid "Calculation completed! PDF report is being generated and will be available shortly."
+msgstr ""
+
+#: public/class-ajax-handler.php:79
+msgid "Redirecting to payment..."
+msgstr ""
+
+#: public/class-ajax-handler.php:123
+msgid "Secret code is required"
+msgstr ""
+
+#: public/class-ajax-handler.php:127
+#: public/class-ajax-handler.php:157
+#: public/class-ajax-handler.php:211
+msgid "Valid email is required"
+msgstr ""
+
+#: public/class-ajax-handler.php:135
+msgid "PDF report will be sent to your email shortly!"
+msgstr ""
+
+#: public/class-ajax-handler.php:170
+msgid "No data found for this email"
+msgstr ""
+
+#: public/class-ajax-handler.php:215
+msgid "Please type DELETE to confirm"
+msgstr ""
+
+#: public/class-ajax-handler.php:237
+msgid "All your data has been permanently deleted"
+msgstr ""
+
+#: public/views/form-calculator.php:27
+#: public/views/form-calculator.php:40
+msgid "Partner 1"
+msgstr ""
+
+#: public/views/form-calculator.php:27
+#: public/views/form-calculator.php:40
+msgid "Partner 2"
+msgstr ""
+
+#: public/views/form-calculator.php:30
+#: public/views/form-calculator.php:43
+msgid "Date of Birth"
+msgstr ""
+
+#: public/views/form-calculator.php:55
+msgid "You're entering another person's data:"
+msgstr ""
+
+#: public/views/form-calculator.php:61
+msgid "I have permission to use this person's birth data for compatibility analysis"
+msgstr ""
+
+#: public/views/form-calculator.php:66
+msgid "I will not use this information to harm, harass, or make decisions affecting this person without their knowledge"
+msgstr ""
+
+#: public/views/form-calculator.php:71
+msgid "I understand this is for entertainment and self-reflection purposes only"
+msgstr ""
+
+#: public/views/form-calculator.php:78
+msgid "Continue"
+msgstr ""
+
+#: public/views/form-calculator.php:87
+msgid "Choose Your Report Type"
+msgstr ""
+
+#: public/views/form-calculator.php:92
+#: public/views/form-calculator.php:93
+msgid "Free"
+msgstr ""
+
+#: public/views/form-calculator.php:96
+msgid "Basic compatibility score"
+msgstr ""
+
+#: public/views/form-calculator.php:97
+msgid "Key personality insights"
+msgstr ""
+
+#: public/views/form-calculator.php:98
+msgid "PDF report via email"
+msgstr ""
+
+#: public/views/form-calculator.php:101
+msgid "Get Free Report"
+msgstr ""
+
+#: public/views/form-calculator.php:106
+msgid "Most Popular"
+msgstr ""
+
+#: public/views/form-calculator.php:108
+msgid "Standard"
+msgstr ""
+
+#: public/views/form-calculator.php:109
+#: public/views/form-calculator.php:125
+msgid "Paid"
+msgstr ""
+
+#: public/views/form-calculator.php:112
+msgid "Full compatibility analysis"
+msgstr ""
+
+#: public/views/form-calculator.php:113
+msgid "Relationship dynamics"
+msgstr ""
+
+#: public/views/form-calculator.php:114
+msgid "1-2 year forecast"
+msgstr ""
+
+#: public/views/form-calculator.php:115
+msgid "PDF download + email"
+msgstr ""
+
+#: public/views/form-calculator.php:118
+msgid "Get Standard Report"
+msgstr ""
+
+#: public/views/form-calculator.php:124
+msgid "Premium"
+msgstr ""
+
+#: public/views/form-calculator.php:128
+msgid "Everything in Standard"
+msgstr ""
+
+#: public/views/form-calculator.php:129
+msgid "Karmic connections"
+msgstr ""
+
+#: public/views/form-calculator.php:130
+msgid "10-20 year forecast"
+msgstr ""
+
+#: public/views/form-calculator.php:131
+msgid "Action recommendations"
+msgstr ""
+
+#: public/views/form-calculator.php:132
+msgid "Priority support"
+msgstr ""
+
+#: public/views/form-calculator.php:135
+msgid "Get Premium Report"
+msgstr ""
+
+#: public/views/form-calculator.php:146
+msgid "Processing..."
+msgstr ""
+
+#: public/views/form-calculator.php:147
+msgid "Please wait..."
+msgstr ""
+
+#: public/views/form-calculator.php:155
+msgid "Verifying Payment..."
+msgstr ""
+
+#: public/views/form-calculator.php:156
+msgid "Please wait while we confirm your payment. This usually takes a few seconds."
+msgstr ""
+
+#: public/views/form-calculator.php:159
+msgid "Do not close this page. You will be redirected automatically."
+msgstr ""
+
+#: public/views/form-calculator.php:168
+msgid "Success!"
+msgstr ""
+
+#: public/views/form-calculator.php:169
+msgid "Your compatibility report has been generated!"
+msgstr ""
+
+#: public/views/form-calculator.php:174
+msgid "Download PDF Report"
+msgstr ""
+
+#: public/views/form-calculator.php:177
+msgid "PDF is being generated... Please wait."
+msgstr ""
+
+#: public/views/form-calculator.php:183
+msgid "Send Report to Email?"
+msgstr ""
+
+#: public/views/form-calculator.php:184
+msgid "Optionally, you can receive this report via email:"
+msgstr ""
+
+#: public/views/form-calculator.php:188
+msgid "Email Address"
+msgstr ""
+
+#: public/views/form-calculator.php:197
+msgid "Send to Email"
+msgstr ""
+
+#: public/views/form-calculator.php:201
+msgid "Email sent successfully!"
+msgstr ""
+
+#: public/views/form-calculator.php:208
+msgid "Calculate Another"
+msgstr ""
+
+#: public/views/form-calculator.php:218
+msgid "Oops! Something Went Wrong"
+msgstr ""
+
+#: public/views/form-calculator.php:219
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: public/views/form-calculator.php:222
+msgid "If the problem persists, please contact our support team with your payment confirmation."
+msgstr ""
+
+#: public/views/form-calculator.php:227
+msgid "Try Again"
+msgstr ""
+
+#: admin/views/settings-page.php:22
+msgid "How to Display the Calculator"
+msgstr ""
+
+#: admin/views/settings-page.php:25
+msgid "Use the following shortcode to display the numerology calculator form on any page or post:"
+msgstr ""
+
+#: admin/views/settings-page.php:31
+msgid "Example: Create a new page, paste the shortcode, and publish. The calculator will appear automatically."
+msgstr ""
+
+#: admin/views/settings-page.php:38
+msgid "General"
+msgstr ""
+
+#: admin/views/settings-page.php:41
+msgid "API Configuration"
+msgstr ""
+
+#: admin/views/settings-page.php:44
+msgid "Localization"
+msgstr ""
+
+#: admin/views/settings-page.php:47
+msgid "Advanced"
+msgstr ""
+
+#: admin/views/settings-page.php:54
+msgid "Note:"
+msgstr ""
+
+#: admin/views/settings-page.php:55
+msgid "Pricing and payment gateway settings are now managed on the backend. Please configure them in your Laravel backend .env file."
+msgstr ""
+
+#: admin/views/settings-page.php:67
+msgid "Environment"
+msgstr ""
+
+#: admin/views/settings-page.php:71
+msgid "Production"
+msgstr ""
+
+#: admin/views/settings-page.php:74
+msgid "Staging"
+msgstr ""
+
+#: admin/views/settings-page.php:77
+msgid "Development"
+msgstr ""
+
+#: admin/views/settings-page.php:80
+msgid "Select the environment for API connections"
+msgstr ""
+
+#: admin/views/settings-page.php:85
+msgid "Terms Page URL"
+msgstr ""
+
+#: admin/views/settings-page.php:92
+msgid "Privacy Page URL"
+msgstr ""
+
+#: admin/views/settings-page.php:104
+msgid "Backend API URL"
+msgstr ""
+
+#: admin/views/settings-page.php:107
+msgid "Your Laravel backend API URL"
+msgstr ""
+
+#: admin/views/settings-page.php:112
+msgid "API Key"
+msgstr ""
+
+#: admin/views/settings-page.php:115
+msgid "Your unique API key from the backend"
+msgstr ""
+
+#: admin/views/settings-page.php:120
+msgid "Connection Test"
+msgstr ""
+
+#: admin/views/settings-page.php:123
+msgid "Test Connection"
+msgstr ""
+
+#: admin/views/settings-page.php:135
+msgid "Default Language"
+msgstr ""
+
+#: admin/views/settings-page.php:148
+msgid "Multi-language Support"
+msgstr ""
+
+#: admin/views/settings-page.php:152
+msgid "Enable multi-language support"
+msgstr ""
+
+#: admin/views/settings-page.php:154
+msgid "Works with WPML or Polylang if installed"
+msgstr ""
+
+#: admin/views/settings-page.php:159
+msgid "Auto-detect Currency"
+msgstr ""
+
+#: admin/views/settings-page.php:163
+msgid "Automatically detect currency based on user location"
+msgstr ""
+
+#: admin/views/settings-page.php:169
+msgid "Date Format"
+msgstr ""
+
+#: admin/views/settings-page.php:185
+msgid "Debug Mode"
+msgstr ""
+
+#: admin/views/settings-page.php:189
+msgid "Enable debug logging"
+msgstr ""
+
+#: admin/views/settings-page.php:191
+msgid "Logs will be saved to wp-content/uploads/nc-logs/"
+msgstr ""
+
+#: admin/views/settings-page.php:196
+msgid "Cache Duration"
+msgstr ""
+
+#: admin/views/settings-page.php:199
+msgid "seconds"
+msgstr ""
+
+#: admin/views/settings-page.php:200
+msgid "How long to cache API responses (0 to disable)"
+msgstr ""
+
+#: admin/views/settings-page.php:205
+msgid "Rate Limiting"
+msgstr ""
+
+#: admin/views/settings-page.php:208
+msgid "calculations per hour for free users"
+msgstr ""
+
+#: admin/views/settings-page.php:213
+msgid "Delete Data on Uninstall"
+msgstr ""
+
+#: admin/views/settings-page.php:217
+msgid "Remove all plugin data when uninstalled"
+msgstr ""
+
+#: admin/views/settings-page.php:220
+msgid "� This will permanently delete all calculations and user data!"
+msgstr ""
+
+#: admin/views/settings-page.php:226
+msgid "Export/Import"
+msgstr ""
+
+#: admin/views/settings-page.php:229
+msgid "Export Settings"
+msgstr ""
+
+#: admin/views/settings-page.php:232
+msgid "Import Settings"
+msgstr ""
+
+#: public/class-public.php:48
+msgid "Loading..."
+msgstr ""
+
+#: public/class-public.php:49
+msgid "An error occurred"
+msgstr ""
+
+#: public/class-public.php:54
+msgid "Birth date is required"
+msgstr ""
+
+#: public/class-public.php:55
+msgid "Birth date cannot be in the future"
+msgstr ""
+
+#: public/class-public.php:56
+msgid "Please enter a valid birth date"
+msgstr ""
+
+#: public/class-public.php:57
+msgid "Email is required"
+msgstr ""
+
+#: public/class-public.php:58
+msgid "Please enter a valid email address"
+msgstr ""
+
+#: public/class-public.php:61
+msgid "You must confirm you have permission to use this data"
+msgstr ""
+
+#: public/class-public.php:62
+msgid "You must agree not to use this information to harm others"
+msgstr ""
+
+#: public/class-public.php:63
+msgid "You must acknowledge this is for entertainment purposes"
+msgstr ""
+
+#: public/class-public.php:66
+msgid "Calculating your compatibility..."
+msgstr ""
+
+#: public/class-public.php:68
+msgid "Creating payment session..."
+msgstr ""
+
+#: public/class-public.php:69
+msgid "Please wait, you will be redirected to payment page..."
+msgstr ""
+
+#: public/class-public.php:72
+msgid "Free Compatibility Report"
+msgstr ""
+
+#: public/class-public.php:73
+msgid "Standard Package Report"
+msgstr ""
+
+#: public/class-public.php:74
+msgid "Premium Package Report"
+msgstr ""
+
+#: public/class-public.php:75
+msgid "Compatibility Report"
+msgstr ""
+
+#: public/class-public.php:78
+msgid "Failed to complete calculation. Please try again."
+msgstr ""
+
+#: public/class-public.php:79
+#: public/class-public.php:80
+msgid "Failed to create payment session. Please try again."
+msgstr ""
+
+#: public/class-public.php:81
+msgid "Payment was cancelled. Please try again."
+msgstr ""
+
+#: public/class-public.php:82
+msgid "Payment verification timeout. If you completed the payment, please contact support with your payment confirmation."
+msgstr ""
+
+#: public/class-public.php:83
+#: public/class-public.php:84
+msgid "Unable to determine payment status. Please contact support with your payment confirmation."
+msgstr ""
+
+#: public/class-public.php:85
+msgid "Unable to verify payment status. Please contact support with your payment confirmation."
+msgstr ""
+
+#: public/class-public.php:88
+msgid "Payment successful! Your PDF report is ready."
+msgstr ""
+
+#: public/class-public.php:89
+msgid "Payment successful! Your PDF report is being generated..."
+msgstr ""
+
+#: public/class-public.php:90
+msgid "Your PDF report is being generated. This usually takes 5-10 seconds."
+msgstr ""
+
+#: public/class-public.php:91
+msgid "PDF URL not available. Please contact support."
+msgstr ""
+
+#: public/class-public.php:95
+msgid "Secret code not found. Please recalculate."
+msgstr ""
+
+#: public/class-public.php:96
+msgid "Sending..."
+msgstr ""
+
+#: public/class-public.php:97
+msgid "Sent!"
+msgstr ""
+
+#: public/class-public.php:98
+msgid "Failed to send email. Please try again."
+msgstr ""
+
+#: public/class-public.php:101
+msgid "Starting payment polling for payment_id:"
+msgstr ""
+
+#: public/class-public.php:102
+msgid "Polling stopped (flag was set to false)"
+msgstr ""
+
+#: public/class-public.php:103
+msgid "Payment status check attempt"
+msgstr ""
+
+#: public/class-public.php:104
+msgid "Payment completed!"
+msgstr ""
+
+#: public/class-public.php:105
+msgid "Payment failed or cancelled"
+msgstr ""
+
+#: public/class-public.php:106
+msgid "Payment still pending, will check again in 3 seconds..."
+msgstr ""
+
+#: public/class-public.php:107
+msgid "Unknown status"
+msgstr ""
+
+#: public/class-public.php:108
+msgid "Your payment was successful! Check your email for the PDF report."
+msgstr ""
+
+#: public/class-public.php:111
+msgid "Calculator reset to initial state"
+msgstr ""
+
+#: public/class-public.php:112
+msgid "PDF download link is ready"
+msgstr ""

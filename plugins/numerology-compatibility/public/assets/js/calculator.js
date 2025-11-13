@@ -112,28 +112,28 @@
             var date2 = $('#person2_date').val();
 
             if (!date1) {
-                this.showFieldError($('#person1_date'), 'Birth date is required');
+                this.showFieldError($('#person1_date'), nc_public.i18n.birth_date_required);
                 isValid = false;
             }
 
             if (!date2) {
-                this.showFieldError($('#person2_date'), 'Birth date is required');
+                this.showFieldError($('#person2_date'), nc_public.i18n.birth_date_required);
                 isValid = false;
             }
 
             // Validate consents
             if (!$('#data_consent').is(':checked')) {
-                this.showError('You must confirm you have permission to use this data');
+                this.showError(nc_public.i18n.consent_data_required);
                 isValid = false;
             }
 
             if (!$('#harm_consent').is(':checked')) {
-                this.showError('You must agree not to use this information to harm others');
+                this.showError(nc_public.i18n.consent_harm_required);
                 isValid = false;
             }
 
             if (!$('#entertainment_consent').is(':checked')) {
-                this.showError('You must acknowledge this is for entertainment purposes');
+                this.showError(nc_public.i18n.consent_entertainment_required);
                 isValid = false;
             }
 
@@ -144,12 +144,12 @@
             var email = $field.val();
 
             if (!email) {
-                this.showFieldError($field, 'Email is required');
+                this.showFieldError($field, nc_public.i18n.email_required);
                 return false;
             }
 
             if (!this.isValidEmail(email)) {
-                this.showFieldError($field, 'Please enter a valid email address');
+                this.showFieldError($field, nc_public.i18n.email_invalid);
                 return false;
             }
 
@@ -167,13 +167,13 @@
             var today = new Date();
 
             if (date > today) {
-                this.showFieldError($field, 'Birth date cannot be in the future');
+                this.showFieldError($field, nc_public.i18n.birth_date_future);
                 return false;
             }
 
             var minDate = new Date('1900-01-01');
             if (date < minDate) {
-                this.showFieldError($field, 'Please enter a valid birth date');
+                this.showFieldError($field, nc_public.i18n.birth_date_invalid);
                 return false;
             }
 
@@ -205,7 +205,7 @@
         submitFreeCalculation: function() {
             // Show processing
             this.showStep(3);
-            this.updateProcessingMessage('Calculating your compatibility...', 'Please wait...');
+            this.updateProcessingMessage(nc_public.i18n.calculating, nc_public.i18n.please_wait);
 
             // Submit free calculation
             $.ajax({
@@ -243,7 +243,7 @@
                                 pdf_url: CalculatorManager.pdfUrl,
                                 response: response.data
                             });
-                            $('.nc-pdf-generating').html('PDF URL not available. Please contact support.');
+                            $('.nc-pdf-generating').html(nc_public.i18n.pdf_url_missing);
                         }
                     } else {
                         CalculatorManager.showError(response.data.message);
@@ -251,7 +251,7 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('Free calculation error:', error);
-                    CalculatorManager.showError('Failed to complete calculation. Please try again.');
+                    CalculatorManager.showError(nc_public.i18n.calculation_failed);
                 }
             });
         },
@@ -262,7 +262,7 @@
         submitPaidCalculation: function(tier) {
             // Show processing
             this.showStep(3);
-            this.updateProcessingMessage('Creating payment session...', 'Please wait, you will be redirected to payment page...');
+            this.updateProcessingMessage(nc_public.i18n.creating_payment, nc_public.i18n.redirect_to_payment);
 
             // Submit paid calculation request
             $.ajax({
@@ -280,12 +280,12 @@
                         console.log('Redirecting to checkout:', response.data.checkout_url);
                         window.location.href = response.data.checkout_url;
                     } else {
-                        CalculatorManager.showError(response.data.message || 'Failed to create payment session');
+                        CalculatorManager.showError(response.data.message || nc_public.i18n.payment_failed);
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error('Paid calculation error:', error);
-                    CalculatorManager.showError('Failed to create payment session. Please try again.');
+                    CalculatorManager.showError(nc_public.i18n.payment_failed);
                 }
             });
         },
@@ -362,7 +362,7 @@
 
                                 if (pdfReady && self.pdfUrl) {
                                     // PDF готов - показываем Success с ссылкой на скачивание
-                                    self.showSuccess('Payment successful! Your PDF report is ready.');
+                                    self.showSuccess(nc_public.i18n.payment_success_pdf_ready);
 
                                     // Сразу показываем ссылку на скачивание (без ожидания)
                                     $('#nc-pdf-download-link')
@@ -371,7 +371,7 @@
                                     $('.nc-pdf-generating').hide();
                                 } else {
                                     // PDF еще генерируется
-                                    self.showSuccess('Payment successful! Your PDF report is being generated...');
+                                    self.showSuccess(nc_public.i18n.payment_success_generating);
 
                                     // Запускаем проверку готовности PDF
                                     self.checkPdfStatus();
@@ -380,12 +380,12 @@
                                 // Платеж провалился или был отменен
                                 console.log('✗ Payment failed or cancelled');
                                 pollingActive = false;
-                                self.showError('Payment failed. Please try again.');
+                                self.showError(nc_public.i18n.payment_cancelled);
                             } else if (status === 'pending' && isPaid === false && attempts >= maxAttempts) {
                                 // Таймаут - оплата НЕ прошла
                                 console.log('✗ Timeout reached, payment not completed');
                                 pollingActive = false;
-                                self.showError('Payment verification timeout. If you completed the payment, please contact support with your payment confirmation.');
+                                self.showError(nc_public.i18n.payment_timeout);
                             } else if (status === 'pending') {
                                 // Продолжаем проверку
                                 console.log('⟳ Payment still pending, will check again in 3 seconds...');
@@ -395,7 +395,7 @@
                                 console.log('? Unknown status:', status);
                                 if (attempts >= maxAttempts) {
                                     pollingActive = false;
-                                    self.showError('Unable to determine payment status. Please contact support with your payment confirmation.');
+                                    self.showError(nc_public.i18n.payment_status_unknown);
                                 } else {
                                     setTimeout(checkStatus, 3000);
                                 }
@@ -405,7 +405,7 @@
                             console.error('Invalid API response structure:', response);
                             if (attempts >= maxAttempts) {
                                 pollingActive = false;
-                                self.showError('Unable to verify payment status. Please contact support with your payment confirmation.');
+                                self.showError(nc_public.i18n.payment_verify_failed);
                             } else {
                                 setTimeout(checkStatus, 3000);
                             }
@@ -438,13 +438,13 @@
         getPackageName: function(packageType) {
             switch (packageType) {
                 case 'free':
-                    return 'Free Compatibility Report';
+                    return nc_public.i18n.package_free;
                 case 'standard':
-                    return 'Standard Package Report';
+                    return nc_public.i18n.package_standard;
                 case 'premium':
-                    return 'Premium Package Report';
+                    return nc_public.i18n.package_premium;
                 default:
-                    return 'Compatibility Report';
+                    return nc_public.i18n.package_default;
             }
         },
 
@@ -514,7 +514,7 @@
             console.log('PDF URL:', self.pdfUrl);
 
             // Показываем сообщение что PDF генерируется
-            $('.nc-pdf-generating').html('Your PDF report is being generated. This usually takes 5-10 seconds.');
+            $('.nc-pdf-generating').html(nc_public.i18n.pdf_generating);
             $('.nc-pdf-generating').show();
 
             // Показываем ссылку СРАЗУ
@@ -535,19 +535,19 @@
 
             // Валидация email
             if (!email || !this.isValidEmail(email)) {
-                alert('Please enter a valid email address');
+                alert(nc_public.i18n.email_invalid_alert);
                 return;
             }
 
             // Проверка secret_code
             if (!this.secretCode) {
-                alert('Secret code not found. Please recalculate.');
+                alert(nc_public.i18n.secret_code_missing);
                 return;
             }
 
             // Блокируем кнопку
             var submitBtn = form.find('button[type="submit"]');
-            submitBtn.prop('disabled', true).text('Sending...');
+            submitBtn.prop('disabled', true).text(nc_public.i18n.email_sending);
 
             // Отправляем запрос на бэкенд
             $.ajax({
@@ -563,17 +563,17 @@
                     if (response.success) {
                         // Показываем сообщение об успехе
                         $('.nc-email-sent-message').show();
-                        submitBtn.text('Sent!').prop('disabled', true);
+                        submitBtn.text(nc_public.i18n.email_sent).prop('disabled', true);
 
                         console.log('Email sent successfully to:', email);
                     } else {
-                        alert(response.data.message || 'Failed to send email. Please try again.');
+                        alert(response.data.message || nc_public.i18n.email_failed);
                         submitBtn.prop('disabled', false).text('📧 Send to Email');
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error('Email sending error:', error);
-                    alert('Failed to send email. Please try again.');
+                    alert(nc_public.i18n.email_failed);
                     submitBtn.prop('disabled', false).text('📧 Send to Email');
                 }
             });
@@ -604,11 +604,11 @@
                 CalculatorManager.showPendingStep(paymentId, calculationId);
             } else {
                 // Fallback если нет payment_id
-                CalculatorManager.showSuccess('Your payment was successful! Check your email for the PDF report.');
+                CalculatorManager.showSuccess(nc_public.i18n.payment_success_email);
             }
         } else if (urlParams.get('payment_cancelled') === '1') {
             // Пользователь отменил оплату
-            CalculatorManager.showError('Payment was cancelled. Please try again.');
+            CalculatorManager.showError(nc_public.i18n.payment_cancelled);
 
             // Очищаем URL
             if (window.history && window.history.replaceState) {

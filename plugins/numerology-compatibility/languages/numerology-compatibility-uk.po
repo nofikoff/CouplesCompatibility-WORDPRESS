@@ -1,4 +1,4 @@
-# Russian translation for Numerology Compatibility Calculator
+# Ukrainian translation for Numerology Compatibility Calculator
 # Copyright (C) 2025 Numerology Compatibility Calculator
 # This file is distributed under the GPL v2 or later.
 msgid ""
@@ -8,8 +8,8 @@ msgstr ""
 "POT-Creation-Date: 2025-01-13 12:00+0000\n"
 "PO-Revision-Date: 2025-01-13 12:00+0000\n"
 "Last-Translator: \n"
-"Language-Team: Russian\n"
-"Language: ru_RU\n"
+"Language-Team: Ukrainian\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,37 +23,37 @@ msgid "Partner 2"
 msgstr "Партнер 2"
 
 msgid "Date of Birth"
-msgstr "Дата рождения"
+msgstr "Дата народження"
 
 msgid "Continue"
-msgstr "Продолжить"
+msgstr "Продовжити"
 
 msgid "Free"
-msgstr "Бесплатно"
+msgstr "Безкоштовно"
 
 msgid "Standard"
 msgstr "Стандарт"
 
 msgid "Premium"
-msgstr "Премиум"
+msgstr "Преміум"
 
 msgid "Processing..."
-msgstr "Обработка..."
+msgstr "Обробка..."
 
 msgid "Please wait..."
-msgstr "Пожалуйста, подождите..."
+msgstr "Будь ласка, зачекайте..."
 
 msgid "Success!"
-msgstr "Успешно!"
+msgstr "Успішно!"
 
 msgid "Loading..."
-msgstr "Загрузка..."
+msgstr "Завантаження..."
 
 msgid "General"
-msgstr "Общие"
+msgstr "Загальні"
 
 msgid "Advanced"
-msgstr "Расширенные"
+msgstr "Розширені"
 
 msgid "Localization"
-msgstr "Локализация"
+msgstr "Локалізація"
