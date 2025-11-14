@@ -44,7 +44,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
-    margin-bottom: 20px;
 }
 
 @media (max-width: 768px) {
@@ -60,7 +59,7 @@
 .nc-form-group h3 {
     color: var(--nc-primary);
     margin-bottom: 15px;
-    font-size: 1.1em;
+    font-size: 1.6em;
 }
 
 .nc-field {
@@ -129,11 +128,14 @@
 }
 
 .nc-consent-group {
-    background: #FEF3C7;
-    border: 1px solid #FCD34D;
+    font-size: 0.8rem;
     border-radius: 8px;
     padding: 15px;
-    margin: 20px 0;
+}
+
+.nc-form-actions {
+    display: flex;
+    justify-content: center;
 }
 
 .nc-alert {
@@ -143,7 +145,7 @@
 }
 
 .nc-alert-warning {
-    background: #FEF3C7;
+    background: #fbf4d7;
     color: #92400E;
     border: 1px solid #FCD34D;
 }
