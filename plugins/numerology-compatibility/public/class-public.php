@@ -65,6 +65,8 @@ class PublicClass {
 				'redirecting_to_payment' => __('Please wait, you will be redirected to payment page...', 'numerology-compatibility'),
 				'pdf_generating' => __('Your PDF report is being generated. This usually takes 5-10 seconds.', 'numerology-compatibility'),
 				'pdf_not_available' => __('PDF URL not available. Please contact support.', 'numerology-compatibility'),
+				'pdf_timeout' => __('PDF is taking longer than expected. Please try downloading in a moment.', 'numerology-compatibility'),
+				'pdf_ready' => __('PDF is ready for download!', 'numerology-compatibility'),
 			]
 		]);
 	}

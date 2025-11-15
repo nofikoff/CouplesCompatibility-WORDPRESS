@@ -398,3 +398,9 @@ msgstr "Ваш PDF отчет генерируется. Обычно это за
 
 msgid "PDF URL not available. Please contact support."
 msgstr "PDF ссылка недоступна. Пожалуйста, свяжитесь с поддержкой."
+
+msgid "PDF is taking longer than expected. Please try downloading in a moment."
+msgstr "PDF генерируется дольше обычного. Пожалуйста, попробуйте скачать через несколько секунд."
+
+msgid "PDF is ready for download!"
+msgstr "PDF готов к скачиванию!"

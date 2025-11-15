@@ -401,3 +401,9 @@ msgstr ""
 
 msgid "PDF URL not available. Please contact support."
 msgstr ""
+
+msgid "PDF is taking longer than expected. Please try downloading in a moment."
+msgstr ""
+
+msgid "PDF is ready for download!"
+msgstr ""

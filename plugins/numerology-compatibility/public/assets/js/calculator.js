@@ -533,24 +533,84 @@
         },
 
         /**
-         * УПРОЩЕННАЯ проверка готовности PDF
-         * Просто показываем ссылку сразу - пользователь сам решит когда кликать
+         * Проверка готовности PDF через polling
+         * Делает HEAD запросы к PDF URL каждые 2 секунды (макс 15 попыток = 30 секунд)
          */
         checkPdfStatus: function() {
             var self = this;
+            var attempts = 0;
+            var maxAttempts = 15;
+            var pollInterval = 2000; // 2 секунды
 
-            console.log('PDF URL:', self.pdfUrl);
+            console.log('Starting PDF polling for URL:', self.pdfUrl);
 
-            // Показываем сообщение что PDF генерируется
-            $('.nc-pdf-generating').html(nc_public.i18n.pdf_generating);
-            $('.nc-pdf-generating').show();
+            // Скрываем кнопку и показываем сообщение о генерации
+            $('#nc-pdf-download-link').hide();
+            $('.nc-pdf-generating').html(nc_public.i18n.pdf_generating).show();
 
-            // Показываем ссылку СРАЗУ
-            $('#nc-pdf-download-link')
-                .attr('href', self.pdfUrl)
-                .show();
+            var checkPdf = function() {
+                attempts++;
+                console.log('PDF check attempt ' + attempts + '/' + maxAttempts);
 
-            console.log('PDF download link is ready');
+                // HEAD запрос для проверки доступности PDF
+                $.ajax({
+                    url: self.pdfUrl,
+                    type: 'HEAD',
+                    timeout: 5000,
+                    success: function(data, textStatus, xhr) {
+                        var contentType = xhr.getResponseHeader('Content-Type');
+
+                        // Если получили PDF (не JSON с ошибкой)
+                        if (contentType && contentType.indexOf('application/pdf') !== -1) {
+                            console.log('PDF is ready!');
+
+                            // Скрываем сообщение о генерации
+                            $('.nc-pdf-generating').hide();
+
+                            // Показываем кнопку скачивания
+                            $('#nc-pdf-download-link')
+                                .attr('href', self.pdfUrl)
+                                .show();
+                        } else {
+                            // PDF еще не готов, продолжаем проверку
+                            if (attempts < maxAttempts) {
+                                setTimeout(checkPdf, pollInterval);
+                            } else {
+                                // Таймаут - показываем кнопку но с предупреждением
+                                console.warn('PDF polling timeout after ' + (maxAttempts * pollInterval / 1000) + ' seconds');
+                                $('.nc-pdf-generating').html(nc_public.i18n.pdf_timeout);
+                                $('#nc-pdf-download-link')
+                                    .attr('href', self.pdfUrl)
+                                    .show();
+                            }
+                        }
+                    },
+                    error: function(xhr) {
+                        // 425 Too Early = PDF еще генерируется
+                        if (xhr.status === 425) {
+                            console.log('PDF still generating (425), retrying...');
+                            if (attempts < maxAttempts) {
+                                setTimeout(checkPdf, pollInterval);
+                            } else {
+                                $('.nc-pdf-generating').html(nc_public.i18n.pdf_timeout);
+                                $('#nc-pdf-download-link')
+                                    .attr('href', self.pdfUrl)
+                                    .show();
+                            }
+                        } else {
+                            // Другая ошибка - показываем кнопку
+                            console.error('Error checking PDF status:', xhr.status);
+                            $('.nc-pdf-generating').hide();
+                            $('#nc-pdf-download-link')
+                                .attr('href', self.pdfUrl)
+                                .show();
+                        }
+                    }
+                });
+            };
+
+            // Начинаем проверку
+            checkPdf();
         },
 
         /**
