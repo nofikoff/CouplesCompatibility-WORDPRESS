@@ -162,6 +162,10 @@
     cursor: pointer;
     transition: all 0.2s;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .nc-btn-primary {
@@ -301,6 +305,12 @@
     color: var(--nc-success);
     font-weight: bold;
     margin-right: 10px;
+}
+
+.nc-package .nc-select-package {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* Modal */
