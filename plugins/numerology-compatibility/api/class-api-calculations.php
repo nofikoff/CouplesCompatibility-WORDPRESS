@@ -176,12 +176,12 @@ class ApiCalculations {
 	 * Получить текущую локаль для API
 	 * Конвертирует WordPress локаль в формат API: en|ru|uk
 	 *
-	 * @return string 'en', 'ru' или 'uk'
+	 * @return string
 	 */
 	private function get_current_locale() {
 		$lang = substr(get_locale(), 0, 2);
 
-		return in_array($lang, ['ru', 'uk'], true) ? $lang : 'en';
+		return $lang ?: 'en';
 	}
 
 	/**
