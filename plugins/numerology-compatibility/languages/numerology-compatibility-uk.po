@@ -7,8 +7,8 @@ msgstr ""
 "POT-Creation-Date: 2025-01-13 12:00+0000\n"
 "PO-Revision-Date: 2025-01-13 12:00+0000\n"
 "Last-Translator: \n"
-"Language-Team: Russian\n"
-"Language: ru_RU\n"
+"Language-Team: Ukrainian\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,81 +18,81 @@ msgstr ""
 #: numerology-compatibility.php:38
 #, php-format
 msgid "Numerology Compatibility requires PHP %s or higher. Your version: %s"
-msgstr "Нумерология совместимости требует PHP %s или выше. Ваша версия: %s"
+msgstr "Нумерологія сумісності потребує PHP %s або вище. Ваша версія: %s"
 
 #: api/class-api-calculations.php:51
 msgid "Calculation failed"
-msgstr "Расчет не удался"
+msgstr "Розрахунок не вдався"
 
 #: api/class-api-calculations.php:90
 msgid "Failed to create payment session"
-msgstr "Не удалось создать платежную сессию"
+msgstr "Не вдалося створити платіжну сесію"
 
 #: api/class-api-calculations.php:103
 #: api/class-api-calculations.php:121
 msgid "Calculation ID is required"
-msgstr "Требуется ID расчета"
+msgstr "Потрібен ID розрахунку"
 
 #: api/class-api-calculations.php:138
 msgid "Both birth dates are required"
-msgstr "Требуются обе даты рождения"
+msgstr "Потрібні обидві дати народження"
 
 #: api/class-api-calculations.php:146
 msgid "Invalid date format. Required: Y-m-d"
-msgstr "Неверный формат даты. Требуется: Г-М-Д"
+msgstr "Невірний формат дати. Потрібно: Р-М-Д"
 
 #: api/class-api-calculations.php:152
 msgid "Birth dates cannot be in the future"
-msgstr "Даты рождения не могут быть в будущем"
+msgstr "Дати народження не можуть бути в майбутньому"
 
 #: api/class-api-calculations.php:168
 #, php-format
 msgid "Invalid tier. Allowed: %s"
-msgstr "Неверный тариф. Допустимые: %s"
+msgstr "Невірний тариф. Дозволені: %s"
 
 #: api/class-api-calculations.php:209
 msgid "Invalid secret code"
-msgstr "Неверный секретный код"
+msgstr "Невірний секретний код"
 
 #: api/class-api-calculations.php:214
 #: public/class-ajax-handler.php:127
 #: public/class-ajax-handler.php:157
 #: public/class-ajax-handler.php:211
 msgid "Valid email is required"
-msgstr "Требуется действительный email"
+msgstr "Потрібна дійсна електронна пошта"
 
 #: api/class-api-calculations.php:233
 msgid "Failed to send email"
-msgstr "Не удалось отправить email"
+msgstr "Не вдалося надіслати email"
 
 #: api/class-api-client.php:64
 msgid "Payment required"
-msgstr "Требуется оплата"
+msgstr "Потрібна оплата"
 
 #: api/class-api-client.php:69
 #, php-format
 msgid "Rate limit exceeded. Try again in %d seconds"
-msgstr "Превышен лимит запросов. Попробуйте снова через %d секунд"
+msgstr "Перевищено ліміт запитів. Спробуйте знову через %d секунд"
 
 #: api/class-api-client.php:74
 msgid "Validation failed"
-msgstr "Ошибка валидации"
+msgstr "Помилка валідації"
 
 #: api/class-api-client.php:75
 msgid "Validation error: "
-msgstr "Ошибка валидации: "
+msgstr "Помилка валідації: "
 
 #: api/class-api-client.php:78
 msgid "Unknown error occurred"
-msgstr "Произошла неизвестная ошибка"
+msgstr "Сталася невідома помилка"
 
 #: api/class-api-client.php:79
 msgid "API error: "
-msgstr "Ошибка API: "
+msgstr "Помилка API: "
 
 #: api/class-api-client.php:127
 msgid "Connection successful"
-msgstr "Подключение успешно"
+msgstr "Підключення успішне"
 
 #: public/views/form-calculator.php:27
 msgid "Partner 1"
@@ -101,7 +101,7 @@ msgstr "Партнер 1"
 #: public/views/form-calculator.php:30
 #: public/views/form-calculator.php:43
 msgid "Date of Birth"
-msgstr "Дата рождения"
+msgstr "Дата народження"
 
 #: public/views/form-calculator.php:40
 msgid "Partner 2"
@@ -109,48 +109,48 @@ msgstr "Партнер 2"
 
 #: public/views/form-calculator.php:57
 msgid "I will not use this information to harm, harass, or make decisions affecting this person without their knowledge"
-msgstr "Я не буду использовать эту информацию для причинения вреда, преследования или принятия решений, влияющих на этого человека, без его ведома"
+msgstr "Я не буду використовувати цю інформацію для заподіяння шкоди, переслідування або прийняття рішень, що впливають на цю людину, без її відома"
 
 #: public/views/form-calculator.php:62
 msgid "I understand this is for entertainment and self-reflection purposes only"
-msgstr "Я понимаю, что это только для развлечения и самопознания"
+msgstr "Я розумію, що це лише для розваги та самопізнання"
 
 #: public/views/form-calculator.php:69
 msgid "Continue"
-msgstr "Продолжить"
+msgstr "Продовжити"
 
 #: public/views/form-calculator.php:78
 msgid "Choose Your Report Type"
-msgstr "Выберите тип отчета"
+msgstr "Виберіть тип звіту"
 
 #: public/views/form-calculator.php:83
 #: public/views/form-calculator.php:84
 #: public/class-shortcodes.php:53
 msgid "Free"
-msgstr "Бесплатно"
+msgstr "Безкоштовно"
 
 #: public/views/form-calculator.php:87
 #: public/class-shortcodes.php:56
 msgid "Basic compatibility score"
-msgstr "Базовая оценка совместимости"
+msgstr "Базова оцінка сумісності"
 
 #: public/views/form-calculator.php:88
 msgid "Key personality insights"
-msgstr "Ключевые особенности личности"
+msgstr "Ключові особливості особистості"
 
 #: public/views/form-calculator.php:89
 msgid "PDF report via email"
-msgstr "PDF отчет на email"
+msgstr "PDF звіт на email"
 
 #: public/views/form-calculator.php:92
 #: public/class-shortcodes.php:61
 msgid "Get Free Report"
-msgstr "Получить бесплатный отчет"
+msgstr "Отримати безкоштовний звіт"
 
 #: public/views/form-calculator.php:97
 #: public/class-shortcodes.php:68
 msgid "Most Popular"
-msgstr "Самый популярный"
+msgstr "Найпопулярніший"
 
 #: public/views/form-calculator.php:99
 #: public/class-shortcodes.php:70
@@ -160,132 +160,132 @@ msgstr "Стандарт"
 #: public/views/form-calculator.php:100
 #: public/views/form-calculator.php:116
 msgid "Paid"
-msgstr "Платный"
+msgstr "Платний"
 
 #: public/views/form-calculator.php:103
 msgid "Full compatibility analysis"
-msgstr "Полный анализ совместимости"
+msgstr "Повний аналіз сумісності"
 
 #: public/views/form-calculator.php:104
 msgid "Relationship dynamics"
-msgstr "Динамика отношений"
+msgstr "Динаміка стосунків"
 
 #: public/views/form-calculator.php:105
 msgid "1-2 year forecast"
-msgstr "Прогноз на 1-2 года"
+msgstr "Прогноз на 1-2 роки"
 
 #: public/views/form-calculator.php:106
 msgid "PDF download + email"
-msgstr "Скачать PDF + email"
+msgstr "Завантажити PDF + email"
 
 #: public/views/form-calculator.php:109
 msgid "Get Standard Report"
-msgstr "Получить стандартный отчет"
+msgstr "Отримати стандартний звіт"
 
 #: public/views/form-calculator.php:115
 msgid "Premium"
-msgstr "Премиум"
+msgstr "Преміум"
 
 #: public/views/form-calculator.php:119
 msgid "Everything in Standard"
-msgstr "Все из Стандарта"
+msgstr "Все зі Стандарту"
 
 #: public/views/form-calculator.php:120
 msgid "Karmic connections"
-msgstr "Кармические связи"
+msgstr "Кармічні зв'язки"
 
 #: public/views/form-calculator.php:121
 msgid "10-20 year forecast"
-msgstr "Прогноз на 10-20 лет"
+msgstr "Прогноз на 10-20 років"
 
 #: public/views/form-calculator.php:122
 msgid "Action recommendations"
-msgstr "Рекомендации к действию"
+msgstr "Рекомендації до дій"
 
 #: public/views/form-calculator.php:123
 msgid "Priority support"
-msgstr "Приоритетная поддержка"
+msgstr "Пріоритетна підтримка"
 
 #: public/views/form-calculator.php:126
 msgid "Get Premium Report"
-msgstr "Получить премиум отчет"
+msgstr "Отримати преміум звіт"
 
 #: public/views/form-calculator.php:137
 msgid "Processing..."
-msgstr "Обработка..."
+msgstr "Обробка..."
 
 #: public/views/form-calculator.php:138
 msgid "Please wait..."
-msgstr "Пожалуйста, подождите..."
+msgstr "Будь ласка, зачекайте..."
 
 #: public/views/form-calculator.php:146
 msgid "Verifying Payment..."
-msgstr "Проверка оплаты..."
+msgstr "Перевірка оплати..."
 
 #: public/views/form-calculator.php:147
 msgid "Please wait while we confirm your payment. This usually takes a few seconds."
-msgstr "Пожалуйста, подождите, пока мы подтверждаем вашу оплату. Обычно это занимает несколько секунд."
+msgstr "Будь ласка, зачекайте, поки ми підтверджуємо вашу оплату. Зазвичай це займає кілька секунд."
 
 #: public/views/form-calculator.php:150
 msgid "Do not close this page. You will be redirected automatically."
-msgstr "Не закрывайте эту страницу. Вы будете перенаправлены автоматически."
+msgstr "Не закривайте цю сторінку. Ви будете перенаправлені автоматично."
 
 #: public/views/form-calculator.php:159
 #: public/class-public.php:49
 msgid "Success!"
-msgstr "Успешно!"
+msgstr "Успішно!"
 
 #: public/views/form-calculator.php:160
 msgid "Your compatibility report has been generated!"
-msgstr "Ваш отчет о совместимости создан!"
+msgstr "Ваш звіт про сумісність створено!"
 
 #: public/views/form-calculator.php:165
 msgid "Download PDF Report"
-msgstr "Скачать PDF отчет"
+msgstr "Завантажити PDF звіт"
 
 #: public/views/form-calculator.php:168
 msgid "PDF is being generated... Please wait."
-msgstr "PDF генерируется... Пожалуйста, подождите."
+msgstr "PDF генерується... Будь ласка, зачекайте."
 
 #: public/views/form-calculator.php:174
 msgid "Send Report to Email?"
-msgstr "Отправить отчет на email?"
+msgstr "Надіслати звіт на email?"
 
 #: public/views/form-calculator.php:175
 msgid "Optionally, you can receive this report via email:"
-msgstr "При желании вы можете получить этот отчет на email:"
+msgstr "За бажанням ви можете отримати цей звіт на email:"
 
 #: public/views/form-calculator.php:179
 msgid "Email Address"
-msgstr "Адрес Email"
+msgstr "Адреса Email"
 
 #: public/views/form-calculator.php:188
 msgid "Send to Email"
-msgstr "Отправить на email"
+msgstr "Надіслати на email"
 
 #: public/views/form-calculator.php:192
 msgid "Email sent successfully!"
-msgstr "Email успешно отправлен!"
+msgstr "Email успішно надіслано!"
 
 #: public/views/form-calculator.php:199
 msgid "Calculate Another"
-msgstr "Рассчитать еще раз"
+msgstr "Розрахувати ще раз"
 
 #: public/views/form-calculator.php:209
 msgid "Oops! Something Went Wrong"
-msgstr "Упс! Что-то пошло не так"
+msgstr "Ой! Щось пішло не так"
 
 #: public/views/form-calculator.php:210
 msgid "An error occurred. Please try again."
-msgstr "Произошла ошибка. Пожалуйста, попробуйте снова."
+msgstr "Сталася помилка. Будь ласка, спробуйте знову."
 
 #: public/views/form-calculator.php:213
 msgid "If the problem persists, please contact our support team with your payment confirmation."
-msgstr "Если проблема не исчезает, пожалуйста, свяжитесь с нашей службой поддержки с подтверждением оплаты."
+msgstr "Якщо проблема не зникає, будь ласка, зв'яжіться з нашою службою підтримки з підтвердженням оплати."
 
 #: public/views/form-calculator.php:218
 msgid "Try Again"
-msgstr "Попробовать снова"
+msgstr "Спробувати знову"
 
 #: admin/class-settings.php:42
 #: admin/class-settings.php:46
@@ -295,57 +295,57 @@ msgstr "Попробовать снова"
 #: public/class-ajax-handler.php:151
 #: public/class-ajax-handler.php:204
 msgid "Security check failed"
-msgstr "Проверка безопасности не пройдена"
+msgstr "Перевірка безпеки не пройдена"
 
 #: admin/class-settings.php:46
 msgid "Permission denied"
-msgstr "Доступ запрещен"
+msgstr "Доступ заборонено"
 
 #: public/class-public.php:47
 msgid "Loading..."
-msgstr "Загрузка..."
+msgstr "Завантаження..."
 
 #: public/class-public.php:48
 msgid "An error occurred"
-msgstr "Произошла ошибка"
+msgstr "Сталася помилка"
 
 #: public/class-public.php:50
 #: public/class-ajax-handler.php:79
 msgid "Redirecting to payment..."
-msgstr "Перенаправление на оплату..."
+msgstr "Перенаправлення на оплату..."
 
 #: public/class-ajax-handler.php:28
 #: public/class-ajax-handler.php:65
 msgid "All consent checkboxes must be accepted"
-msgstr "Все согласия должны быть приняты"
+msgstr "Всі згоди повинні бути прийняті"
 
 #: public/class-ajax-handler.php:42
 msgid "Calculation completed! PDF report is being generated and will be available shortly."
-msgstr "Расчет завершен! PDF отчет генерируется и скоро будет доступен."
+msgstr "Розрахунок завершено! PDF звіт генерується і скоро буде доступний."
 
 #: public/class-ajax-handler.php:123
 msgid "Secret code is required"
-msgstr "Требуется секретный код"
+msgstr "Потрібен секретний код"
 
 #: public/class-ajax-handler.php:135
 msgid "PDF report will be sent to your email shortly!"
-msgstr "PDF отчет скоро будет отправлен на ваш email!"
+msgstr "PDF звіт скоро буде надіслано на ваш email!"
 
 #: public/class-ajax-handler.php:170
 msgid "No data found for this email"
-msgstr "Данные для этого email не найдены"
+msgstr "Дані для цього email не знайдені"
 
 #: public/class-ajax-handler.php:215
 msgid "Please type DELETE to confirm"
-msgstr "Пожалуйста, введите DELETE для подтверждения"
+msgstr "Будь ласка, введіть DELETE для підтвердження"
 
 #: public/class-ajax-handler.php:237
 msgid "All your data has been permanently deleted"
-msgstr "Все ваши данные были безвозвратно удалены"
+msgstr "Всі ваші дані були безповоротно видалені"
 
 #: public/class-shortcodes.php:57
 msgid "3 positions analysis"
-msgstr "Анализ 3 позиций"
+msgstr "Аналіз 3 позицій"
 
 #: public/class-shortcodes.php:58
 msgid "PDF via email"
@@ -353,27 +353,27 @@ msgstr "PDF на email"
 
 #: public/class-shortcodes.php:73
 msgid "Full compatibility matrix"
-msgstr "Полная матрица совместимости"
+msgstr "Повна матриця сумісності"
 
 #: public/class-shortcodes.php:74
 msgid "7 positions analysis"
-msgstr "Анализ 7 позиций"
+msgstr "Аналіз 7 позицій"
 
 #. JavaScript strings (to be localized via wp_localize_script)
 msgid "Birth date is required"
-msgstr "Требуется дата рождения"
+msgstr "Потрібна дата народження"
 
 msgid "You must agree not to use this information to harm others"
-msgstr "Вы должны согласиться не использовать эту информацию для причинения вреда другим"
+msgstr "Ви повинні погодитися не використовувати цю інформацію для заподіяння шкоди іншим"
 
 msgid "You must acknowledge this is for entertainment purposes"
-msgstr "Вы должны признать, что это только для развлечения"
+msgstr "Ви повинні визнати, що це лише для розваги"
 
 msgid "Please enter a valid email address"
-msgstr "Пожалуйста, введите действительный адрес email"
+msgstr "Будь ласка, введіть дійсну адресу email"
 
 msgid "Payment failed. Please try again."
-msgstr "Оплата не прошла. Пожалуйста, попробуйте снова."
+msgstr "Оплата не пройшла. Будь ласка, спробуйте знову."
 
 msgid "Payment verification timed out. Please contact support if you were charged."
-msgstr "Превышено время ожидания подтверждения оплаты. Пожалуйста, свяжитесь с поддержкой, если с вас списали средства."
+msgstr "Перевищено час очікування підтвердження оплати. Будь ласка, зв'яжіться з підтримкою, якщо з вас стягнули кошти."
