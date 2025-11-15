@@ -29,13 +29,13 @@ class ApiCalculations {
 	public function calculate_free($data) {
 		$this->validate_calculation_data($data);
 
-		$language = $this->get_current_language();
+		$locale = $this->get_current_locale();
 
 		// Подготавливаем данные согласно API спецификации
 		$request_data = [
 			'person1_date' => sanitize_text_field($data['person1_date']),
 			'person2_date' => sanitize_text_field($data['person2_date']),
-			'language' => $language,
+			'locale' => $locale,
 		];
 
 		// Отправляем запрос на бэкенд
@@ -68,13 +68,13 @@ class ApiCalculations {
 		$this->validate_calculation_data($data);
 		$this->validate_tier($tier);
 
-		$language = $this->get_current_language();
+		$locale = $this->get_current_locale();
 
 		$request_data = [
 			'person1_date' => sanitize_text_field($data['person1_date']),
 			'person2_date' => sanitize_text_field($data['person2_date']),
 			'tier' => $tier,
-			'language' => $language,
+			'locale' => $locale,
 		];
 
 		// Отправляем запрос на создание Checkout Session
@@ -173,24 +173,15 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Получить текущий язык для API
+	 * Получить текущую локаль для API
 	 * Конвертирует WordPress локаль в формат API: en|ru|uk
 	 *
 	 * @return string 'en', 'ru' или 'uk'
 	 */
-	private function get_current_language() {
-		$wp_locale = get_locale();
+	private function get_current_locale() {
+		$lang = substr(get_locale(), 0, 2);
 
-		// Конвертируем WordPress локаль в формат API (en|ru|uk)
-		if (strpos($wp_locale, 'ru') === 0) {
-			return 'ru';
-		}
-
-		if (strpos($wp_locale, 'uk') === 0) {
-			return 'uk';
-		}
-
-		return 'en';
+		return in_array($lang, ['ru', 'uk'], true) ? $lang : 'en';
 	}
 
 	/**
