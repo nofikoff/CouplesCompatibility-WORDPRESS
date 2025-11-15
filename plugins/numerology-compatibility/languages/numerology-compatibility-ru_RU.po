@@ -377,3 +377,24 @@ msgstr "Оплата не прошла. Пожалуйста, попробуйт
 
 msgid "Payment verification timed out. Please contact support if you were charged."
 msgstr "Превышено время ожидания подтверждения оплаты. Пожалуйста, свяжитесь с поддержкой, если с вас списали средства."
+
+msgid "Please fill in this field"
+msgstr "Пожалуйста, заполните это поле"
+
+msgid "Please check this box if you want to continue"
+msgstr "Пожалуйста, отметьте этот флажок, чтобы продолжить"
+
+msgid "Calculating your compatibility..."
+msgstr "Рассчитываем вашу совместимость..."
+
+msgid "Creating payment session..."
+msgstr "Создание платежной сессии..."
+
+msgid "Please wait, you will be redirected to payment page..."
+msgstr "Пожалуйста, подождите, вы будете перенаправлены на страницу оплаты..."
+
+msgid "Your PDF report is being generated. This usually takes 5-10 seconds."
+msgstr "Ваш PDF отчет генерируется. Обычно это занимает 5-10 секунд."
+
+msgid "PDF URL not available. Please contact support."
+msgstr "PDF ссылка недоступна. Пожалуйста, свяжитесь с поддержкой."

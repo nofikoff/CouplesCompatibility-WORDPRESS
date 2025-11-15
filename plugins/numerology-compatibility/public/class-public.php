@@ -54,7 +54,17 @@ class PublicClass {
 				'harm_consent_required' => __('You must agree not to use this information to harm others', 'numerology-compatibility'),
 				'entertainment_consent_required' => __('You must acknowledge this is for entertainment purposes', 'numerology-compatibility'),
 				'payment_failed' => __('Payment failed. Please try again.', 'numerology-compatibility'),
-				'payment_timeout' => __('Payment verification timed out. Please contact support if you were charged.', 'numerology-compatibility')
+				'payment_timeout' => __('Payment verification timed out. Please contact support if you were charged.', 'numerology-compatibility'),
+				// HTML5 валидационные сообщения
+				'field_required' => __('Please fill in this field', 'numerology-compatibility'),
+				'checkbox_required' => __('Please check this box if you want to continue', 'numerology-compatibility'),
+				// Сообщения процесса обработки
+				'calculating_compatibility' => __('Calculating your compatibility...', 'numerology-compatibility'),
+				'please_wait' => __('Please wait...', 'numerology-compatibility'),
+				'creating_payment_session' => __('Creating payment session...', 'numerology-compatibility'),
+				'redirecting_to_payment' => __('Please wait, you will be redirected to payment page...', 'numerology-compatibility'),
+				'pdf_generating' => __('Your PDF report is being generated. This usually takes 5-10 seconds.', 'numerology-compatibility'),
+				'pdf_not_available' => __('PDF URL not available. Please contact support.', 'numerology-compatibility'),
 			]
 		]);
 	}

@@ -380,3 +380,24 @@ msgstr ""
 
 msgid "Payment verification timed out. Please contact support if you were charged."
 msgstr ""
+
+msgid "Please fill in this field"
+msgstr ""
+
+msgid "Please check this box if you want to continue"
+msgstr ""
+
+msgid "Calculating your compatibility..."
+msgstr ""
+
+msgid "Creating payment session..."
+msgstr ""
+
+msgid "Please wait, you will be redirected to payment page..."
+msgstr ""
+
+msgid "Your PDF report is being generated. This usually takes 5-10 seconds."
+msgstr ""
+
+msgid "PDF URL not available. Please contact support."
+msgstr ""

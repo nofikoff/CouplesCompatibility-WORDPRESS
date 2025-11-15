@@ -18,9 +18,42 @@
 
         init: function() {
             this.bindEvents();
+            this.setupHTML5Validation();
 
             // Get initial package from data attribute
             this.selectedPackage = $('#nc-calculator-wrapper').data('package') || 'auto';
+        },
+
+        /**
+         * Настройка локализованной валидации HTML5 полей
+         */
+        setupHTML5Validation: function() {
+            var self = this;
+
+            // Валидация для всех required полей (input date)
+            $('input[required][type="date"]').on('invalid', function() {
+                this.setCustomValidity(nc_public.i18n.field_required);
+            }).on('input change', function() {
+                this.setCustomValidity('');
+            });
+
+            // Валидация для чекбоксов
+            $('input[required][type="checkbox"]').on('invalid', function() {
+                this.setCustomValidity(nc_public.i18n.checkbox_required);
+            }).on('change', function() {
+                this.setCustomValidity('');
+            });
+
+            // Email валидация
+            $('input[type="email"]').on('invalid', function() {
+                if (this.validity.valueMissing) {
+                    this.setCustomValidity(nc_public.i18n.email_required);
+                } else if (this.validity.typeMismatch) {
+                    this.setCustomValidity(nc_public.i18n.valid_email_required);
+                }
+            }).on('input', function() {
+                this.setCustomValidity('');
+            });
         },
 
         bindEvents: function() {
@@ -200,7 +233,7 @@
         submitFreeCalculation: function() {
             // Show processing
             this.showStep(3);
-            this.updateProcessingMessage('Calculating your compatibility...', 'Please wait...');
+            this.updateProcessingMessage(nc_public.i18n.calculating_compatibility, nc_public.i18n.please_wait);
 
             // Submit free calculation
             $.ajax({
@@ -238,7 +271,7 @@
                                 pdf_url: CalculatorManager.pdfUrl,
                                 response: response.data
                             });
-                            $('.nc-pdf-generating').html('PDF URL not available. Please contact support.');
+                            $('.nc-pdf-generating').html(nc_public.i18n.pdf_not_available);
                         }
                     } else {
                         CalculatorManager.showError(response.data.message);
@@ -257,7 +290,7 @@
         submitPaidCalculation: function(tier) {
             // Show processing
             this.showStep(3);
-            this.updateProcessingMessage('Creating payment session...', 'Please wait, you will be redirected to payment page...');
+            this.updateProcessingMessage(nc_public.i18n.creating_payment_session, nc_public.i18n.redirecting_to_payment);
 
             // Submit paid calculation request
             $.ajax({
@@ -509,7 +542,7 @@
             console.log('PDF URL:', self.pdfUrl);
 
             // Показываем сообщение что PDF генерируется
-            $('.nc-pdf-generating').html('Your PDF report is being generated. This usually takes 5-10 seconds.');
+            $('.nc-pdf-generating').html(nc_public.i18n.pdf_generating);
             $('.nc-pdf-generating').show();
 
             // Показываем ссылку СРАЗУ
