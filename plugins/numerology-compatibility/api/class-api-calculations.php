@@ -29,13 +29,13 @@ class ApiCalculations {
 	public function calculate_free($data) {
 		$this->validate_calculation_data($data);
 
-		$locale = $this->get_current_locale();
+		$language = $this->get_current_language();
 
 		// Подготавливаем данные согласно API спецификации
 		$request_data = [
 			'person1_date' => sanitize_text_field($data['person1_date']),
 			'person2_date' => sanitize_text_field($data['person2_date']),
-			'locale' => $locale,
+			'language' => $language,
 		];
 
 		// Отправляем запрос на бэкенд
@@ -68,13 +68,13 @@ class ApiCalculations {
 		$this->validate_calculation_data($data);
 		$this->validate_tier($tier);
 
-		$locale = $this->get_current_locale();
+		$language = $this->get_current_language();
 
 		$request_data = [
 			'person1_date' => sanitize_text_field($data['person1_date']),
 			'person2_date' => sanitize_text_field($data['person2_date']),
 			'tier' => $tier,
-			'locale' => $locale,
+			'language' => $language,
 		];
 
 		// Отправляем запрос на создание Checkout Session
@@ -173,11 +173,12 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Получить текущую локаль для API
+	 * Получить текущий язык для API
+	 * Конвертирует WordPress локаль в формат API: en|ru|uk
 	 *
-	 * @return string
+	 * @return string 'en', 'ru' или 'uk'
 	 */
-	private function get_current_locale() {
+	private function get_current_language() {
 		$wp_locale = get_locale();
 
 		// Конвертируем WordPress локаль в формат API (en|ru|uk)
