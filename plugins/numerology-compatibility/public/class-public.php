@@ -67,6 +67,10 @@ class PublicClass {
 				'pdf_not_available' => __('PDF URL not available. Please contact support.', 'numerology-compatibility'),
 				'pdf_timeout' => __('PDF is taking longer than expected. Please try downloading in a moment.', 'numerology-compatibility'),
 				'pdf_ready' => __('PDF is ready for download!', 'numerology-compatibility'),
+				'pdf_generation_progress' => __('Calculation completed! PDF report is being generated...', 'numerology-compatibility'),
+				'pdf_generation_failed' => __('PDF generation failed after multiple attempts. Please try again or contact support if the problem persists.', 'numerology-compatibility'),
+				'pdf_check_error' => __('Failed to check PDF status. Please try again or contact support.', 'numerology-compatibility'),
+				'calculation_id_label' => __('Calculation ID', 'numerology-compatibility'),
 			]
 		]);
 	}

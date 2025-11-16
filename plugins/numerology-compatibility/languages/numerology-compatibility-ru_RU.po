@@ -404,3 +404,21 @@ msgstr "PDF генерируется дольше обычного. Пожалу
 
 msgid "PDF is ready for download!"
 msgstr "PDF готов к скачиванию!"
+
+msgid "PDF generation failed after multiple attempts. Please try again or contact support if the problem persists."
+msgstr "Генерация PDF не удалась после нескольких попыток. Пожалуйста, попробуйте еще раз или обратитесь в поддержку, если проблема повторяется."
+
+msgid "Failed to check PDF status. Please try again or contact support."
+msgstr "Не удалось проверить статус PDF. Пожалуйста, попробуйте еще раз или обратитесь в поддержку."
+
+msgid "In Progress!"
+msgstr "В процессе!"
+
+msgid "Your calculation is complete! PDF report is being generated and will be ready soon."
+msgstr "Ваш расчет завершен! PDF отчет генерируется и скоро будет готов."
+
+msgid "Calculation completed! PDF report is being generated..."
+msgstr "Расчет завершен! PDF отчет генерируется..."
+
+msgid "Calculation ID"
+msgstr "ID расчета"

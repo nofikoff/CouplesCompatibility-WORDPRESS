@@ -151,12 +151,12 @@ $show_prices = $attributes['show_prices'] ?? true;
         </div>
     </div>
 
-    <!-- Step 5: Success -->
+    <!-- Step 5: PDF Generation In Progress -->
     <div class="nc-step nc-step-5" data-step="5" style="display:none;">
-        <div class="nc-success">
-            <div class="nc-success-icon">✓</div>
-            <h2><?php _e('Success!', 'numerology-compatibility'); ?></h2>
-            <p class="nc-success-message"><?php _e('Your compatibility report has been generated!', 'numerology-compatibility'); ?></p>
+        <div class="nc-success nc-generating">
+            <div class="nc-generating-icon">⏳</div>
+            <h2><?php _e('In Progress!', 'numerology-compatibility'); ?></h2>
+            <p class="nc-success-message"><?php _e('Your calculation is complete! PDF report is being generated and will be ready soon.', 'numerology-compatibility'); ?></p>
 
             <!-- PDF Download Link -->
             <div class="nc-pdf-download" style="margin: 20px 0;">

@@ -13,6 +13,7 @@
         selectedPackage: null,
         selectedTier: null,
         calculationData: {},
+        calculationId: null,  // ID расчета для обращения в поддержку
         secretCode: null,  // НОВОЕ: секретный код для доступа к расчету
         pdfUrl: null,      // НОВОЕ: ссылка на PDF
 
@@ -248,18 +249,20 @@
                     console.log('Free calculation response:', response);
 
                     if (response.success) {
-                        // НОВОЕ: Сохраняем secret_code и pdf_url
+                        // НОВОЕ: Сохраняем calculation_id, secret_code и pdf_url
+                        CalculatorManager.calculationId = response.data.calculation_id || null;
                         CalculatorManager.secretCode = response.data.secret_code || null;
                         CalculatorManager.pdfUrl = response.data.pdf_url || null;
 
                         console.log('Calculation completed:', {
+                            calculation_id: CalculatorManager.calculationId,
                             secret_code: CalculatorManager.secretCode,
                             pdf_url: CalculatorManager.pdfUrl,
                             full_response: response.data
                         });
 
-                        // Показываем Step 5 (Success)
-                        CalculatorManager.showSuccess(response.data.message);
+                        // Показываем Step 5 с сообщением о процессе генерации PDF
+                        CalculatorManager.showSuccess(nc_public.i18n.pdf_generation_progress || 'PDF generation in progress...');
 
                         // НОВОЕ: Начинаем проверку готовности PDF
                         // Проверяем что pdf_url не пустой (не null, не "", не undefined)
@@ -378,11 +381,13 @@
                                 console.log('✓ Payment completed!');
                                 pollingActive = false;
 
-                                // НОВОЕ: Сохраняем secret_code и pdf_url из ответа API
+                                // НОВОЕ: Сохраняем calculation_id, secret_code и pdf_url из ответа API
+                                self.calculationId = response.data.calculation_id || null;
                                 self.secretCode = response.data.secret_code || null;
                                 self.pdfUrl = response.data.pdf_url || null;
 
                                 console.log('Payment data saved:', {
+                                    calculation_id: self.calculationId,
                                     secret_code: self.secretCode,
                                     pdf_url: self.pdfUrl,
                                     pdf_ready: pdfReady
@@ -390,7 +395,13 @@
 
                                 if (pdfReady && self.pdfUrl) {
                                     // PDF готов - показываем Success с ссылкой на скачивание
-                                    self.showSuccess('Payment successful! Your PDF report is ready.');
+                                    self.showSuccess(nc_public.i18n.pdf_ready || 'PDF is ready for download!');
+
+                                    // Меняем желтую иконку на зеленую
+                                    $('.nc-generating-icon').removeClass('nc-generating-icon').addClass('nc-success-icon').text('✓');
+
+                                    // Обновляем заголовок на "Успешно!"
+                                    $('.nc-step-5 h2').text(nc_public.i18n.success || 'Success!');
 
                                     // Сразу показываем ссылку на скачивание (без ожидания)
                                     $('#nc-pdf-download-link')
@@ -399,7 +410,7 @@
                                     $('.nc-pdf-generating').hide();
                                 } else {
                                     // PDF еще генерируется
-                                    self.showSuccess('Payment successful! Your PDF report is being generated...');
+                                    self.showSuccess(nc_public.i18n.pdf_generation_progress || 'PDF generation in progress...');
 
                                     // Запускаем проверку готовности PDF
                                     self.checkPdfStatus();
@@ -512,7 +523,8 @@
             this.selectedPackage = $('#nc-calculator-wrapper').data('package') || 'auto';
             this.selectedTier = null;
 
-            // НОВОЕ: Очистить secret_code и pdfUrl
+            // НОВОЕ: Очистить calculationId, secret_code и pdfUrl
+            this.calculationId = null;
             this.secretCode = null;
             this.pdfUrl = null;
 
@@ -564,6 +576,15 @@
                         if (contentType && contentType.indexOf('application/pdf') !== -1) {
                             console.log('PDF is ready!');
 
+                            // Меняем желтую иконку на зеленую
+                            $('.nc-generating-icon').removeClass('nc-generating-icon').addClass('nc-success-icon').text('✓');
+
+                            // Обновляем заголовок на "Успешно!"
+                            $('.nc-step-5 h2').text(nc_public.i18n.success || 'Success!');
+
+                            // Обновляем сообщение на "PDF готов!"
+                            $('.nc-success-message').text(nc_public.i18n.pdf_ready || 'PDF is ready for download!');
+
                             // Скрываем сообщение о генерации
                             $('.nc-pdf-generating').hide();
 
@@ -576,12 +597,13 @@
                             if (attempts < maxAttempts) {
                                 setTimeout(checkPdf, pollInterval);
                             } else {
-                                // Таймаут - показываем кнопку но с предупреждением
-                                console.warn('PDF polling timeout after ' + (maxAttempts * pollInterval / 1000) + ' seconds');
-                                $('.nc-pdf-generating').html(nc_public.i18n.pdf_timeout);
-                                $('#nc-pdf-download-link')
-                                    .attr('href', self.pdfUrl)
-                                    .show();
+                                // Таймаут - показываем страницу ошибки
+                                console.error('PDF polling timeout after ' + (maxAttempts * pollInterval / 1000) + ' seconds');
+                                var errorMsg = (nc_public.i18n.pdf_generation_failed || 'PDF generation failed. Please try again or contact support.');
+                                if (self.calculationId) {
+                                    errorMsg += ' ' + (nc_public.i18n.calculation_id_label || 'Calculation ID') + ': ' + self.calculationId;
+                                }
+                                self.showError(errorMsg);
                             }
                         }
                     },
@@ -592,18 +614,22 @@
                             if (attempts < maxAttempts) {
                                 setTimeout(checkPdf, pollInterval);
                             } else {
-                                $('.nc-pdf-generating').html(nc_public.i18n.pdf_timeout);
-                                $('#nc-pdf-download-link')
-                                    .attr('href', self.pdfUrl)
-                                    .show();
+                                // Таймаут - показываем страницу ошибки
+                                console.error('PDF polling timeout after ' + (maxAttempts * pollInterval / 1000) + ' seconds (425 status)');
+                                var errorMsg = (nc_public.i18n.pdf_generation_failed || 'PDF generation failed. Please try again or contact support.');
+                                if (self.calculationId) {
+                                    errorMsg += ' ' + (nc_public.i18n.calculation_id_label || 'Calculation ID') + ': ' + self.calculationId;
+                                }
+                                self.showError(errorMsg);
                             }
                         } else {
-                            // Другая ошибка - показываем кнопку
+                            // Другая ошибка - показываем страницу ошибки
                             console.error('Error checking PDF status:', xhr.status);
-                            $('.nc-pdf-generating').hide();
-                            $('#nc-pdf-download-link')
-                                .attr('href', self.pdfUrl)
-                                .show();
+                            var errorMsg = (nc_public.i18n.pdf_check_error || 'Failed to check PDF status. Please try again or contact support.');
+                            if (self.calculationId) {
+                                errorMsg += ' ' + (nc_public.i18n.calculation_id_label || 'Calculation ID') + ': ' + self.calculationId;
+                            }
+                            self.showError(errorMsg);
                         }
                     }
                 });
