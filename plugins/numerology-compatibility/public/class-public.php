@@ -71,6 +71,7 @@ class PublicClass {
 				'pdf_generation_failed' => __('PDF generation failed after multiple attempts. Please try again or contact support if the problem persists.', 'numerology-compatibility'),
 				'pdf_check_error' => __('Failed to check PDF status. Please try again or contact support.', 'numerology-compatibility'),
 				'calculation_id_label' => __('Calculation ID', 'numerology-compatibility'),
+				'send_to_email' => __('Send to Email', 'numerology-compatibility'),
 			]
 		]);
 	}

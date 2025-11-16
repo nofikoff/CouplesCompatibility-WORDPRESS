@@ -16,6 +16,7 @@
         calculationId: null,  // ID расчета для обращения в поддержку
         secretCode: null,  // НОВОЕ: секретный код для доступа к расчету
         pdfUrl: null,      // НОВОЕ: ссылка на PDF
+        lastSentEmail: null,  // НОВОЕ: последний email, на который был отправлен отчет
 
         init: function() {
             this.bindEvents();
@@ -81,6 +82,11 @@
             $(document).on('submit', '#nc-send-email-form', function(e) {
                 e.preventDefault();
                 CalculatorManager.handleSendEmail($(this));
+            });
+
+            // НОВОЕ: Обработчик изменения поля email для разблокировки кнопки
+            $(document).on('input', '#email-after-calc', function() {
+                CalculatorManager.handleEmailChange($(this));
             });
 
             // Date validation
@@ -331,6 +337,8 @@
             if (message) {
                 $('.nc-success-message').text(message);
             }
+            // НОВОЕ: Скрываем форму email (она будет показана только когда PDF готов)
+            $('.nc-email-form').hide();
         },
 
         /**
@@ -408,6 +416,9 @@
                                         .attr('href', self.pdfUrl)
                                         .show();
                                     $('.nc-pdf-generating').hide();
+
+                                    // НОВОЕ: Показываем форму отправки email
+                                    $('.nc-email-form').show();
                                 } else {
                                     // PDF еще генерируется
                                     self.showSuccess(nc_public.i18n.pdf_generation_progress || 'PDF generation in progress...');
@@ -523,19 +534,22 @@
             this.selectedPackage = $('#nc-calculator-wrapper').data('package') || 'auto';
             this.selectedTier = null;
 
-            // НОВОЕ: Очистить calculationId, secret_code и pdfUrl
+            // НОВОЕ: Очистить calculationId, secret_code, pdfUrl и lastSentEmail
             this.calculationId = null;
             this.secretCode = null;
             this.pdfUrl = null;
+            this.lastSentEmail = null;
 
             // Убрать выделение пакетов
             $('.nc-package').removeClass('nc-selected');
 
-            // НОВОЕ: Очистить форму отправки email
+            // НОВОЕ: Очистить и скрыть форму отправки email
             if ($('#nc-send-email-form').length) {
                 $('#nc-send-email-form')[0].reset();
                 $('.nc-email-sent-message').hide();
-                $('#nc-send-email-form button[type="submit"]').prop('disabled', false);
+                $('.nc-email-form').hide();
+                var submitBtn = $('#nc-send-email-form button[type="submit"]');
+                submitBtn.prop('disabled', false).text('📧 ' + (nc_public.i18n.send_to_email || 'Send to Email'));
             }
 
             // Вернуться на шаг 1
@@ -556,8 +570,9 @@
 
             console.log('Starting PDF polling for URL:', self.pdfUrl);
 
-            // Скрываем кнопку и показываем сообщение о генерации
+            // Скрываем кнопку, форму email и показываем сообщение о генерации
             $('#nc-pdf-download-link').hide();
+            $('.nc-email-form').hide();
             $('.nc-pdf-generating').html(nc_public.i18n.pdf_generating).show();
 
             var checkPdf = function() {
@@ -592,6 +607,9 @@
                             $('#nc-pdf-download-link')
                                 .attr('href', self.pdfUrl)
                                 .show();
+
+                            // НОВОЕ: Показываем форму отправки email
+                            $('.nc-email-form').show();
                         } else {
                             // PDF еще не готов, продолжаем проверку
                             if (attempts < maxAttempts) {
@@ -640,6 +658,24 @@
         },
 
         /**
+         * НОВЫЙ МЕТОД: Обработчик изменения поля email
+         * Разблокирует кнопку и скрывает сообщение об успехе, если email был изменен
+         */
+        handleEmailChange: function($field) {
+            var currentEmail = $field.val();
+            var form = $field.closest('form');
+            var submitBtn = form.find('button[type="submit"]');
+            var successMessage = $('.nc-email-sent-message');
+
+            // Если email изменился после последней отправки - разблокировать кнопку
+            if (this.lastSentEmail && currentEmail !== this.lastSentEmail) {
+                submitBtn.prop('disabled', false).text('📧 ' + (nc_public.i18n.send_to_email || 'Send to Email'));
+                successMessage.hide();
+                console.log('Email changed, button unlocked');
+            }
+        },
+
+        /**
          * НОВЫЙ МЕТОД: Отправка PDF на email
          * Вызывается при submit формы отправки email на Step 5
          */
@@ -675,6 +711,9 @@
                 },
                 success: function(response) {
                     if (response.success) {
+                        // Сохраняем email для отслеживания изменений
+                        self.lastSentEmail = email;
+
                         // Показываем сообщение об успехе
                         $('.nc-email-sent-message').show();
                         submitBtn.text('Sent!').prop('disabled', true);

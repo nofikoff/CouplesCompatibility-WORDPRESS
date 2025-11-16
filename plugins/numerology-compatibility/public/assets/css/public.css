@@ -231,6 +231,22 @@
     pointer-events: none;
 }
 
+/* Disabled Button Styles */
+.nc-btn:disabled,
+.nc-btn[disabled] {
+    background: #9CA3AF !important;
+    color: #D1D5DB !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.nc-btn:disabled:hover,
+.nc-btn[disabled]:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 /* Package Selection */
 .nc-packages {
     display: grid;
