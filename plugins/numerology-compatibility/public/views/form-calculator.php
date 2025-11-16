@@ -31,7 +31,7 @@ $show_prices = $attributes['show_prices'] ?? true;
                         <input type="date" id="person1_date" name="person1_date" required
                                max="<?php echo date('Y-m-d'); ?>"
                                min="1900-01-01">
-                        <span class="nc-error-message"></span>
+                        <span class="nc-error-message nc-hidden"></span>
                     </div>
                 </div>
 
@@ -44,7 +44,7 @@ $show_prices = $attributes['show_prices'] ?? true;
                         <input type="date" id="person2_date" name="person2_date" required
                                max="<?php echo date('Y-m-d'); ?>"
                                min="1900-01-01">
-                        <span class="nc-error-message"></span>
+                        <span class="nc-error-message nc-hidden"></span>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@ $show_prices = $attributes['show_prices'] ?? true;
 
     <!-- Step 2: Package Selection -->
 	<?php if ($package_type === 'auto' && $show_prices): ?>
-        <div class="nc-step nc-step-2" data-step="2" style="display:none;">
+        <div class="nc-step nc-step-2 nc-hidden" data-step="2">
             <h2><?php _e('Choose Your Report Type', 'numerology-compatibility'); ?></h2>
 
             <div class="nc-packages">
@@ -130,7 +130,7 @@ $show_prices = $attributes['show_prices'] ?? true;
 	<?php endif; ?>
 
     <!-- Step 3: Processing -->
-    <div class="nc-step nc-step-3" data-step="3" style="display:none;">
+    <div class="nc-step nc-step-3 nc-hidden" data-step="3">
         <div class="nc-processing">
             <div class="nc-spinner"></div>
             <h2 class="nc-processing-title"><?php _e('Processing...', 'numerology-compatibility'); ?></h2>
@@ -139,7 +139,7 @@ $show_prices = $attributes['show_prices'] ?? true;
     </div>
 
     <!-- Step 4: Payment Pending (Verifying Payment) -->
-    <div class="nc-step nc-step-4" data-step="4" style="display:none;">
+    <div class="nc-step nc-step-4 nc-hidden" data-step="4">
         <div class="nc-pending">
             <div class="nc-spinner"></div>
             <h2><?php _e('Verifying Payment...', 'numerology-compatibility'); ?></h2>
@@ -152,24 +152,24 @@ $show_prices = $attributes['show_prices'] ?? true;
     </div>
 
     <!-- Step 5: PDF Generation In Progress -->
-    <div class="nc-step nc-step-5" data-step="5" style="display:none;">
+    <div class="nc-step nc-step-5 nc-hidden" data-step="5">
         <div class="nc-success nc-generating">
             <div class="nc-generating-icon">⏳</div>
             <h2><?php _e('In Progress!', 'numerology-compatibility'); ?></h2>
             <p class="nc-success-message"><?php _e('Your calculation is complete! PDF report is being generated and will be ready soon.', 'numerology-compatibility'); ?></p>
 
             <!-- PDF Download Link -->
-            <div class="nc-pdf-download" style="margin: 20px 0;">
-                <a href="#" id="nc-pdf-download-link" class="nc-btn nc-btn-primary nc-btn-large" target="_blank" style="display:none;">
+            <div class="nc-pdf-download">
+                <a href="#" id="nc-pdf-download-link" class="nc-btn nc-btn-primary nc-btn-large nc-hidden" target="_blank">
                     📄 <?php _e('Download PDF Report', 'numerology-compatibility'); ?>
                 </a>
-                <p class="nc-pdf-generating" style="color: #666;">
+                <p class="nc-pdf-generating nc-hidden">
                     <?php _e('PDF is being generated... Please wait.', 'numerology-compatibility'); ?>
                 </p>
             </div>
 
             <!-- Email Form (Optional) - показывается только когда PDF готов -->
-            <div class="nc-email-form" style="display:none; margin: 30px 0; padding: 20px; background: #f8f8f8; border-radius: 8px;">
+            <div class="nc-email-form nc-hidden">
                 <h3><?php _e('Send Report to Email?', 'numerology-compatibility'); ?></h3>
                 <p><?php _e('Optionally, you can receive this report via email:', 'numerology-compatibility'); ?></p>
 
@@ -178,22 +178,21 @@ $show_prices = $attributes['show_prices'] ?? true;
                         <label for="email-after-calc"><?php _e('Email Address', 'numerology-compatibility'); ?></label>
                         <input type="email" id="email-after-calc" name="email"
                                placeholder="your@email.com"
-                               autocomplete="email"
-                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                        <span class="nc-error-message"></span>
+                               autocomplete="email">
+                        <span class="nc-error-message nc-hidden"></span>
                     </div>
 
-                    <button type="submit" class="nc-btn nc-btn-secondary" style="margin-top: 10px;">
+                    <button type="submit" class="nc-btn nc-btn-secondary nc-mt-1">
                         📧 <?php _e('Send to Email', 'numerology-compatibility'); ?>
                     </button>
 
-                    <p class="nc-email-sent-message" style="display:none; color: #10B981; margin-top: 10px;">
+                    <p class="nc-email-sent-message nc-hidden">
                         ✓ <?php _e('Email sent successfully!', 'numerology-compatibility'); ?>
                     </p>
                 </form>
             </div>
 
-            <div class="nc-form-actions" style="margin-top: 20px;">
+            <div class="nc-form-actions nc-mt-2">
                 <button type="button" class="nc-btn nc-btn-outline nc-btn-restart">
 					<?php _e('Calculate Another', 'numerology-compatibility'); ?>
                 </button>
@@ -202,7 +201,7 @@ $show_prices = $attributes['show_prices'] ?? true;
     </div>
 
     <!-- Step 6: Error -->
-    <div class="nc-step nc-step-6" data-step="6" style="display:none;">
+    <div class="nc-step nc-step-6 nc-hidden" data-step="6">
         <div class="nc-error-page">
             <div class="nc-error-icon">✕</div>
             <h2><?php _e('Oops! Something Went Wrong', 'numerology-compatibility'); ?></h2>

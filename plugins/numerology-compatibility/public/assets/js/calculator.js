@@ -337,8 +337,10 @@
             if (message) {
                 $('.nc-success-message').text(message);
             }
-            // НОВОЕ: Скрываем форму email (она будет показана только когда PDF готов)
-            $('.nc-email-form').hide();
+            // НОВОЕ: Скрываем форму email и кнопку PDF по умолчанию (они будут показаны только когда PDF готов)
+            $('.nc-email-form').addClass('nc-hidden');
+            $('#nc-pdf-download-link').addClass('nc-hidden');
+            $('.nc-pdf-generating').removeClass('nc-hidden');
         },
 
         /**
@@ -403,22 +405,25 @@
 
                                 if (pdfReady && self.pdfUrl) {
                                     // PDF готов - показываем Success с ссылкой на скачивание
-                                    self.showSuccess(nc_public.i18n.pdf_ready || 'PDF is ready for download!');
+                                    self.showStep(5); // Показываем Step 5
 
                                     // Меняем желтую иконку на зеленую
                                     $('.nc-generating-icon').removeClass('nc-generating-icon').addClass('nc-success-icon').text('✓');
 
-                                    // Обновляем заголовок на "Успешно!"
+                                    // Обновляем заголовок и сообщение
                                     $('.nc-step-5 h2').text(nc_public.i18n.success || 'Success!');
+                                    $('.nc-success-message').text(nc_public.i18n.pdf_ready || 'PDF is ready for download!');
+
+                                    // Скрываем сообщение о генерации (оно уже скрыто по умолчанию)
+                                    $('.nc-pdf-generating').addClass('nc-hidden');
 
                                     // Сразу показываем ссылку на скачивание (без ожидания)
                                     $('#nc-pdf-download-link')
                                         .attr('href', self.pdfUrl)
-                                        .show();
-                                    $('.nc-pdf-generating').hide();
+                                        .removeClass('nc-hidden');
 
-                                    // НОВОЕ: Показываем форму отправки email
-                                    $('.nc-email-form').show();
+                                    // Показываем форму отправки email
+                                    $('.nc-email-form').removeClass('nc-hidden');
                                 } else {
                                     // PDF еще генерируется
                                     self.showSuccess(nc_public.i18n.pdf_generation_progress || 'PDF generation in progress...');
@@ -480,8 +485,8 @@
         },
 
         showStep: function(step) {
-            $('.nc-step').hide();
-            $('.nc-step-' + step).fadeIn();
+            $('.nc-step').addClass('nc-hidden');
+            $('.nc-step-' + step).removeClass('nc-hidden');
             this.currentStep = step;
         },
 
@@ -507,12 +512,12 @@
 
         showFieldError: function($field, message) {
             $field.addClass('error');
-            $field.siblings('.nc-error-message').text(message).show();
+            $field.siblings('.nc-error-message').text(message).removeClass('nc-hidden');
         },
 
         clearFieldError: function($field) {
             $field.removeClass('error');
-            $field.siblings('.nc-error-message').text('').hide();
+            $field.siblings('.nc-error-message').text('').addClass('nc-hidden');
         },
 
         /**
@@ -526,7 +531,7 @@
             $('#data_consent, #harm_consent, #entertainment_consent').prop('checked', false);
 
             // Очистить все ошибки
-            $('.nc-error-message').text('').hide();
+            $('.nc-error-message').text('').addClass('nc-hidden');
             $('input, select, textarea').removeClass('error');
 
             // Сбросить данные
@@ -546,8 +551,8 @@
             // НОВОЕ: Очистить и скрыть форму отправки email
             if ($('#nc-send-email-form').length) {
                 $('#nc-send-email-form')[0].reset();
-                $('.nc-email-sent-message').hide();
-                $('.nc-email-form').hide();
+                $('.nc-email-sent-message').addClass('nc-hidden');
+                $('.nc-email-form').addClass('nc-hidden');
                 var submitBtn = $('#nc-send-email-form button[type="submit"]');
                 submitBtn.prop('disabled', false).text('📧 ' + (nc_public.i18n.send_to_email || 'Send to Email'));
             }
@@ -571,9 +576,9 @@
             console.log('Starting PDF polling for URL:', self.pdfUrl);
 
             // Скрываем кнопку, форму email и показываем сообщение о генерации
-            $('#nc-pdf-download-link').hide();
-            $('.nc-email-form').hide();
-            $('.nc-pdf-generating').html(nc_public.i18n.pdf_generating).show();
+            $('#nc-pdf-download-link').addClass('nc-hidden');
+            $('.nc-email-form').addClass('nc-hidden');
+            $('.nc-pdf-generating').html(nc_public.i18n.pdf_generating).removeClass('nc-hidden');
 
             var checkPdf = function() {
                 attempts++;
@@ -601,15 +606,15 @@
                             $('.nc-success-message').text(nc_public.i18n.pdf_ready || 'PDF is ready for download!');
 
                             // Скрываем сообщение о генерации
-                            $('.nc-pdf-generating').hide();
+                            $('.nc-pdf-generating').addClass('nc-hidden');
 
                             // Показываем кнопку скачивания
                             $('#nc-pdf-download-link')
                                 .attr('href', self.pdfUrl)
-                                .show();
+                                .removeClass('nc-hidden');
 
                             // НОВОЕ: Показываем форму отправки email
-                            $('.nc-email-form').show();
+                            $('.nc-email-form').removeClass('nc-hidden');
                         } else {
                             // PDF еще не готов, продолжаем проверку
                             if (attempts < maxAttempts) {
@@ -670,7 +675,7 @@
             // Если email изменился после последней отправки - разблокировать кнопку
             if (this.lastSentEmail && currentEmail !== this.lastSentEmail) {
                 submitBtn.prop('disabled', false).text('📧 ' + (nc_public.i18n.send_to_email || 'Send to Email'));
-                successMessage.hide();
+                successMessage.addClass('nc-hidden');
                 console.log('Email changed, button unlocked');
             }
         },
@@ -715,7 +720,7 @@
                         self.lastSentEmail = email;
 
                         // Показываем сообщение об успехе
-                        $('.nc-email-sent-message').show();
+                        $('.nc-email-sent-message').removeClass('nc-hidden');
                         submitBtn.text('Sent!').prop('disabled', true);
 
                         console.log('Email sent successfully to:', email);
