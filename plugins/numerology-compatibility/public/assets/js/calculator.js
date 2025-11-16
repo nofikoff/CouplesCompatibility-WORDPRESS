@@ -333,14 +333,10 @@
         },
 
         showSuccess: function(message) {
-            this.showStep(5); // Step 5 = Success
+            this.showStep(5); // Step 5 = Success (автоматически сбрасывает состояние элементов)
             if (message) {
                 $('.nc-success-message').text(message);
             }
-            // НОВОЕ: Скрываем форму email и кнопку PDF по умолчанию (они будут показаны только когда PDF готов)
-            $('.nc-email-form').addClass('nc-hidden');
-            $('#nc-pdf-download-link').addClass('nc-hidden');
-            $('.nc-pdf-generating').removeClass('nc-hidden');
         },
 
         /**
@@ -414,10 +410,10 @@
                                     $('.nc-step-5 h2').text(nc_public.i18n.success || 'Success!');
                                     $('.nc-success-message').text(nc_public.i18n.pdf_ready || 'PDF is ready for download!');
 
-                                    // Скрываем сообщение о генерации (оно уже скрыто по умолчанию)
+                                    // Скрываем сообщение о генерации
                                     $('.nc-pdf-generating').addClass('nc-hidden');
 
-                                    // Сразу показываем ссылку на скачивание (без ожидания)
+                                    // Показываем ссылку на скачивание с URL
                                     $('#nc-pdf-download-link')
                                         .attr('href', self.pdfUrl)
                                         .removeClass('nc-hidden');
@@ -488,6 +484,14 @@
             $('.nc-step').addClass('nc-hidden');
             $('.nc-step-' + step).removeClass('nc-hidden');
             this.currentStep = step;
+
+            // НОВОЕ: При показе Step 5 сбрасываем состояние элементов к дефолтным значениям
+            if (step === 5) {
+                // Гарантируем что кнопка скрыта, а сообщение о генерации показано
+                $('#nc-pdf-download-link').addClass('nc-hidden').attr('href', '#');
+                $('.nc-pdf-generating').removeClass('nc-hidden');
+                $('.nc-email-form').addClass('nc-hidden');
+            }
         },
 
         getPackageName: function(packageType) {
@@ -557,6 +561,12 @@
                 submitBtn.prop('disabled', false).text('📧 ' + (nc_public.i18n.send_to_email || 'Send to Email'));
             }
 
+            // НОВОЕ: Сбросить состояние Step 5 (PDF и иконки)
+            $('#nc-pdf-download-link').addClass('nc-hidden').attr('href', '#');
+            $('.nc-pdf-generating').removeClass('nc-hidden');
+            $('.nc-success-icon').removeClass('nc-success-icon').addClass('nc-generating-icon').text('⏳');
+            $('.nc-step-5 h2').text(nc_public.i18n.in_progress || 'In Progress!');
+
             // Вернуться на шаг 1
             this.showStep(1);
 
@@ -575,10 +585,8 @@
 
             console.log('Starting PDF polling for URL:', self.pdfUrl);
 
-            // Скрываем кнопку, форму email и показываем сообщение о генерации
-            $('#nc-pdf-download-link').addClass('nc-hidden');
-            $('.nc-email-form').addClass('nc-hidden');
-            $('.nc-pdf-generating').html(nc_public.i18n.pdf_generating).removeClass('nc-hidden');
+            // Обновляем текст сообщения о генерации (элементы уже в правильном состоянии благодаря showStep)
+            $('.nc-pdf-generating').html(nc_public.i18n.pdf_generating);
 
             var checkPdf = function() {
                 attempts++;

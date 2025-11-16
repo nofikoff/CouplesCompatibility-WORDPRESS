@@ -163,7 +163,7 @@ $show_prices = $attributes['show_prices'] ?? true;
                 <a href="#" id="nc-pdf-download-link" class="nc-btn nc-btn-primary nc-btn-large nc-hidden" target="_blank">
                     📄 <?php _e('Download PDF Report', 'numerology-compatibility'); ?>
                 </a>
-                <p class="nc-pdf-generating nc-hidden">
+                <p class="nc-pdf-generating">
                     <?php _e('PDF is being generated... Please wait.', 'numerology-compatibility'); ?>
                 </p>
             </div>

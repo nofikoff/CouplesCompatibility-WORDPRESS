@@ -22,7 +22,7 @@
 
 /* Utility Classes */
 .nc-hidden {
-    display: none;
+    display: none !important;
 }
 
 .nc-mt-1 {

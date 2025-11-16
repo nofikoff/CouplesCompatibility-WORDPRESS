@@ -72,6 +72,7 @@ class PublicClass {
 				'pdf_check_error' => __('Failed to check PDF status. Please try again or contact support.', 'numerology-compatibility'),
 				'calculation_id_label' => __('Calculation ID', 'numerology-compatibility'),
 				'send_to_email' => __('Send to Email', 'numerology-compatibility'),
+				'in_progress' => __('In Progress!', 'numerology-compatibility'),
 			]
 		]);
 	}
