@@ -532,6 +532,7 @@
             this.$wrapper.find('.nc-pdf-download-link').addClass('nc-hidden').attr('href', '#');
             this.$wrapper.find('.nc-pdf-generating').removeClass('nc-hidden');
             this.$wrapper.find('.nc-email-form').addClass('nc-hidden');
+            this.$wrapper.find('.nc-restart-actions').addClass('nc-hidden');
         }
     };
 
@@ -564,6 +565,11 @@
 
         // Show email form
         this.$wrapper.find('.nc-email-form').removeClass('nc-hidden');
+
+        // Show restart button
+        var $restartBtn = this.$wrapper.find('.nc-restart-actions');
+        console.log('Showing restart button, found:', $restartBtn.length);
+        $restartBtn.removeClass('nc-hidden');
     };
 
     /**

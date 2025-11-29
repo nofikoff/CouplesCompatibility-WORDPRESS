@@ -313,7 +313,7 @@ $price_premium = get_option('nc_price_premium', '19.99');
                 </form>
             </div>
 
-            <div class="nc-form-actions nc-mt-2">
+            <div class="nc-form-actions nc-mt-2 nc-restart-actions">
                 <button type="button" class="nc-btn nc-btn-outline nc-btn-restart">
 					<?php _e('Calculate Another', 'numerology-compatibility'); ?>
                 </button>
