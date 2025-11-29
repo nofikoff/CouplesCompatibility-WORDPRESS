@@ -27,8 +27,14 @@ if (!defined('WPINC')) {
  * Requires Polylang plugin.
  */
 add_action('init', function() {
-    // Skip for admin area, AJAX requests, and REST API
-    if (is_admin() || wp_doing_ajax() || defined('REST_REQUEST')) {
+    // Skip for admin area, AJAX requests, REST API, cron, and system pages
+    if (is_admin() || wp_doing_ajax() || defined('REST_REQUEST') || wp_doing_cron()) {
+        return;
+    }
+
+    // Skip system URLs
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    if (preg_match('#^/(wp-cron|wp-admin|wp-login|wp-json|xmlrpc)#', $request_uri)) {
         return;
     }
 
@@ -46,19 +52,16 @@ add_action('init', function() {
     ];
 
     // Determine target language (default to English)
-    $target_lang = $country_to_lang[ $country_code ] ?? 'en';
+    $target_lang = $country_to_lang[$country_code] ?? 'en';
 
     // Get current language
     $current_lang = pll_current_language();
 
-    // Check if user has manually selected a language (cookie check)
-    $lang_cookie = $_COOKIE['pll_language'] ?? null;
+    // Check if geo-detection was already done (use separate cookie)
+    $geo_detected = $_COOKIE['nc_geo_lang_detected'] ?? null;
 
-    // Only auto-switch if:
-    // 1. User hasn't manually selected a language (no cookie or first visit)
-    // 2. Current language differs from target language
-    // 3. We're on the home page or no language is set in URL yet
-    if ($lang_cookie === null && $current_lang !== $target_lang) {
+    // Only auto-switch if geo-detection hasn't been done yet and language differs
+    if ($geo_detected === null && $current_lang !== $target_lang) {
         // Check if target language exists in Polylang
         $languages = PLL()->model->get_languages_list();
         $target_lang_obj = null;
@@ -71,16 +74,23 @@ add_action('init', function() {
         }
 
         if ($target_lang_obj) {
-            // Get the URL for the target language version of current page
-            $translations = PLL()->links->get_translation_url($target_lang_obj);
+            // Try to get translation URL, fallback to home URL for homepage
+            $translations = null;
+            if (method_exists(PLL()->links, 'get_translation_url')) {
+                $translations = PLL()->links->get_translation_url($target_lang_obj);
+            }
+            if (!$translations) {
+                $translations = pll_home_url($target_lang);
+            }
 
-            if ($translations && $translations !== home_url($_SERVER['REQUEST_URI'])) {
-                // Set cookie to remember the auto-detected language
-                setcookie('pll_language', $target_lang, time() + (86400 * 30), '/'); // 30 days
+            $current_url = home_url($_SERVER['REQUEST_URI']);
 
-                // Redirect to the target language version
+            if ($translations && $translations !== $current_url) {
+                setcookie('nc_geo_lang_detected', '1', time() + (86400 * 30), '/');
                 wp_safe_redirect($translations);
                 exit;
+            } else {
+                setcookie('nc_geo_lang_detected', '1', time() + (86400 * 30), '/');
             }
         }
     }
