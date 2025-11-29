@@ -131,22 +131,25 @@ User → Select tier (standard/premium) → Enter birth dates
 
 **Admin Layer** (`admin/`):
 - Страница: Settings (только настройки плагина)
-- Настройки: General, API Configuration, Localization, Advanced
+- Вкладки: General, API Configuration, Advanced
 - **НЕТ** Dashboard, Statistics, Calculations - все данные хранятся на бэкенде Laravel
-- **НЕТ** настроек Pricing и Payment Gateway (управляется на бэкенде)
+- **НЕТ** настроек Payment Gateway (управляется на бэкенде)
 - **НЕТ** локальной базы данных - все данные хранятся на бэкенде Laravel
+- Цены пакетов настраиваются в WordPress (отображение), фактические цены на бэкенде
 
 ### Настройки плагина
 
 **General:**
-- `nc_environment` - окружение (production/staging/development)
-- `nc_terms_url` - URL страницы условий использования
-- `nc_privacy_url` - URL страницы политики конфиденциальности
 - `nc_result_page_url` - URL страницы с `[numerology_result]` (для редиректа после оплаты)
+- `nc_price_standard` - цена Standard пакета в USD (по умолчанию: 9.99)
+- `nc_price_premium` - цена Premium пакета в USD (по умолчанию: 19.99)
 
 **API Configuration:**
 - `nc_api_url` - URL бэкенда
 - `nc_api_key` - идентификатор клиента (отправляется в `X-API-Key`)
+
+**Advanced:**
+- `nc_delete_on_uninstall` - удалить настройки плагина при деинсталляции
 
 ## UI/UX и обработка ошибок
 
