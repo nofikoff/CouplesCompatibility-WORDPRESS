@@ -13,6 +13,7 @@ class Settings {
         register_setting('nc_settings_general', 'nc_environment');
         register_setting('nc_settings_general', 'nc_terms_url');
         register_setting('nc_settings_general', 'nc_privacy_url');
+        register_setting('nc_settings_general', 'nc_result_page_url');
 
         // API settings
         register_setting('nc_settings_api', 'nc_api_url');
@@ -86,6 +87,7 @@ class Settings {
             'nc_environment' => 'production',
             'nc_terms_url' => '/terms',
             'nc_privacy_url' => '/privacy',
+            'nc_result_page_url' => '',
 
             // API settings
             'nc_api_url' => 'https://api.your-domain.com',

@@ -9,12 +9,19 @@ class Shortcodes {
 	 */
 	public function register_shortcodes() {
 		add_shortcode('numerology_compatibility', [$this, 'render_calculator']);
+		add_shortcode('numerology_compatibility_v2', [$this, 'render_calculator_v2']);
+		add_shortcode('numerology_result', [$this, 'render_result']);
 		add_shortcode('numerology_pricing', [$this, 'render_pricing']);
 		add_shortcode('numerology_gdpr', [$this, 'render_gdpr_tools']);
 	}
 
 	/**
-	 * Render calculator shortcode
+	 * Counter for unique calculator IDs
+	 */
+	private static $instance_counter = 0;
+
+	/**
+	 * Render calculator shortcode (normal mode: dates first, then package selection)
 	 */
 	public function render_calculator($atts) {
 		$attributes = shortcode_atts([
@@ -25,8 +32,53 @@ class Shortcodes {
 			'style' => 'modern'
 		], $atts);
 
+		$mode = 'normal';
+		self::$instance_counter++;
+		$instance_id = self::$instance_counter;
+
 		ob_start();
 		include NC_PLUGIN_DIR . 'public/views/form-calculator.php';
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render calculator shortcode v2 (reversed mode: package selection first, then dates)
+	 * Flow: Step1 (Package) -> Step2 (Dates) -> Payment (if paid) -> PDF
+	 */
+	public function render_calculator_v2($atts) {
+		$attributes = shortcode_atts([
+			'package' => 'auto',
+			'show_prices' => 'yes',
+			'language' => 'auto',
+			'currency' => 'auto',
+			'style' => 'modern'
+		], $atts);
+
+		$mode = 'reversed';
+		self::$instance_counter++;
+		$instance_id = self::$instance_counter;
+
+		ob_start();
+		include NC_PLUGIN_DIR . 'public/views/form-calculator.php';
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render result page shortcode
+	 * Displays calculation result and PDF download link
+	 *
+	 * URL parameters:
+	 * - ?code={secret_code} - access by secret code
+	 * - ?payment_success=1&payment_id={id} - after payment redirect
+	 * - ?payment_cancelled=1 - payment was cancelled
+	 */
+	public function render_result($atts) {
+		$attributes = shortcode_atts([
+			'style' => 'modern'
+		], $atts);
+
+		ob_start();
+		include NC_PLUGIN_DIR . 'public/views/view-result.php';
 		return ob_get_clean();
 	}
 

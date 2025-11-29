@@ -3,7 +3,10 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Назначение
-WordPress плагин для расчета нумерологической совместимости через shortcode `[numerology_calculator]`
+WordPress плагин для расчета нумерологической совместимости через shortcodes:
+- `[numerology_compatibility]` - стандартный flow (даты → выбор пакета → расчет)
+- `[numerology_compatibility_v2]` - reversed flow (выбор пакета → даты → расчет)
+- `[numerology_result]` - страница результата с PDF (отдельная страница, редирект после оплаты)
 
 ## Ключевые принципы архитектуры
 
@@ -37,9 +40,37 @@ WordPress плагин для расчета нумерологической с
 
 ### Поток данных
 
+**Шорткод `[numerology_compatibility]` (Normal Mode):**
+```
+Step 1: Ввод дат рождения
+Step 2: Выбор пакета (free/standard/premium)
+Step 3+: Processing → Payment → PDF
+```
+
+**Шорткод `[numerology_compatibility_v2]` (Reversed Mode):**
+```
+Step 1: Выбор пакета (free/standard/premium)
+Step 2: Ввод дат рождения
+Step 3+: Processing → Payment → PDF
+```
+
+**Шорткод `[numerology_result]` (Result Page):**
+```
+Отдельная страница для отображения результата расчета.
+URL: /compatibility-result/?code={secret_code}
+     /compatibility-result/?payment_success=1&payment_id={id}&calculation_id={id}
+
+Поддерживаемые параметры:
+- ?code={secret_code} - доступ к расчету по секретному коду (постоянная ссылка)
+- ?payment_success=1&payment_id={id} - редирект после успешной оплаты
+- ?payment_cancelled=1 - редирект при отмене оплаты
+
+Настройка: Settings → General → Result Page URL
+```
+
 **Бесплатный расчет:**
 ```
-User → Form (Step 1: даты рождения) → Select tier "Free" (Step 2)
+User → Select tier "Free" → Enter birth dates
 → AJAX (nc_calculate_free) → ApiCalculations::calculate_free()
 → Backend API /api/v1/calculate/free
   Request: { person1_date, person2_date, locale }
@@ -53,7 +84,7 @@ User → Form (Step 1: даты рождения) → Select tier "Free" (Step 2
 
 **Платный расчет:**
 ```
-User → Form (Step 1: даты рождения) → Select tier (standard/premium) (Step 2)
+User → Select tier (standard/premium) → Enter birth dates
 → AJAX (nc_calculate_paid) → ApiCalculations::calculate_paid()
 → Backend API /api/v1/calculate/paid
   Request: { person1_date, person2_date, tier, locale, success_url?, cancel_url? }
@@ -79,7 +110,10 @@ User → Form (Step 1: даты рождения) → Select tier (standard/prem
 
 **Public Layer** (`public/`):
 - `AjaxHandler` - обработка AJAX запросов (`handle_free_calculation`, `handle_paid_calculation`, `handle_send_email`)
-- `Shortcodes` - регистрация shortcode `[numerology_calculator]`
+- `Shortcodes` - регистрация shortcodes:
+  - `[numerology_compatibility]` - normal mode (даты → пакеты)
+  - `[numerology_compatibility_v2]` - reversed mode (пакеты → даты)
+  - `[numerology_result]` - страница результата (PDF, email форма)
 - `form-calculator.php` - многошаговая форма с 7 шагами:
   - **Step 1**: Ввод данных (даты рождения, согласия) - БЕЗ email
   - **Step 2**: Выбор пакета (free/standard/premium)
@@ -91,6 +125,8 @@ User → Form (Step 1: даты рождения) → Select tier (standard/prem
     - Платный: "Отправить чек об оплате и PDF расчет на email"
   - **Step 7**: Error - страница ошибки (красная иконка, кнопка "Try Again")
 - `calculator.js` - логика формы, редирект на `checkout_url`, polling статуса платежа, отправка email
+- `view-result.php` - шаблон страницы результата с состояниями: loading, success, generating, error, cancelled, empty
+- `result.js` - логика страницы результата: payment polling, PDF проверка, email отправка
 - Обработка ошибок - вместо `alert()` показывается Step 7 с понятным сообщением
 
 **Admin Layer** (`admin/`):
@@ -101,6 +137,12 @@ User → Form (Step 1: даты рождения) → Select tier (standard/prem
 - **НЕТ** локальной базы данных - все данные хранятся на бэкенде Laravel
 
 ### Настройки плагина
+
+**General:**
+- `nc_environment` - окружение (production/staging/development)
+- `nc_terms_url` - URL страницы условий использования
+- `nc_privacy_url` - URL страницы политики конфиденциальности
+- `nc_result_page_url` - URL страницы с `[numerology_result]` (для редиректа после оплаты)
 
 **API Configuration:**
 - `nc_api_url` - URL бэкенда
@@ -147,6 +189,41 @@ User → Form (Step 1: даты рождения) → Select tier (standard/prem
   - Возвращает на Step 1
 - **Важно**: виджет работает через шорткод, поэтому НЕ делается переход на другую страницу
 
+### Страница результата `[numerology_result]`
+
+Отдельная страница для отображения результата расчета. Решает проблему конфликта между несколькими калькуляторами на одной странице.
+
+**Настройка:**
+1. Создать страницу WordPress (например `/compatibility-result/`)
+2. Добавить шорткод `[numerology_result]`
+3. В настройках плагина указать URL: Settings → General → Result Page URL
+
+**Поддерживаемые URL параметры:**
+- `?code={secret_code}` - доступ по постоянной ссылке (32 символа hex)
+- `?payment_success=1&payment_id={id}` - редирект после успешной оплаты
+- `?payment_cancelled=1` - редирект при отмене оплаты
+
+**Состояния страницы:**
+- **loading** - загрузка/проверка платежа
+- **generating** - PDF генерируется
+- **success** - PDF готов, показать ссылку на скачивание и форму email
+- **error** - ошибка загрузки или платежа
+- **cancelled** - оплата отменена
+- **empty** - нет параметров в URL
+
+**Поток после оплаты:**
+```
+Калькулятор → Оплата → Редирект на /result/?payment_success=1&payment_id=123
+                            ↓
+                   Polling GET /payments/{id}/status
+                            ↓
+                   Получаем secret_code, pdf_url
+                            ↓
+                   URL обновляется на ?code={secret_code}
+                            ↓
+                   Показываем PDF + форма email
+```
+
 ### CSS стили и анимации
 **Цветовая схема** (`:root` переменные):
 - `--nc-primary: #6B46C1` - основной фиолетовый
@@ -160,11 +237,17 @@ User → Form (Step 1: даты рождения) → Select tier (standard/prem
 - `shake` - тряска влево-вправо (для иконки ошибки)
 - `spin` - вращение (для спиннера)
 
-**Ключевые CSS классы**:
+**Ключевые CSS классы (калькулятор)**:
 - `.nc-success` / `.nc-success-icon` - страница успеха с зеленой иконкой ✓
 - `.nc-error-page` / `.nc-error-icon` - страница ошибки с красной иконкой ✕
 - `.nc-pending` - страница ожидания проверки платежа
 - `.nc-btn-restart` - кнопка сброса формы (используется на Success и Error страницах)
+
+**Ключевые CSS классы (страница результата)**:
+- `.nc-result-wrapper` - основной контейнер
+- `.nc-result-loading` / `.nc-result-success` / `.nc-result-error` - состояния
+- `.nc-result-generating` - PDF генерируется
+- `.nc-result-cancelled` / `.nc-result-empty` - отмена/пустая страница
 
 ## Форматы данных
 

@@ -83,6 +83,10 @@ class Plugin {
 		$this->loader->add_action('wp_ajax_nc_send_email', $ajax_handler, 'handle_send_email');
 		$this->loader->add_action('wp_ajax_nopriv_nc_send_email', $ajax_handler, 'handle_send_email');
 
+		// Получение расчета по secret_code (для страницы результата)
+		$this->loader->add_action('wp_ajax_nc_get_calculation', $ajax_handler, 'handle_get_calculation');
+		$this->loader->add_action('wp_ajax_nopriv_nc_get_calculation', $ajax_handler, 'handle_get_calculation');
+
 		// DEPRECATED: Старые endpoints для обратной совместимости
 		$this->loader->add_action('wp_ajax_nc_calculate', $ajax_handler, 'handle_calculation');
 		$this->loader->add_action('wp_ajax_nopriv_nc_calculate', $ajax_handler, 'handle_calculation');

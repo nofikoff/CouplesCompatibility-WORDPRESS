@@ -70,11 +70,31 @@ class ApiCalculations {
 
 		$locale = $this->get_current_locale();
 
+		// Get result page URL from settings, fallback to referer or home
+		$result_page_url = get_option('nc_result_page_url', '');
+		if (empty($result_page_url)) {
+			// Fallback: use referer (page with form) or home URL
+			$referer = wp_get_referer();
+			if ($referer) {
+				// Remove any existing query parameters from referer
+				$result_page_url = strtok($referer, '?');
+			} else {
+				$result_page_url = home_url('/');
+			}
+		}
+
+		// Backend will add payment_id and calculation_id to success_url automatically
+		// We just pass the base URLs
+		$success_url = $result_page_url;
+		$cancel_url = $result_page_url;
+
 		$request_data = [
 			'person1_date' => sanitize_text_field($data['person1_date']),
 			'person2_date' => sanitize_text_field($data['person2_date']),
 			'tier' => $tier,
 			'locale' => $locale,
+			'success_url' => $success_url,
+			'cancel_url' => $cancel_url,
 		];
 
 		// Отправляем запрос на создание Checkout Session
@@ -182,6 +202,26 @@ class ApiCalculations {
 		$lang = substr(get_locale(), 0, 2);
 
 		return $lang ?: 'en';
+	}
+
+	/**
+	 * Получить информацию о расчете по секретному коду
+	 * GET /api/v1/calculations/by-code/{secret_code}
+	 *
+	 * @param string $secret_code Секретный код расчета (32 символа)
+	 * @return array Информация о расчете с pdf_url
+	 * @throws \Exception
+	 */
+	public function get_calculation_by_code($secret_code) {
+		// Validate secret code
+		if (empty($secret_code) || strlen($secret_code) !== 32) {
+			throw new \Exception(__('Invalid secret code', 'numerology-compatibility'));
+		}
+
+		$response = $this->client->request('/calculations/by-code/' . $secret_code, 'GET');
+
+		// Laravel API returns data in format {success, data}
+		return $response['data'] ?? [];
 	}
 
 	/**

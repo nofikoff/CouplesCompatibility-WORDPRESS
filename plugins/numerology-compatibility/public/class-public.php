@@ -29,11 +29,20 @@ class PublicClass {
 	 * Register public scripts
 	 */
 	public function enqueue_scripts() {
-		// Main plugin script
+		// Main calculator script
 		wp_enqueue_script(
 			$this->plugin_name . '-calculator',
 			NC_PLUGIN_URL . 'public/assets/js/calculator.js',
 			['jquery'],
+			$this->version,
+			true
+		);
+
+		// Result page script (for [numerology_result] shortcode)
+		wp_enqueue_script(
+			$this->plugin_name . '-result',
+			NC_PLUGIN_URL . 'public/assets/js/result.js',
+			['jquery', $this->plugin_name . '-calculator'],
 			$this->version,
 			true
 		);
@@ -75,6 +84,7 @@ class PublicClass {
 				'in_progress' => __('In Progress!', 'numerology-compatibility'),
 				'send_report_to_email' => __('Send Report to Email?', 'numerology-compatibility'),
 				'send_report_and_receipt_to_email' => __('Send Report and Receipt to Email?', 'numerology-compatibility'),
+				'calculation_not_found' => __('Calculation not found. Please check your link.', 'numerology-compatibility'),
 			]
 		]);
 	}

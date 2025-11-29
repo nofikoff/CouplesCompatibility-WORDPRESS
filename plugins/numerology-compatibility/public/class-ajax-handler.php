@@ -23,8 +23,11 @@ class AjaxHandler {
 				wp_send_json_error(['message' => __('Security check failed', 'numerology-compatibility')]);
 			}
 
-			// Проверка consent
-			if (empty($_POST['harm_consent']) || empty($_POST['entertainment_consent'])) {
+			// Проверка consent (проверяем что значение равно '1' или true)
+			$harm_consent = isset($_POST['harm_consent']) && ($_POST['harm_consent'] === '1' || $_POST['harm_consent'] === 'true' || $_POST['harm_consent'] === true);
+			$entertainment_consent = isset($_POST['entertainment_consent']) && ($_POST['entertainment_consent'] === '1' || $_POST['entertainment_consent'] === 'true' || $_POST['entertainment_consent'] === true);
+
+			if (!$harm_consent || !$entertainment_consent) {
 				wp_send_json_error(['message' => __('All consent checkboxes must be accepted', 'numerology-compatibility')]);
 			}
 
@@ -60,8 +63,11 @@ class AjaxHandler {
 				wp_send_json_error(['message' => __('Security check failed', 'numerology-compatibility')]);
 			}
 
-			// Проверка consent
-			if (empty($_POST['harm_consent']) || empty($_POST['entertainment_consent'])) {
+			// Проверка consent (проверяем что значение равно '1' или true)
+			$harm_consent = isset($_POST['harm_consent']) && ($_POST['harm_consent'] === '1' || $_POST['harm_consent'] === 'true' || $_POST['harm_consent'] === true);
+			$entertainment_consent = isset($_POST['entertainment_consent']) && ($_POST['entertainment_consent'] === '1' || $_POST['entertainment_consent'] === 'true' || $_POST['entertainment_consent'] === true);
+
+			if (!$harm_consent || !$entertainment_consent) {
 				wp_send_json_error(['message' => __('All consent checkboxes must be accepted', 'numerology-compatibility')]);
 			}
 
@@ -98,6 +104,44 @@ class AjaxHandler {
 	 */
 	public function handle_payment() {
 		$this->handle_paid_calculation();
+	}
+
+	/**
+	 * Получить расчет по секретному коду
+	 * AJAX action: nc_get_calculation
+	 *
+	 * Используется на странице результата [numerology_result]
+	 */
+	public function handle_get_calculation() {
+		try {
+			// Check nonce
+			if (!check_ajax_referer('nc_ajax_nonce', 'nonce', false)) {
+				wp_send_json_error(['message' => __('Security check failed', 'numerology-compatibility')]);
+			}
+
+			$secret_code = sanitize_text_field($_POST['secret_code'] ?? '');
+
+			if (empty($secret_code)) {
+				wp_send_json_error(['message' => __('Secret code is required', 'numerology-compatibility')]);
+			}
+
+			// Get calculation from API
+			$calc = new ApiCalculations();
+			$result = $calc->get_calculation_by_code($secret_code);
+
+			wp_send_json_success([
+				'calculation_id' => $result['calculation_id'] ?? null,
+				'secret_code' => $result['secret_code'] ?? $secret_code,
+				'pdf_url' => $result['pdf_url'] ?? null,
+				'pdf_ready' => $result['pdf_ready'] ?? false,
+				'tier' => $result['tier'] ?? 'free',
+				'is_paid' => $result['is_paid'] ?? false,
+				'status' => $result['status'] ?? 'completed'
+			]);
+
+		} catch (\Exception $e) {
+			wp_send_json_error(['message' => $e->getMessage()]);
+		}
 	}
 
 	/**

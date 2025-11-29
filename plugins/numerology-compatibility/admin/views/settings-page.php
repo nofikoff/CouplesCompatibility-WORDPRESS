@@ -19,17 +19,62 @@ $active_tab = $_GET['tab'] ?? 'general';
     <!-- Shortcode Info -->
     <div class="notice notice-success" style="padding: 15px; margin-top: 20px; border-left: 4px solid #46b450;">
         <h3 style="margin-top: 0;">
-            <?php _e('🎯 How to Display the Calculator', 'numerology-compatibility'); ?>
+            <?php _e('🎯 Available Shortcodes', 'numerology-compatibility'); ?>
         </h3>
-        <p style="font-size: 14px; margin-bottom: 10px;">
-            <?php _e('Use the following shortcode to display the numerology calculator form on any page or post:', 'numerology-compatibility'); ?>
-        </p>
-        <p style="background: #fff; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 16px; font-weight: bold; color: #2271b1;">
-            [numerology_calculator]
-        </p>
-        <p style="font-size: 13px; color: #666; margin-bottom: 0;">
-            <?php _e('Example: Create a new page, paste the shortcode, and publish. The calculator will appear automatically.', 'numerology-compatibility'); ?>
-        </p>
+
+        <!-- Standard Shortcode -->
+        <div style="margin-bottom: 15px;">
+            <p style="font-size: 14px; margin-bottom: 5px; font-weight: 600;">
+                <?php _e('Standard Flow (Dates → Package Selection):', 'numerology-compatibility'); ?>
+            </p>
+            <p style="background: #fff; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 16px; font-weight: bold; color: #2271b1; margin-bottom: 5px;">
+                [numerology_compatibility]
+            </p>
+            <p style="font-size: 13px; color: #666; margin: 0;">
+                <?php _e('User enters birth dates first, then selects a package (Free/Standard/Premium).', 'numerology-compatibility'); ?>
+            </p>
+        </div>
+
+        <!-- Reversed Shortcode (v2) -->
+        <div style="margin-bottom: 15px; padding-top: 10px; border-top: 1px solid #ddd;">
+            <p style="font-size: 14px; margin-bottom: 5px; font-weight: 600;">
+                <?php _e('Landing Page Flow (Package Selection → Dates):', 'numerology-compatibility'); ?>
+            </p>
+            <p style="background: #fff; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 16px; font-weight: bold; color: #9b59b6; margin-bottom: 5px;">
+                [numerology_compatibility_v2]
+            </p>
+            <p style="font-size: 13px; color: #666; margin: 0;">
+                <?php _e('User selects a package first, then enters birth dates. Ideal for landing pages with pre-selected offers.', 'numerology-compatibility'); ?>
+            </p>
+        </div>
+
+        <!-- Result Shortcode -->
+        <div style="margin-bottom: 15px; padding-top: 10px; border-top: 1px solid #ddd;">
+            <p style="font-size: 14px; margin-bottom: 5px; font-weight: 600;">
+                <?php _e('Result Page (PDF Download):', 'numerology-compatibility'); ?>
+            </p>
+            <p style="background: #fff; padding: 10px; border-radius: 4px; font-family: monospace; font-size: 16px; font-weight: bold; color: #27ae60; margin-bottom: 5px;">
+                [numerology_result]
+            </p>
+            <p style="font-size: 13px; color: #666; margin: 0;">
+                <?php _e('Displays calculation result and PDF download. Place on a separate page and set its URL in "Result Page URL" setting below.', 'numerology-compatibility'); ?>
+            </p>
+        </div>
+
+        <!-- Shortcode Attributes -->
+        <div style="padding-top: 10px; border-top: 1px solid #ddd;">
+            <p style="font-size: 14px; margin-bottom: 5px; font-weight: 600;">
+                <?php _e('Optional Attributes:', 'numerology-compatibility'); ?>
+            </p>
+            <ul style="font-size: 13px; color: #666; margin: 0; padding-left: 20px;">
+                <li><code>package="auto|free|standard|premium"</code> - <?php _e('Pre-select package (default: auto)', 'numerology-compatibility'); ?></li>
+                <li><code>show_prices="yes|no"</code> - <?php _e('Show price labels (default: yes)', 'numerology-compatibility'); ?></li>
+                <li><code>language="auto|en|ru|uk"</code> - <?php _e('Force language (default: auto)', 'numerology-compatibility'); ?></li>
+            </ul>
+            <p style="font-size: 13px; color: #666; margin-top: 10px; margin-bottom: 0;">
+                <?php _e('Example:', 'numerology-compatibility'); ?> <code>[numerology_compatibility_v2 package="premium"]</code>
+            </p>
+        </div>
     </div>
 
     <!-- Tabs -->
@@ -92,6 +137,16 @@ $active_tab = $_GET['tab'] ?? 'general';
                     <th scope="row"><?php _e('Privacy Page URL', 'numerology-compatibility'); ?></th>
                     <td>
                         <input type="url" name="nc_privacy_url" value="<?php echo esc_attr(get_option('nc_privacy_url', '/privacy')); ?>" class="regular-text">
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><?php _e('Result Page URL', 'numerology-compatibility'); ?></th>
+                    <td>
+                        <input type="url" name="nc_result_page_url" value="<?php echo esc_attr(get_option('nc_result_page_url', '')); ?>" class="regular-text" placeholder="https://example.com/compatibility-result/">
+                        <p class="description">
+                            <?php _e('URL of the page with [numerology_result] shortcode. After payment, users will be redirected here.', 'numerology-compatibility'); ?>
+                        </p>
                     </td>
                 </tr>
             </table>

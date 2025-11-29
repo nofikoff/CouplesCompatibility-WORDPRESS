@@ -19,13 +19,7 @@
     "brain/monkey": "^2.6"
   },
   "autoload": {
-    "psr-4": {
-      "NC\\": "includes/",
-      "NC\\Admin\\": "admin/",
-      "NC\\PublicSite\\": "public/",
-      "NC\\Api\\": "api/"
-    },
-    "exclude-from-classmap": [
+    "classmap": [
       "includes/",
       "admin/",
       "public/",
@@ -33,10 +27,7 @@
     ]
   },
   "autoload-dev": {
-    "psr-4": {
-      "NC\\Tests\\": "tests/"
-    },
-    "exclude-from-classmap": [
+    "classmap": [
       "tests/"
     ]
   },
