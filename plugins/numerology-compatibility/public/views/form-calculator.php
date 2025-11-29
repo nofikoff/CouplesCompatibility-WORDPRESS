@@ -170,7 +170,7 @@ $show_prices = $attributes['show_prices'] ?? true;
 
             <!-- Email Form (Optional) - показывается только когда PDF готов -->
             <div class="nc-email-form nc-hidden">
-                <h3><?php _e('Send Report to Email?', 'numerology-compatibility'); ?></h3>
+                <h3 id="nc-email-form-title"><?php _e('Send Report to Email?', 'numerology-compatibility'); ?></h3>
                 <p><?php _e('Optionally, you can receive this report via email:', 'numerology-compatibility'); ?></p>
 
                 <form id="nc-send-email-form" class="nc-form">

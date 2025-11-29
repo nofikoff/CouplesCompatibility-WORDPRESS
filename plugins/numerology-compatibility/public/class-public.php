@@ -73,6 +73,8 @@ class PublicClass {
 				'calculation_id_label' => __('Calculation ID', 'numerology-compatibility'),
 				'send_to_email' => __('Send to Email', 'numerology-compatibility'),
 				'in_progress' => __('In Progress!', 'numerology-compatibility'),
+				'send_report_to_email' => __('Send Report to Email?', 'numerology-compatibility'),
+				'send_report_and_receipt_to_email' => __('Send Report and Receipt to Email?', 'numerology-compatibility'),
 			]
 		]);
 	}

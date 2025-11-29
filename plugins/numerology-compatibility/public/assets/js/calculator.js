@@ -17,6 +17,7 @@
         secretCode: null,  // НОВОЕ: секретный код для доступа к расчету
         pdfUrl: null,      // НОВОЕ: ссылка на PDF
         lastSentEmail: null,  // НОВОЕ: последний email, на который был отправлен отчет
+        isPaid: false,     // Флаг платного расчета (для отображения текста о квитанции)
 
         init: function() {
             this.bindEvents();
@@ -259,6 +260,7 @@
                         CalculatorManager.calculationId = response.data.calculation_id || null;
                         CalculatorManager.secretCode = response.data.secret_code || null;
                         CalculatorManager.pdfUrl = response.data.pdf_url || null;
+                        CalculatorManager.isPaid = false;  // Бесплатный расчет
 
                         console.log('Calculation completed:', {
                             calculation_id: CalculatorManager.calculationId,
@@ -391,6 +393,7 @@
                                 self.calculationId = response.data.calculation_id || null;
                                 self.secretCode = response.data.secret_code || null;
                                 self.pdfUrl = response.data.pdf_url || null;
+                                self.isPaid = true;  // Платный расчет
 
                                 console.log('Payment data saved:', {
                                     calculation_id: self.calculationId,
@@ -417,6 +420,12 @@
                                     $('#nc-pdf-download-link')
                                         .attr('href', self.pdfUrl)
                                         .removeClass('nc-hidden');
+
+                                    // Обновляем заголовок формы email в зависимости от типа расчета
+                                    var emailFormTitle = self.isPaid
+                                        ? (nc_public.i18n.send_report_and_receipt_to_email || 'Send Report and Receipt to Email?')
+                                        : (nc_public.i18n.send_report_to_email || 'Send Report to Email?');
+                                    $('#nc-email-form-title').text(emailFormTitle);
 
                                     // Показываем форму отправки email
                                     $('.nc-email-form').removeClass('nc-hidden');
@@ -620,6 +629,12 @@
                             $('#nc-pdf-download-link')
                                 .attr('href', self.pdfUrl)
                                 .removeClass('nc-hidden');
+
+                            // Обновляем заголовок формы email в зависимости от типа расчета
+                            var emailFormTitle = self.isPaid
+                                ? (nc_public.i18n.send_report_and_receipt_to_email || 'Send Report and Receipt to Email?')
+                                : (nc_public.i18n.send_report_to_email || 'Send Report to Email?');
+                            $('#nc-email-form-title').text(emailFormTitle);
 
                             // НОВОЕ: Показываем форму отправки email
                             $('.nc-email-form').removeClass('nc-hidden');
