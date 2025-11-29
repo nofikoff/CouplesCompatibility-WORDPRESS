@@ -248,8 +248,13 @@ msgid "PDF is being generated... Please wait."
 msgstr "PDF генерується... Будь ласка, зачекайте."
 
 #: public/views/form-calculator.php:174
+#: public/class-public.php:76
 msgid "Send Report to Email?"
 msgstr "Надіслати звіт на email?"
+
+#: public/class-public.php:77
+msgid "Send Report and Receipt to Email?"
+msgstr "Надіслати звіт та квитанцію на email?"
 
 #: public/views/form-calculator.php:175
 msgid "Optionally, you can receive this report via email:"

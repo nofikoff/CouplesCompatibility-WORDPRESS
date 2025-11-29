@@ -245,7 +245,12 @@ msgid "PDF is being generated... Please wait."
 msgstr ""
 
 #: public/views/form-calculator.php:174
+#: public/class-public.php:76
 msgid "Send Report to Email?"
+msgstr ""
+
+#: public/class-public.php:77
+msgid "Send Report and Receipt to Email?"
 msgstr ""
 
 #: public/views/form-calculator.php:175
