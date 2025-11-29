@@ -16,6 +16,10 @@ $is_reversed = ($mode === 'reversed');
 $instance_id = $instance_id ?? 1;  // Unique instance ID
 $wrapper_id = 'nc-calculator-' . $instance_id;
 $form_id = 'nc-calculator-form-' . $instance_id;
+
+// Get prices from settings
+$price_standard = get_option('nc_price_standard', '9.99');
+$price_premium = get_option('nc_price_premium', '19.99');
 ?>
 
 <div id="<?php echo esc_attr($wrapper_id); ?>" class="nc-calculator nc-calculator-wrapper" data-package="<?php echo esc_attr($package_type); ?>" data-mode="<?php echo esc_attr($mode); ?>" data-instance="<?php echo esc_attr($instance_id); ?>">
@@ -45,7 +49,7 @@ $form_id = 'nc-calculator-form-' . $instance_id;
                 <div class="nc-badge"><?php _e('Most Popular', 'numerology-compatibility'); ?></div>
                 <div class="nc-package-header">
                     <h3><?php _e('Standard', 'numerology-compatibility'); ?></h3>
-                    <div class="nc-price"><?php _e('Paid', 'numerology-compatibility'); ?></div>
+                    <div class="nc-price">$<?php echo esc_html($price_standard); ?></div>
                 </div>
                 <ul class="nc-features">
                     <li><?php _e('Full compatibility analysis', 'numerology-compatibility'); ?></li>
@@ -61,7 +65,7 @@ $form_id = 'nc-calculator-form-' . $instance_id;
             <div class="nc-package" data-package="premium" data-tier="premium">
                 <div class="nc-package-header">
                     <h3><?php _e('Premium', 'numerology-compatibility'); ?></h3>
-                    <div class="nc-price"><?php _e('Paid', 'numerology-compatibility'); ?></div>
+                    <div class="nc-price">$<?php echo esc_html($price_premium); ?></div>
                 </div>
                 <ul class="nc-features">
                     <li><?php _e('Everything in Standard', 'numerology-compatibility'); ?></li>
@@ -211,7 +215,7 @@ $form_id = 'nc-calculator-form-' . $instance_id;
                     <div class="nc-badge"><?php _e('Most Popular', 'numerology-compatibility'); ?></div>
                     <div class="nc-package-header">
                         <h3><?php _e('Standard', 'numerology-compatibility'); ?></h3>
-                        <div class="nc-price"><?php _e('Paid', 'numerology-compatibility'); ?></div>
+                        <div class="nc-price">$<?php echo esc_html($price_standard); ?></div>
                     </div>
                     <ul class="nc-features">
                         <li><?php _e('Full compatibility analysis', 'numerology-compatibility'); ?></li>
@@ -227,7 +231,7 @@ $form_id = 'nc-calculator-form-' . $instance_id;
                 <div class="nc-package" data-package="premium" data-tier="premium">
                     <div class="nc-package-header">
                         <h3><?php _e('Premium', 'numerology-compatibility'); ?></h3>
-                        <div class="nc-price"><?php _e('Paid', 'numerology-compatibility'); ?></div>
+                        <div class="nc-price">$<?php echo esc_html($price_premium); ?></div>
                     </div>
                     <ul class="nc-features">
                         <li><?php _e('Everything in Standard', 'numerology-compatibility'); ?></li>

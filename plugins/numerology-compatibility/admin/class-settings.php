@@ -10,28 +10,15 @@ class Settings {
      */
     public function register_settings() {
         // General settings
-        register_setting('nc_settings_general', 'nc_environment');
-        register_setting('nc_settings_general', 'nc_terms_url');
-        register_setting('nc_settings_general', 'nc_privacy_url');
         register_setting('nc_settings_general', 'nc_result_page_url');
+        register_setting('nc_settings_general', 'nc_price_standard');
+        register_setting('nc_settings_general', 'nc_price_premium');
 
         // API settings
         register_setting('nc_settings_api', 'nc_api_url');
         register_setting('nc_settings_api', 'nc_api_key');
 
-        // ПРИМЕЧАНИЕ: Pricing и Payment Gateway настройки убраны
-        // Все цены и платежные шлюзы управляются на бэкенде Laravel
-
-        // Localization settings
-        register_setting('nc_settings_localization', 'nc_default_language');
-        register_setting('nc_settings_localization', 'nc_multilanguage');
-        register_setting('nc_settings_localization', 'nc_auto_currency');
-        register_setting('nc_settings_localization', 'nc_date_format');
-
         // Advanced settings
-        register_setting('nc_settings_advanced', 'nc_debug_mode');
-        register_setting('nc_settings_advanced', 'nc_cache_duration');
-        register_setting('nc_settings_advanced', 'nc_rate_limit');
         register_setting('nc_settings_advanced', 'nc_delete_on_uninstall');
     }
 
@@ -84,24 +71,14 @@ class Settings {
     public static function get_defaults() {
         return [
             // General settings
-            'nc_environment' => 'production',
-            'nc_terms_url' => '/terms',
-            'nc_privacy_url' => '/privacy',
             'nc_result_page_url' => '',
+            'nc_price_standard' => '9.99',
+            'nc_price_premium' => '19.99',
 
             // API settings
             'nc_api_url' => 'https://api.your-domain.com',
 
-            // Localization settings
-            'nc_default_language' => get_locale(),
-            'nc_multilanguage' => 1,
-            'nc_auto_currency' => 1,
-            'nc_date_format' => 'Y-m-d',
-
             // Advanced settings
-            'nc_debug_mode' => 0,
-            'nc_cache_duration' => 3600,
-            'nc_rate_limit' => 10,
             'nc_delete_on_uninstall' => 0
         ];
     }

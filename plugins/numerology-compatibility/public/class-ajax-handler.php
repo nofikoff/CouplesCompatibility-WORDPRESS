@@ -3,7 +3,6 @@
 namespace NC\PublicSite;
 
 use NC\Api\ApiCalculations;
-use NC\Api\ApiPayments;
 
 class AjaxHandler {
 

@@ -127,8 +127,6 @@
      * Handle form submission
      */
     Calculator.prototype.handleFormSubmit = function($form) {
-        var self = this;
-
         // Validate form
         if (!this.validateCalculationForm($form)) {
             return;
@@ -172,7 +170,6 @@
      * Validate calculation form
      */
     Calculator.prototype.validateCalculationForm = function($form) {
-        var self = this;
         var isValid = true;
 
         // Validate dates
@@ -257,7 +254,6 @@
      * Select package
      */
     Calculator.prototype.selectPackage = function(packageType, tier) {
-        var self = this;
         this.selectedPackage = packageType;
         this.selectedTier = tier;
 
@@ -543,8 +539,6 @@
      * Show PDF ready state
      */
     Calculator.prototype.showPdfReady = function() {
-        var self = this;
-
         this.showStep(5);
 
         // Update icon
@@ -618,8 +612,6 @@
      * Reset calculator to initial state
      */
     Calculator.prototype.resetCalculator = function() {
-        var self = this;
-
         // Reset form
         this.$wrapper.find('.nc-calculator-form')[0].reset();
 

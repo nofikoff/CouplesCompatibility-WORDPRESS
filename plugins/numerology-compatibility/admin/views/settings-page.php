@@ -85,22 +85,10 @@ $active_tab = $_GET['tab'] ?? 'general';
         <a href="?page=nc-settings&tab=api" class="nav-tab <?php echo $active_tab == 'api' ? 'nav-tab-active' : ''; ?>">
             <?php _e('API Configuration', 'numerology-compatibility'); ?>
         </a>
-        <a href="?page=nc-settings&tab=localization" class="nav-tab <?php echo $active_tab == 'localization' ? 'nav-tab-active' : ''; ?>">
-            <?php _e('Localization', 'numerology-compatibility'); ?>
-        </a>
         <a href="?page=nc-settings&tab=advanced" class="nav-tab <?php echo $active_tab == 'advanced' ? 'nav-tab-active' : ''; ?>">
             <?php _e('Advanced', 'numerology-compatibility'); ?>
         </a>
     </nav>
-
-    <?php if (in_array($active_tab, ['pricing', 'payment'])): ?>
-        <div class="notice notice-info">
-            <p>
-                <strong><?php _e('Note:', 'numerology-compatibility'); ?></strong>
-                <?php _e('Pricing and payment gateway settings are now managed on the backend. Please configure them in your Laravel backend .env file.', 'numerology-compatibility'); ?>
-            </p>
-        </div>
-    <?php endif; ?>
 
     <form method="post" action="options.php" class="nc-settings-form">
         <?php settings_fields('nc_settings_' . $active_tab); ?>
@@ -109,44 +97,36 @@ $active_tab = $_GET['tab'] ?? 'general';
         <?php if ($active_tab == 'general'): ?>
             <table class="form-table" role="presentation">
                 <tr>
-                    <th scope="row"><?php _e('Environment', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <select name="nc_environment">
-                            <option value="production" <?php selected(get_option('nc_environment'), 'production'); ?>>
-                                <?php _e('Production', 'numerology-compatibility'); ?>
-                            </option>
-                            <option value="staging" <?php selected(get_option('nc_environment'), 'staging'); ?>>
-                                <?php _e('Staging', 'numerology-compatibility'); ?>
-                            </option>
-                            <option value="development" <?php selected(get_option('nc_environment'), 'development'); ?>>
-                                <?php _e('Development', 'numerology-compatibility'); ?>
-                            </option>
-                        </select>
-                        <p class="description"><?php _e('Select the environment for API connections', 'numerology-compatibility'); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Terms Page URL', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <input type="url" name="nc_terms_url" value="<?php echo esc_attr(get_option('nc_terms_url', '/terms')); ?>" class="regular-text">
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Privacy Page URL', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <input type="url" name="nc_privacy_url" value="<?php echo esc_attr(get_option('nc_privacy_url', '/privacy')); ?>" class="regular-text">
-                    </td>
-                </tr>
-
-                <tr>
                     <th scope="row"><?php _e('Result Page URL', 'numerology-compatibility'); ?></th>
                     <td>
                         <input type="url" name="nc_result_page_url" value="<?php echo esc_attr(get_option('nc_result_page_url', '')); ?>" class="regular-text" placeholder="https://example.com/compatibility-result/">
                         <p class="description">
                             <?php _e('URL of the page with [numerology_result] shortcode. After payment, users will be redirected here.', 'numerology-compatibility'); ?>
                         </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row" colspan="2">
+                        <h3 style="margin: 0;"><?php _e('Package Pricing (USD)', 'numerology-compatibility'); ?></h3>
+                    </th>
+                </tr>
+
+                <tr>
+                    <th scope="row"><?php _e('Standard Price', 'numerology-compatibility'); ?></th>
+                    <td>
+                        <span style="font-size: 16px; margin-right: 5px;">$</span>
+                        <input type="number" name="nc_price_standard" value="<?php echo esc_attr(get_option('nc_price_standard', '9.99')); ?>" class="small-text" step="0.01" min="0">
+                        <p class="description"><?php _e('Price for Standard report (e.g., 9.99)', 'numerology-compatibility'); ?></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><?php _e('Premium Price', 'numerology-compatibility'); ?></th>
+                    <td>
+                        <span style="font-size: 16px; margin-right: 5px;">$</span>
+                        <input type="number" name="nc_price_premium" value="<?php echo esc_attr(get_option('nc_price_premium', '19.99')); ?>" class="small-text" step="0.01" min="0">
+                        <p class="description"><?php _e('Price for Premium report (e.g., 19.99)', 'numerology-compatibility'); ?></p>
                     </td>
                 </tr>
             </table>
@@ -183,110 +163,20 @@ $active_tab = $_GET['tab'] ?? 'general';
             </table>
         <?php endif; ?>
 
-        <!-- Localization Tab -->
-        <?php if ($active_tab == 'localization'): ?>
-            <table class="form-table" role="presentation">
-                <tr>
-                    <th scope="row"><?php _e('Default Language', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <select name="nc_default_language">
-                            <option value="en_US" <?php selected(get_option('nc_default_language'), 'en_US'); ?>>English</option>
-                            <option value="es_ES" <?php selected(get_option('nc_default_language'), 'es_ES'); ?>>Español</option>
-                            <option value="fr_FR" <?php selected(get_option('nc_default_language'), 'fr_FR'); ?>>Français</option>
-                            <option value="de_DE" <?php selected(get_option('nc_default_language'), 'de_DE'); ?>>Deutsch</option>
-                            <option value="ru_RU" <?php selected(get_option('nc_default_language'), 'ru_RU'); ?>>Русский</option>
-                        </select>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Multi-language Support', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="nc_multilanguage" value="1" <?php checked(get_option('nc_multilanguage', 1)); ?>>
-                            <?php _e('Enable multi-language support', 'numerology-compatibility'); ?>
-                        </label>
-                        <p class="description"><?php _e('Works with WPML or Polylang if installed', 'numerology-compatibility'); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Auto-detect Currency', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="nc_auto_currency" value="1" <?php checked(get_option('nc_auto_currency', 1)); ?>>
-                            <?php _e('Automatically detect currency based on user location', 'numerology-compatibility'); ?>
-                        </label>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Date Format', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <select name="nc_date_format">
-                            <option value="Y-m-d" <?php selected(get_option('nc_date_format'), 'Y-m-d'); ?>>YYYY-MM-DD</option>
-                            <option value="d/m/Y" <?php selected(get_option('nc_date_format'), 'd/m/Y'); ?>>DD/MM/YYYY</option>
-                            <option value="m/d/Y" <?php selected(get_option('nc_date_format'), 'm/d/Y'); ?>>MM/DD/YYYY</option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-        <?php endif; ?>
 
         <!-- Advanced Tab -->
         <?php if ($active_tab == 'advanced'): ?>
             <table class="form-table" role="presentation">
                 <tr>
-                    <th scope="row"><?php _e('Debug Mode', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <label>
-                            <input type="checkbox" name="nc_debug_mode" value="1" <?php checked(get_option('nc_debug_mode', 0)); ?>>
-                            <?php _e('Enable debug logging', 'numerology-compatibility'); ?>
-                        </label>
-                        <p class="description"><?php _e('Logs will be saved to wp-content/uploads/nc-logs/', 'numerology-compatibility'); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Cache Duration', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <input type="number" name="nc_cache_duration" value="<?php echo esc_attr(get_option('nc_cache_duration', 3600)); ?>" min="0" class="small-text">
-                        <span><?php _e('seconds', 'numerology-compatibility'); ?></span>
-                        <p class="description"><?php _e('How long to cache API responses (0 to disable)', 'numerology-compatibility'); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Rate Limiting', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <input type="number" name="nc_rate_limit" value="<?php echo esc_attr(get_option('nc_rate_limit', 10)); ?>" min="1" class="small-text">
-                        <span><?php _e('calculations per hour for free users', 'numerology-compatibility'); ?></span>
-                    </td>
-                </tr>
-
-                <tr>
                     <th scope="row"><?php _e('Delete Data on Uninstall', 'numerology-compatibility'); ?></th>
                     <td>
                         <label>
                             <input type="checkbox" name="nc_delete_on_uninstall" value="1" <?php checked(get_option('nc_delete_on_uninstall', 0)); ?>>
-                            <?php _e('Remove all plugin data when uninstalled', 'numerology-compatibility'); ?>
+                            <?php _e('Remove all plugin settings when uninstalled', 'numerology-compatibility'); ?>
                         </label>
-                        <p class="notice notice-warning inline">
-                            <?php _e('⚠️ This will permanently delete all calculations and user data!', 'numerology-compatibility'); ?>
+                        <p class="description">
+                            <?php _e('All calculation data is stored on the backend API.', 'numerology-compatibility'); ?>
                         </p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th scope="row"><?php _e('Export/Import', 'numerology-compatibility'); ?></th>
-                    <td>
-                        <button type="button" class="button" id="nc-export-settings">
-                            <?php _e('Export Settings', 'numerology-compatibility'); ?>
-                        </button>
-                        <button type="button" class="button" id="nc-import-settings">
-                            <?php _e('Import Settings', 'numerology-compatibility'); ?>
-                        </button>
-                        <input type="file" id="nc-import-file" accept=".json" style="display:none;">
                     </td>
                 </tr>
             </table>
@@ -327,58 +217,6 @@ $active_tab = $_GET['tab'] ?? 'general';
                     $button.prop('disabled', false);
                 }
             });
-        });
-
-        // Export settings
-        $('#nc-export-settings').on('click', function() {
-            // Collect all settings
-            var settings = {};
-            $('input[name^="nc_"], select[name^="nc_"]').each(function() {
-                var name = $(this).attr('name');
-                var value = $(this).is(':checkbox') ? $(this).is(':checked') : $(this).val();
-                settings[name] = value;
-            });
-
-            // Download as JSON
-            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settings, null, 2));
-            var downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "numerology-settings.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        });
-
-        // Import settings
-        $('#nc-import-settings').on('click', function() {
-            $('#nc-import-file').click();
-        });
-
-        $('#nc-import-file').on('change', function(e) {
-            var file = e.target.files[0];
-            if (!file) return;
-
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    var settings = JSON.parse(e.target.result);
-
-                    // Apply settings
-                    for (var key in settings) {
-                        var $field = $('[name="' + key + '"]');
-                        if ($field.is(':checkbox')) {
-                            $field.prop('checked', settings[key]);
-                        } else {
-                            $field.val(settings[key]);
-                        }
-                    }
-
-                    alert('Settings imported successfully! Please save to apply.');
-                } catch (err) {
-                    alert('Error importing settings: ' + err.message);
-                }
-            };
-            reader.readAsText(file);
         });
     });
 </script>

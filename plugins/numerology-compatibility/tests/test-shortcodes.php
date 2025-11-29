@@ -34,6 +34,13 @@ class TestShortcodes extends TestCase {
             },
             'add_shortcode' => function() { return true; },
             'shortcode_exists' => function() { return true; },
+            'get_option' => function($key, $default = '') {
+                $options = [
+                    'nc_price_standard' => '9.99',
+                    'nc_price_premium' => '19.99',
+                ];
+                return $options[$key] ?? $default;
+            },
         ]);
 
         // Define NC_PLUGIN_DIR constant if not defined
