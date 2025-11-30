@@ -26,75 +26,57 @@ if (!defined('WPINC')) {
  *
  * Requires Polylang plugin.
  */
-add_action('init', function() {
-    // Skip for admin area, AJAX requests, REST API, cron, and system pages
-    if (is_admin() || wp_doing_ajax() || defined('REST_REQUEST') || wp_doing_cron()) {
-        return;
-    }
+add_action('template_redirect', function() {
+	// Check if Polylang is active
+	if (!function_exists('pll_the_languages') || !function_exists('PLL')) {
+		return;
+	}
 
-    // Skip system URLs
-    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-    if (preg_match('#^/(wp-cron|wp-admin|wp-login|wp-json|xmlrpc)#', $request_uri)) {
-        return;
-    }
+	// Get country code from Cloudflare header
+	$country_code = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? strtoupper($_SERVER['HTTP_CF_IPCOUNTRY']) : '';
 
-    // Check if Polylang is active
-    if (!function_exists('pll_the_languages') || !function_exists('PLL')) {
-        return;
-    }
+	// Map country to language code
+	$country_to_lang = [
+		'UA' => 'uk',
+	];
 
-    // Get country code from Cloudflare header
-    $country_code = isset($_SERVER['HTTP_CF_IPCOUNTRY']) ? strtoupper($_SERVER['HTTP_CF_IPCOUNTRY']) : '';
+	$target_lang = $country_to_lang[$country_code] ?? 'en';
+	$current_lang = pll_current_language();
 
-    // Map country to language code
-    $country_to_lang = [
-        'UA' => 'uk', // Ukraine -> Ukrainian
-    ];
+	// Check if geo-detection was already done
+	$geo_detected = $_COOKIE['nc_geo_lang_detected'] ?? null;
 
-    // Determine target language (default to English)
-    $target_lang = $country_to_lang[$country_code] ?? 'en';
+	if ($geo_detected === null && $current_lang !== $target_lang) {
+		$languages = PLL()->model->get_languages_list();
+		$target_lang_obj = null;
 
-    // Get current language
-    $current_lang = pll_current_language();
+		foreach ($languages as $lang) {
+			if ($lang->slug === $target_lang) {
+				$target_lang_obj = $lang;
+				break;
+			}
+		}
 
-    // Check if geo-detection was already done (use separate cookie)
-    $geo_detected = $_COOKIE['nc_geo_lang_detected'] ?? null;
+		if ($target_lang_obj) {
+			$translations = null;
+			if (method_exists(PLL()->links, 'get_translation_url')) {
+				$translations = PLL()->links->get_translation_url($target_lang_obj);
+			}
+			if (!$translations) {
+				$translations = pll_home_url($target_lang);
+			}
 
-    // Only auto-switch if geo-detection hasn't been done yet and language differs
-    if ($geo_detected === null && $current_lang !== $target_lang) {
-        // Check if target language exists in Polylang
-        $languages = PLL()->model->get_languages_list();
-        $target_lang_obj = null;
+			$current_url = home_url($_SERVER['REQUEST_URI']);
 
-        foreach ($languages as $lang) {
-            if ($lang->slug === $target_lang) {
-                $target_lang_obj = $lang;
-                break;
-            }
-        }
+			setcookie('nc_geo_lang_detected', '1', time() + (86400 * 30), '/');
 
-        if ($target_lang_obj) {
-            // Try to get translation URL, fallback to home URL for homepage
-            $translations = null;
-            if (method_exists(PLL()->links, 'get_translation_url')) {
-                $translations = PLL()->links->get_translation_url($target_lang_obj);
-            }
-            if (!$translations) {
-                $translations = pll_home_url($target_lang);
-            }
-
-            $current_url = home_url($_SERVER['REQUEST_URI']);
-
-            if ($translations && $translations !== $current_url) {
-                setcookie('nc_geo_lang_detected', '1', time() + (86400 * 30), '/');
-                wp_safe_redirect($translations);
-                exit;
-            } else {
-                setcookie('nc_geo_lang_detected', '1', time() + (86400 * 30), '/');
-            }
-        }
-    }
-}, 1); // Priority 1 to run early
+			if ($translations && $translations !== $current_url) {
+				wp_safe_redirect($translations);
+				exit;
+			}
+		}
+	}
+});
 
 /**
  * Shortcode: [if_lang]
