@@ -7,6 +7,16 @@ use NC\Api\ApiCalculations;
 class AjaxHandler {
 
 	/**
+	 * Get fresh nonce (for cached pages)
+	 * AJAX action: nc_get_nonce
+	 */
+	public function handle_get_nonce() {
+		wp_send_json_success([
+			'nonce' => wp_create_nonce('nc_ajax_nonce')
+		]);
+	}
+
+	/**
 	 * Обработка бесплатного расчета
 	 * AJAX action: nc_calculate_free
 	 *
