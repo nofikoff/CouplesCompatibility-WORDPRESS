@@ -82,7 +82,7 @@ $price_premium = get_option('nc_price_premium', '19.99');
     </div>
 
     <!-- REVERSED MODE: Step 2 = Input Form -->
-    <div class="nc-step nc-step-2 nc-hidden" data-step="2">
+    <div class="nc-step nc-step-2 nc-dates-form nc-hidden" data-step="2">
         <form id="<?php echo esc_attr($form_id); ?>" class="nc-form nc-calculator-form">
 
             <div class="nc-form-row">
@@ -137,7 +137,7 @@ $price_premium = get_option('nc_price_premium', '19.99');
 
 <?php else: ?>
     <!-- NORMAL MODE: Step 1 = Input Form -->
-    <div class="nc-step nc-step-1 nc-active" data-step="1">
+    <div class="nc-step nc-step-1 nc-dates-form nc-active" data-step="1">
         <form id="<?php echo esc_attr($form_id); ?>" class="nc-form nc-calculator-form">
 
             <div class="nc-form-row">
