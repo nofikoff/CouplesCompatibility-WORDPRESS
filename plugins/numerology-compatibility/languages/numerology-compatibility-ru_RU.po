@@ -452,6 +452,10 @@ msgstr "При желании получите этот отчет на email:"
 msgid "Generating PDF..."
 msgstr "Генерация PDF..."
 
+#: public/views/view-result.php:112
+msgid "Your PDF report is being generated. This usually takes a few seconds."
+msgstr "Ваш PDF отчет генерируется. Обычно это занимает несколько секунд."
+
 #: public/views/view-result.php:126
 msgid "We could not load your calculation result."
 msgstr "Не удалось загрузить результат расчета."

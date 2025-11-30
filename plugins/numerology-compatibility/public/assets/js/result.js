@@ -36,6 +36,9 @@
     ResultPage.prototype.init = function() {
         var self = this;
 
+        // Refresh nonce first (for cached pages)
+        this.refreshNonce();
+
         // Bind email form
         this.$wrapper.on('submit', '#nc-result-email-form', function(e) {
             e.preventDefault();
@@ -355,6 +358,26 @@
                 console.error('Email sending error:', error);
                 alert('Failed to send email. Please try again.');
                 submitBtn.prop('disabled', false).text('📧 ' + (nc_public.i18n.send_to_email || 'Send to Email'));
+            }
+        });
+    };
+
+    /**
+     * Refresh nonce for cached pages
+     */
+    ResultPage.prototype.refreshNonce = function() {
+        $.ajax({
+            url: nc_public.ajax_url,
+            type: 'POST',
+            data: { action: 'nc_get_nonce' },
+            success: function(response) {
+                if (response.success && response.data.nonce) {
+                    nc_public.nonce = response.data.nonce;
+                    console.log('Nonce refreshed');
+                }
+            },
+            error: function() {
+                console.warn('Failed to refresh nonce');
             }
         });
     };
