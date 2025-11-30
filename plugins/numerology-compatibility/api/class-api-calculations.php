@@ -70,18 +70,8 @@ class ApiCalculations {
 
 		$locale = $this->get_current_locale();
 
-		// Get result page URL from settings, fallback to referer or home
-		$result_page_url = get_option('nc_result_page_url', '');
-		if (empty($result_page_url)) {
-			// Fallback: use referer (page with form) or home URL
-			$referer = wp_get_referer();
-			if ($referer) {
-				// Remove any existing query parameters from referer
-				$result_page_url = strtok($referer, '?');
-			} else {
-				$result_page_url = home_url('/');
-			}
-		}
+		// Get result page URL with locale support
+		$result_page_url = $this->get_localized_result_url($locale);
 
 		// Backend will add payment_id and calculation_id to success_url automatically
 		// We just pass the base URLs
@@ -202,6 +192,39 @@ class ApiCalculations {
 		$lang = substr(get_locale(), 0, 2);
 
 		return $lang ?: 'en';
+	}
+
+	/**
+	 * Get localized result page URL
+	 * Supports Polylang multilingual sites
+	 *
+	 * @param string $locale Language code (en, ru, uk)
+	 * @return string Localized URL
+	 */
+	private function get_localized_result_url($locale) {
+		$base_url = get_option('nc_result_page_url', '');
+
+		// Если URL не задан, используем referer или home
+		if (empty($base_url)) {
+			$referer = wp_get_referer();
+			if ($referer) {
+				return strtok($referer, '?');
+			}
+			return home_url('/');
+		}
+
+		// Polylang: получить локализованную версию страницы
+		if (function_exists('pll_get_post')) {
+			$post_id = url_to_postid($base_url);
+			if ($post_id) {
+				$translated_id = pll_get_post($post_id, $locale);
+				if ($translated_id) {
+					return get_permalink($translated_id);
+				}
+			}
+		}
+
+		return $base_url;
 	}
 
 	/**

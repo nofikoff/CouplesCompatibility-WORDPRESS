@@ -427,3 +427,59 @@ msgstr "Расчет завершен! PDF отчет генерируется..
 
 msgid "Calculation ID"
 msgstr "ID расчета"
+
+#: public/views/view-result.php:46
+msgid "Loading your calculation result..."
+msgstr "Загрузка результата расчета..."
+
+#: public/views/view-result.php:48
+msgid "Do not close this page."
+msgstr "Не закрывайте эту страницу."
+
+#: public/views/view-result.php:56
+msgid "Your Report is Ready!"
+msgstr "Ваш отчет готов!"
+
+#: public/views/view-result.php:57
+msgid "Your numerology compatibility report has been generated."
+msgstr "Ваш нумерологический отчет о совместимости создан."
+
+#: public/views/view-result.php:74
+msgid "Optionally, receive this report via email:"
+msgstr "При желании получите этот отчет на email:"
+
+#: public/views/view-result.php:111
+msgid "Generating PDF..."
+msgstr "Генерация PDF..."
+
+#: public/views/view-result.php:126
+msgid "We could not load your calculation result."
+msgstr "Не удалось загрузить результат расчета."
+
+#: public/views/view-result.php:129
+msgid "If you completed a payment, please contact our support team with your payment confirmation."
+msgstr "Если вы совершили оплату, пожалуйста, свяжитесь с нашей поддержкой и предоставьте подтверждение платежа."
+
+#: public/views/view-result.php:134
+msgid "Go to Homepage"
+msgstr "На главную"
+
+#: public/views/view-result.php:144
+msgid "Payment Cancelled"
+msgstr "Оплата отменена"
+
+#: public/views/view-result.php:145
+msgid "Your payment was cancelled. No charges were made."
+msgstr "Ваш платеж был отменен. Средства не списаны."
+
+#: public/views/view-result.php:159
+msgid "No Result Found"
+msgstr "Результат не найден"
+
+#: public/views/view-result.php:160
+msgid "Please complete a calculation first to see your results."
+msgstr "Сначала выполните расчет, чтобы увидеть результаты."
+
+#: public/views/view-result.php:164
+msgid "Start Calculation"
+msgstr "Начать расчет"

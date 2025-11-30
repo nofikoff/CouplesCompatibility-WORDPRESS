@@ -427,3 +427,49 @@ msgstr "Розрахунок завершено! PDF звіт генеруєть
 
 msgid "Calculation ID"
 msgstr "ID розрахунку"
+
+#. view-result.php - Result page strings
+msgid "Your Report is Ready!"
+msgstr "Ваш звіт готовий!"
+
+msgid "Your numerology compatibility report has been generated."
+msgstr "Ваш звіт про нумерологічну сумісність створено."
+
+msgid "Optionally, receive this report via email:"
+msgstr "За бажанням ви можете отримати цей звіт на email:"
+
+msgid "Do not close this page."
+msgstr "Не закривайте цю сторінку."
+
+msgid "Loading your calculation result..."
+msgstr "Завантаження результатів розрахунку..."
+
+msgid "Generating PDF..."
+msgstr "Генерація PDF..."
+
+msgid "Your PDF report is being generated. This usually takes a few seconds."
+msgstr "Ваш PDF звіт генерується. Зазвичай це займає кілька секунд."
+
+msgid "We could not load your calculation result."
+msgstr "Не вдалося завантажити результат вашого розрахунку."
+
+msgid "If you completed a payment, please contact our support team with your payment confirmation."
+msgstr "Якщо ви здійснили оплату, будь ласка, зв'яжіться з нашою службою підтримки з підтвердженням оплати."
+
+msgid "Go to Homepage"
+msgstr "На головну"
+
+msgid "Payment Cancelled"
+msgstr "Оплату скасовано"
+
+msgid "Your payment was cancelled. No charges were made."
+msgstr "Вашу оплату скасовано. Кошти не списано."
+
+msgid "No Result Found"
+msgstr "Результат не знайдено"
+
+msgid "Please complete a calculation first to see your results."
+msgstr "Спочатку виконайте розрахунок, щоб побачити результати."
+
+msgid "Start Calculation"
+msgstr "Почати розрахунок"
