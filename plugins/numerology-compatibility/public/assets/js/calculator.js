@@ -37,24 +37,6 @@
         this.bindEvents();
         this.setupHTML5Validation();
         this.setupDateLimits();
-        this.refreshNonce(); // Get fresh nonce for cached pages
-    };
-
-    /**
-     * Refresh nonce from server (for cached pages)
-     */
-    Calculator.prototype.refreshNonce = function() {
-        $.ajax({
-            url: nc_public.ajax_url,
-            type: 'POST',
-            data: { action: 'nc_get_nonce' },
-            success: function(response) {
-                if (response.success && response.data.nonce) {
-                    nc_public.nonce = response.data.nonce;
-                    console.log('Nonce refreshed');
-                }
-            }
-        });
     };
 
     /**

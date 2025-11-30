@@ -73,10 +73,6 @@ class Plugin {
 		$this->loader->add_action('init', $shortcodes, 'register_shortcodes');
 
 		// AJAX handlers for calculations - новые endpoints
-		// Get fresh nonce (for cached pages)
-		$this->loader->add_action('wp_ajax_nc_get_nonce', $ajax_handler, 'handle_get_nonce');
-		$this->loader->add_action('wp_ajax_nopriv_nc_get_nonce', $ajax_handler, 'handle_get_nonce');
-
 		$this->loader->add_action('wp_ajax_nc_calculate_free', $ajax_handler, 'handle_free_calculation');
 		$this->loader->add_action('wp_ajax_nopriv_nc_calculate_free', $ajax_handler, 'handle_free_calculation');
 
