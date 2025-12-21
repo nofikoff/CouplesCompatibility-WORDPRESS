@@ -1,7 +1,11 @@
 .zencoder
 db-dumps
-themes
 .idea
 
 /wordpress/
 /uploads/
+/themes/hello-biz/
+/themes/twentytwentyfive/
+/themes/twentytwentyfour/
+/themes/twentytwentythree/
+/themes/index.php

@@ -1,0 +1,17 @@
+{
+    "name": "novikov/couplescompatibility",
+    "require": {
+        "timber/timber": "^2.3"
+    },
+    "authors": [
+        {
+            "name": "Novikov",
+            "email": "ruslan.novikov@gmail.com"
+        }
+    ],
+    "autoload": {
+    "psr-4": {
+      "MyTheme\\": "src/"
+    }
+  }
+}

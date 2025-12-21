@@ -1,0 +1,15 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+
+    {# Секция Hero. Передаем в неё подгруппу полей 'hero' из ACF #}
+    {% include "blocks/hero.twig" with {
+        'data': fields.hero_section
+    } %}
+
+    {# Секция Features #}
+    {% include "blocks/features.twig" with {
+        'data': fields.features_section
+    } %}
+
+{% endblock %}
