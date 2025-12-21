@@ -44,58 +44,6 @@
             {{ function('do_shortcode', "[numerology_compatibility theme='hero']") }}
         </div>
 
-        {#
-        ORIGINAL FORM FOR REFERENCE (remove this comment block when done):
-        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-2xl border border-white/20 max-w-lg w-full">
-            <form class="space-y-6" action="{{ fields.form_action ?: '#' }}" method="POST">
-                <div>
-                    <label for="partner1" class="block text-sm font-medium text-purple-100 mb-2">
-                        <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                            <line x1="16" y1="2" x2="16" y2="6"/>
-                            <line x1="8" y1="2" x2="8" y2="6"/>
-                            <line x1="3" y1="10" x2="21" y2="10"/>
-                        </svg>
-                        {{ fields.partner1_label }}
-                    </label>
-                    <input
-                        type="date"
-                        id="partner1"
-                        name="partner1_date"
-                        class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-200"
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label for="partner2" class="block text-sm font-medium text-purple-100 mb-2">
-                        <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                            <line x1="16" y1="2" x2="16" y2="6"/>
-                            <line x1="8" y1="2" x2="8" y2="6"/>
-                            <line x1="3" y1="10" x2="21" y2="10"/>
-                        </svg>
-                        {{ fields.partner2_label }}
-                    </label>
-                    <input
-                        type="date"
-                        id="partner2"
-                        name="partner2_date"
-                        class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-200"
-                        required
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-lg hover:from-yellow-300 hover:to-yellow-400 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                    {{ fields.hero_cta_button }}
-                </button>
-            </form>
-        </div>
-        #}
-
         {% if fields.hero_bottom_text %}
         <p class="mt-8 text-purple-200 text-sm">
             {{ fields.hero_bottom_text }}
