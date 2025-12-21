@@ -1,0 +1,46 @@
+{#
+    Example report section
+    ACF fields: example_title, example_quote, example_caption, example_cta_button
+#}
+
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-12">
+                {{ fields.example_title }}
+            </h2>
+
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8 md:p-12 mb-12 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-400 opacity-10 rounded-full -mr-16 -mt-16"></div>
+                <div class="absolute bottom-0 left-0 w-24 h-24 bg-purple-400 opacity-10 rounded-full -ml-12 -mb-12"></div>
+
+                <div class="relative z-10">
+                    <div class="mb-6">
+                        <svg class="w-12 h-12 text-purple-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+
+                    <blockquote class="text-2xl md:text-3xl font-medium text-gray-700 leading-relaxed italic mb-8">
+                        {{ fields.example_quote }}
+                    </blockquote>
+
+                    {% if fields.example_caption %}
+                    <div class="text-sm text-purple-600 font-medium">
+                        {{ fields.example_caption }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if fields.example_cta_button %}
+            <a href="#" class="inline-flex items-center bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-4 px-8 rounded-lg hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+                {{ fields.example_cta_button }}
+                <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>

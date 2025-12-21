@@ -1,45 +1,97 @@
 {#
-    Переменная 'data' приходит из родителя.
-    Ожидаем структуру: title, description, button_text, image
+    Hero section with compatibility form
+    ACF fields: hero_title, hero_subtitle, partner1_label, partner2_label,
+                hero_cta_button, hero_bottom_text, form_action
 #}
 
-<section class="relative bg-white overflow-hidden">
-  <div class="max-w-7xl mx-auto">
-    <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-
-      <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-        <div class="sm:text-center lg:text-left">
-
-          <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-            <span class="block xl:inline">{{ data.title }}</span>
-          </h1>
-
-          <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-            {{ data.description }}
-          </p>
-
-          <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-            <div class="rounded-md shadow">
-              <a href="#" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
-                {# Если текст кнопки пришел из ACF - выводим его. Если нет - статический перевод #}
-                {{ data.button_text ?: __('Get started', 'ai-landing') }}
-              </a>
-            </div>
-          </div>
-
+<section class="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-700 text-white overflow-hidden">
+    {# Background decoration #}
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-20 left-10 animate-pulse">
+            <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
         </div>
-      </main>
+        <div class="absolute top-40 right-20 animate-pulse animate-pulse-delay-1000">
+            <svg class="w-6 h-6 text-pink-300" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+        </div>
+        <div class="absolute bottom-40 left-1/4 animate-pulse animate-pulse-delay-2000">
+            <svg class="w-4 h-4 text-yellow-300" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+        </div>
+        <div class="absolute bottom-60 right-1/3 animate-pulse animate-pulse-delay-500">
+            <svg class="w-10 h-10 text-pink-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+        </div>
     </div>
-  </div>
 
-  {# Картинка #}
-  <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-    {% if data.image %}
-        <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-             src="{{ data.image.url }}"
-             alt="{{ data.image.alt }}">
-    {% else %}
-        <div class="bg-gray-200 h-full w-full flex items-center justify-center">No Image</div>
-    {% endif %}
-  </div>
+    <div class="relative z-10 container mx-auto px-6 py-20 flex flex-col items-center text-center min-h-screen justify-center">
+        <div class="mb-12 max-w-4xl">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-yellow-200 to-yellow-400 bg-clip-text text-transparent leading-tight">
+                {{ fields.hero_title }}
+            </h1>
+            <p class="text-xl md:text-2xl text-purple-100 max-w-2xl mx-auto leading-relaxed">
+                {{ fields.hero_subtitle }}
+            </p>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-2xl border border-white/20 max-w-lg w-full">
+            <form class="space-y-6" action="{{ fields.form_action ?: '#' }}" method="POST">
+                <div>
+                    <label for="partner1" class="block text-sm font-medium text-purple-100 mb-2">
+                        <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        {{ fields.partner1_label }}
+                    </label>
+                    <input
+                        type="date"
+                        id="partner1"
+                        name="partner1_date"
+                        class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-200"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label for="partner2" class="block text-sm font-medium text-purple-100 mb-2">
+                        <svg class="inline w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        {{ fields.partner2_label }}
+                    </label>
+                    <input
+                        type="date"
+                        id="partner2"
+                        name="partner2_date"
+                        class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all duration-200"
+                        required
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 font-bold py-4 px-8 rounded-lg hover:from-yellow-300 hover:to-yellow-400 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                    {{ fields.hero_cta_button }}
+                </button>
+            </form>
+        </div>
+
+        {% if fields.hero_bottom_text %}
+        <p class="mt-8 text-purple-200 text-sm">
+            {{ fields.hero_bottom_text }}
+        </p>
+        {% endif %}
+    </div>
 </section>

@@ -1,0 +1,103 @@
+{#
+    FAQ section
+    ACF fields: faq_title,
+                faq1_question, faq1_answer,
+                faq2_question, faq2_answer,
+                faq3_question, faq3_answer,
+                faq4_question, faq4_answer,
+                faq5_question, faq5_answer
+#}
+
+<section class="py-20 bg-purple-50">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+                    {{ fields.faq_title }}
+                </h2>
+            </div>
+
+            <div class="space-y-4">
+                {# FAQ 1 #}
+                {% if fields.faq1_question %}
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-200">
+                    <div class="px-8 py-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            {{ fields.faq1_question }}
+                        </h3>
+                        <div class="pt-4 border-t border-purple-100">
+                            <p class="text-gray-600 leading-relaxed">
+                                {{ fields.faq1_answer }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# FAQ 2 #}
+                {% if fields.faq2_question %}
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-200">
+                    <div class="px-8 py-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            {{ fields.faq2_question }}
+                        </h3>
+                        <div class="pt-4 border-t border-purple-100">
+                            <p class="text-gray-600 leading-relaxed">
+                                {{ fields.faq2_answer }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# FAQ 3 #}
+                {% if fields.faq3_question %}
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-200">
+                    <div class="px-8 py-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            {{ fields.faq3_question }}
+                        </h3>
+                        <div class="pt-4 border-t border-purple-100">
+                            <p class="text-gray-600 leading-relaxed">
+                                {{ fields.faq3_answer }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# FAQ 4 #}
+                {% if fields.faq4_question %}
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-200">
+                    <div class="px-8 py-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            {{ fields.faq4_question }}
+                        </h3>
+                        <div class="pt-4 border-t border-purple-100">
+                            <p class="text-gray-600 leading-relaxed">
+                                {{ fields.faq4_answer }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# FAQ 5 #}
+                {% if fields.faq5_question %}
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-200">
+                    <div class="px-8 py-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            {{ fields.faq5_question }}
+                        </h3>
+                        <div class="pt-4 border-t border-purple-100">
+                            <p class="text-gray-600 leading-relaxed">
+                                {{ fields.faq5_answer }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

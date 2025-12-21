@@ -2,14 +2,22 @@
 
 {% block content %}
 
-    {# Секция Hero. Передаем в неё подгруппу полей 'hero' из ACF #}
-    {% include "blocks/hero.twig" with {
-        'data': fields.hero_section
-    } %}
+    {# Hero Section with Form #}
+    {% include "blocks/hero.twig" %}
 
-    {# Секция Features #}
-    {% include "blocks/features.twig" with {
-        'data': fields.features_section
-    } %}
+    {# About / Benefits Section #}
+    {% include "blocks/about.twig" %}
+
+    {# Example Report Section #}
+    {% include "blocks/example.twig" %}
+
+    {# Pricing Section #}
+    {% include "blocks/pricing.twig" %}
+
+    {# Reviews Section #}
+    {% include "blocks/reviews.twig" %}
+
+    {# FAQ Section #}
+    {% include "blocks/faq.twig" %}
 
 {% endblock %}
