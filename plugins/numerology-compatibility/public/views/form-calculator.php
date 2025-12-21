@@ -12,17 +12,19 @@ if (!defined('ABSPATH')) {
 $package_type = $attributes['package'] ?? 'auto';
 $show_prices = $attributes['show_prices'] ?? true;
 $mode = $mode ?? 'normal';  // 'normal' or 'reversed'
+$theme = $attributes['theme'] ?? '';  // '' or 'hero'
 $is_reversed = ($mode === 'reversed');
 $instance_id = $instance_id ?? 1;  // Unique instance ID
 $wrapper_id = 'nc-calculator-' . $instance_id;
 $form_id = 'nc-calculator-form-' . $instance_id;
+$theme_class = $theme ? 'nc-theme-' . esc_attr($theme) : '';
 
 // Get prices from settings
 $price_standard = get_option('nc_price_standard', '9.99');
 $price_premium = get_option('nc_price_premium', '19.99');
 ?>
 
-<div id="<?php echo esc_attr($wrapper_id); ?>" class="nc-calculator nc-calculator-wrapper" data-package="<?php echo esc_attr($package_type); ?>" data-mode="<?php echo esc_attr($mode); ?>" data-instance="<?php echo esc_attr($instance_id); ?>">
+<div id="<?php echo esc_attr($wrapper_id); ?>" class="nc-calculator nc-calculator-wrapper <?php echo esc_attr($theme_class); ?>" data-package="<?php echo esc_attr($package_type); ?>" data-mode="<?php echo esc_attr($mode); ?>" data-instance="<?php echo esc_attr($instance_id); ?>">
 
 <?php if ($is_reversed): ?>
     <!-- REVERSED MODE: Step 1 = Package Selection -->

@@ -29,7 +29,8 @@ class Shortcodes {
 			'show_prices' => 'yes',
 			'language' => 'auto',
 			'currency' => 'auto',
-			'style' => 'modern'
+			'style' => 'modern',
+			'theme' => ''  // '' or 'hero' for dark backgrounds
 		], $atts);
 
 		$mode = 'normal';
@@ -51,7 +52,8 @@ class Shortcodes {
 			'show_prices' => 'yes',
 			'language' => 'auto',
 			'currency' => 'auto',
-			'style' => 'modern'
+			'style' => 'modern',
+			'theme' => ''  // '' or 'hero' for dark backgrounds
 		], $atts);
 
 		$mode = 'reversed';

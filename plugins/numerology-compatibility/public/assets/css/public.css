@@ -897,6 +897,305 @@
 }
 
 /* ================================================
+   Hero Theme (for embedding in hero sections)
+   Tailwind color reference:
+   - purple-100: #ede9fe
+   - purple-200: #ddd6fe
+   - purple-900: #581c87
+   - yellow-400: #facc15
+   - yellow-500: #eab308
+   ================================================ */
+
+.nc-calculator.nc-theme-hero {
+    background: transparent !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+}
+
+.nc-theme-hero .nc-step h2,
+.nc-theme-hero .nc-step h3 {
+    color: #fff !important;
+}
+
+.nc-theme-hero .nc-form-group h3 {
+    color: #ede9fe !important; /* purple-100 */
+    font-size: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+}
+
+/* Labels - purple-100 like original */
+.nc-theme-hero .nc-field label {
+    display: block !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: #ede9fe !important; /* purple-100 - same as original */
+    margin-bottom: 0.5rem !important;
+}
+
+.nc-theme-hero .nc-field label svg {
+    display: inline !important;
+    width: 1rem !important;
+    height: 1rem !important;
+    margin-right: 0.5rem !important;
+}
+
+/* Inputs - matching original: bg-white/20 border-white/30 text-white */
+.nc-theme-hero .nc-field input[type="text"],
+.nc-theme-hero .nc-field input[type="email"],
+.nc-theme-hero .nc-field input[type="date"],
+.nc-theme-hero .nc-field input[type="time"],
+.nc-theme-hero .nc-field select {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 0.5rem !important;
+    background: rgba(255, 255, 255, 0.2) !important; /* bg-white/20 */
+    border: 1px solid rgba(255, 255, 255, 0.3) !important; /* border-white/30 */
+    color: #fff !important; /* text-white */
+    font-size: 1rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.nc-theme-hero .nc-field input::placeholder {
+    color: #ddd6fe !important; /* purple-200 */
+}
+
+/* Focus: ring-2 ring-yellow-400 */
+.nc-theme-hero .nc-field input:focus {
+    outline: none !important;
+    border-color: transparent !important;
+    box-shadow: 0 0 0 2px #facc15 !important; /* yellow-400 */
+}
+
+/* Date input calendar icon - webkit browsers */
+.nc-theme-hero .nc-field input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.nc-theme-hero .nc-field input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+/* Error states */
+.nc-theme-hero .nc-field input.error {
+    border-color: rgba(239, 68, 68, 0.8);
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+}
+
+.nc-theme-hero .nc-field .nc-error-message {
+    color: rgba(254, 202, 202, 1); /* red-200 */
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+/* Required field asterisk */
+.nc-theme-hero .nc-field.nc-required label::after {
+    color: rgba(252, 165, 165, 1); /* red-300 */
+}
+
+/* Checkboxes */
+.nc-theme-hero .nc-consent-group {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.nc-theme-hero .nc-checkbox span {
+    color: rgba(233, 213, 255, 0.9); /* purple-100 */
+    font-size: 0.875rem;
+}
+
+.nc-theme-hero .nc-checkbox input[type="checkbox"] {
+    accent-color: #facc15; /* yellow-400 */
+}
+
+/* Primary button - yellow gradient matching original:
+   bg-gradient-to-r from-yellow-400 to-yellow-500 text-purple-900 font-bold
+   py-4 px-8 rounded-lg shadow-lg hover:scale-105 */
+.nc-theme-hero .nc-btn-primary {
+    width: 100% !important;
+    background: linear-gradient(to right, #facc15, #eab308) !important; /* from-yellow-400 to-yellow-500 */
+    color: #581c87 !important; /* text-purple-900 */
+    font-weight: 700 !important; /* font-bold */
+    padding: 1rem 2rem !important; /* py-4 px-8 */
+    border-radius: 0.5rem !important; /* rounded-lg */
+    border: none !important;
+    font-size: 1rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; /* shadow-lg */
+}
+
+.nc-theme-hero .nc-btn-primary:hover {
+    background: linear-gradient(to right, #fde047, #facc15) !important; /* hover:from-yellow-300 to-yellow-400 */
+    transform: scale(1.05) !important; /* hover:scale-105 */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important; /* shadow-xl */
+}
+
+/* Outline button */
+.nc-theme-hero .nc-btn-outline {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.nc-theme-hero .nc-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Secondary button */
+.nc-theme-hero .nc-btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.nc-theme-hero .nc-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Processing/Pending states */
+.nc-theme-hero .nc-processing,
+.nc-theme-hero .nc-pending {
+    color: #fff;
+}
+
+.nc-theme-hero .nc-processing-title,
+.nc-theme-hero .nc-processing-message,
+.nc-theme-hero .nc-pending h2,
+.nc-theme-hero .nc-pending-message {
+    color: #fff;
+}
+
+.nc-theme-hero .nc-pending-details small {
+    color: rgba(233, 213, 255, 0.7);
+}
+
+.nc-theme-hero .nc-spinner {
+    border-color: rgba(255, 255, 255, 0.2);
+    border-top-color: #facc15; /* yellow-400 */
+}
+
+/* Success state */
+.nc-theme-hero .nc-success {
+    color: #fff;
+}
+
+.nc-theme-hero .nc-success h2 {
+    color: #fff;
+}
+
+.nc-theme-hero .nc-success-message {
+    color: rgba(233, 213, 255, 0.9);
+}
+
+.nc-theme-hero .nc-success-icon {
+    background: #10b981; /* green-500 */
+}
+
+.nc-theme-hero .nc-generating-icon {
+    background: #facc15; /* yellow-400 */
+    color: #581c87; /* purple-900 */
+}
+
+/* PDF download */
+.nc-theme-hero .nc-pdf-download a {
+    background: linear-gradient(to right, #facc15, #eab308);
+    color: #581c87;
+}
+
+.nc-theme-hero .nc-pdf-generating {
+    color: rgba(233, 213, 255, 0.8);
+}
+
+/* Email form */
+.nc-theme-hero .nc-email-form {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nc-theme-hero .nc-email-form h3,
+.nc-theme-hero .nc-email-form-title {
+    color: #fff;
+}
+
+.nc-theme-hero .nc-email-form p {
+    color: rgba(233, 213, 255, 0.8);
+}
+
+.nc-theme-hero .nc-email-sent-message {
+    color: #34d399; /* green-400 */
+}
+
+/* Error page */
+.nc-theme-hero .nc-error-page {
+    color: #fff;
+}
+
+.nc-theme-hero .nc-error-page h2 {
+    color: #fff;
+}
+
+.nc-theme-hero .nc-error-page .nc-error-message {
+    color: rgba(254, 202, 202, 1); /* red-200 */
+}
+
+.nc-theme-hero .nc-error-details {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: rgba(254, 202, 202, 1);
+}
+
+/* Packages (if shown) */
+.nc-theme-hero .nc-packages {
+    gap: 1rem;
+}
+
+.nc-theme-hero .nc-package {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+}
+
+.nc-theme-hero .nc-package:hover {
+    border-color: rgba(250, 204, 21, 0.5);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.nc-theme-hero .nc-package.nc-package-featured {
+    border-color: #facc15;
+    background: rgba(250, 204, 21, 0.1);
+}
+
+.nc-theme-hero .nc-package-header h3 {
+    color: #fff;
+}
+
+.nc-theme-hero .nc-price {
+    color: #facc15;
+}
+
+.nc-theme-hero .nc-features {
+    color: rgba(233, 213, 255, 0.9);
+}
+
+.nc-theme-hero .nc-features li {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.nc-theme-hero .nc-features li:before {
+    color: #34d399; /* green-400 */
+}
+
+.nc-theme-hero .nc-badge {
+    background: linear-gradient(to right, #facc15, #eab308);
+    color: #581c87;
+}
+
+/* ================================================
    Result Page Styles ([numerology_result] shortcode)
    ================================================ */
 
