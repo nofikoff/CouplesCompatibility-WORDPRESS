@@ -919,7 +919,7 @@
 
 .nc-theme-hero .nc-form-group h3 {
     color: #ede9fe !important; /* purple-100 */
-    font-size: 1.25rem !important;
+    font-size: 2rem !important;
     margin-bottom: 0.75rem !important;
 }
 
@@ -1005,6 +1005,7 @@
 .nc-theme-hero .nc-checkbox span {
     color: rgba(233, 213, 255, 0.9); /* purple-100 */
     font-size: 0.875rem;
+    text-align: left;
 }
 
 .nc-theme-hero .nc-checkbox input[type="checkbox"] {
@@ -1369,4 +1370,244 @@
         height: 4rem;
         font-size: 2rem;
     }
+}
+
+/* ================================================
+   Pricing Theme (for embedding in pricing sections)
+   Matches the original pricing.twig design
+   ================================================ */
+
+.nc-calculator.nc-theme-pricing {
+    background: transparent !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Packages grid - 3 columns */
+.nc-theme-pricing .nc-packages {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 2rem !important;
+    margin: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .nc-theme-pricing .nc-packages {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Package cards - white bg, rounded-2xl, shadow-lg, hover effects */
+.nc-theme-pricing .nc-package {
+    position: relative !important;
+    background: #fff !important;
+    border: none !important;
+    border-radius: 1rem !important; /* rounded-2xl */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; /* shadow-lg */
+    padding: 2rem !important;
+    text-align: center !important;
+    transition: all 0.3s ease !important;
+    transform: translateY(0) !important;
+}
+
+.nc-theme-pricing .nc-package:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important; /* shadow-2xl */
+    transform: translateY(-0.5rem) !important; /* hover:-translate-y-2 */
+}
+
+/* Featured package - ring-4 ring-purple-200 scale-105 */
+.nc-theme-pricing .nc-package.nc-package-featured {
+    box-shadow: 0 0 0 4px #ddd6fe, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; /* ring-4 ring-purple-200 */
+    transform: scale(1.05) !important;
+}
+
+.nc-theme-pricing .nc-package.nc-package-featured:hover {
+    box-shadow: 0 0 0 4px #ddd6fe, 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    transform: scale(1.05) translateY(-0.5rem) !important;
+}
+
+/* Badge - purple gradient */
+.nc-theme-pricing .nc-badge {
+    position: absolute !important;
+    top: -1rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: linear-gradient(to right, #9333ea, #7e22ce) !important; /* from-purple-600 to-purple-700 */
+    color: #fff !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 9999px !important; /* rounded-full */
+    font-size: 0.875rem !important;
+    font-weight: 700 !important;
+}
+
+/* Package header */
+.nc-theme-pricing .nc-package-header {
+    text-align: center !important;
+    margin-bottom: 2rem !important;
+}
+
+.nc-theme-pricing .nc-package-header h3 {
+    font-size: 1.5rem !important; /* text-2xl */
+    font-weight: 700 !important;
+    color: #1f2937 !important; /* text-gray-800 */
+    margin-bottom: 0.5rem !important;
+}
+
+/* Price - purple-600, bold */
+.nc-theme-pricing .nc-price {
+    font-size: 2.25rem !important; /* text-4xl */
+    font-weight: 700 !important;
+    color: #9333ea !important; /* text-purple-600 */
+    margin: 1rem 0 !important;
+}
+
+/* Features list */
+.nc-theme-pricing .nc-features {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 0 2rem 0 !important;
+    text-align: left !important;
+}
+
+.nc-theme-pricing .nc-features li {
+    display: flex !important;
+    align-items: flex-start !important;
+    padding: 0.5rem 0 !important;
+    border-bottom: none !important;
+    color: #4b5563 !important; /* text-gray-600 */
+}
+
+.nc-theme-pricing .nc-features li:before {
+    content: "\2713" !important; /* checkmark */
+    color: #22c55e !important; /* text-green-500 */
+    font-weight: 700 !important;
+    margin-right: 0.75rem !important;
+    flex-shrink: 0 !important;
+    margin-top: 0.125rem !important;
+}
+
+/* Buttons - gradient backgrounds */
+.nc-theme-pricing .nc-select-package {
+    width: 100% !important;
+    font-weight: 700 !important;
+    padding: 1rem 1.5rem !important;
+    border-radius: 0.5rem !important; /* rounded-lg */
+    border: none !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; /* shadow-lg */
+}
+
+.nc-theme-pricing .nc-select-package:hover {
+    opacity: 0.9 !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important; /* shadow-xl */
+}
+
+/* Free package button - gray gradient */
+.nc-theme-pricing .nc-package[data-tier="free"] .nc-select-package {
+    background: linear-gradient(to right, #6b7280, #4b5563) !important; /* from-gray-500 to-gray-600 */
+}
+
+/* Standard package button - purple gradient */
+.nc-theme-pricing .nc-package[data-tier="standard"] .nc-select-package {
+    background: linear-gradient(to right, #9333ea, #7e22ce) !important; /* from-purple-600 to-purple-700 */
+}
+
+/* Premium package button - yellow gradient */
+.nc-theme-pricing .nc-package[data-tier="premium"] .nc-select-package {
+    background: linear-gradient(to right, #eab308, #ca8a04) !important; /* from-yellow-500 to-yellow-600 */
+}
+
+/* Form elements in pricing theme */
+.nc-theme-pricing .nc-step h2 {
+    color: #1f2937 !important; /* text-gray-800 */
+    text-align: center !important;
+}
+
+.nc-theme-pricing .nc-step .nc-subtitle {
+    color: #6b7280 !important; /* text-gray-500 */
+    text-align: center !important;
+}
+
+.nc-theme-pricing .nc-form-group h3 {
+    color: #9333ea !important; /* purple-600 */
+}
+
+.nc-theme-pricing .nc-field label {
+    color: #374151 !important; /* text-gray-700 */
+}
+
+.nc-theme-pricing .nc-field input[type="text"],
+.nc-theme-pricing .nc-field input[type="email"],
+.nc-theme-pricing .nc-field input[type="date"],
+.nc-theme-pricing .nc-field input[type="time"],
+.nc-theme-pricing .nc-field select {
+    background: #fff !important;
+    border: 1px solid #e5e7eb !important; /* border-gray-200 */
+    color: #1f2937 !important;
+    max-width: 100% !important;
+}
+
+.nc-theme-pricing .nc-field input:focus {
+    border-color: #9333ea !important;
+    box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.2) !important;
+}
+
+.nc-theme-pricing .nc-checkbox span {
+    color: #4b5563 !important; /* text-gray-600 */
+}
+
+.nc-theme-pricing .nc-consent-group {
+    background: #f9fafb !important; /* bg-gray-50 */
+    border: 1px solid #e5e7eb !important;
+}
+
+/* Primary button in form steps */
+.nc-theme-pricing .nc-btn-primary {
+    background: linear-gradient(to right, #9333ea, #7e22ce) !important;
+    color: #fff !important;
+}
+
+.nc-theme-pricing .nc-btn-primary:hover {
+    opacity: 0.9 !important;
+    transform: scale(1.02) !important;
+}
+
+/* Processing/Pending states */
+.nc-theme-pricing .nc-processing,
+.nc-theme-pricing .nc-pending {
+    background: #fff !important;
+    border-radius: 1rem !important;
+    padding: 3rem !important;
+}
+
+.nc-theme-pricing .nc-spinner {
+    border-color: #e5e7eb !important;
+    border-top-color: #9333ea !important;
+}
+
+/* Success state */
+.nc-theme-pricing .nc-success {
+    background: #fff !important;
+    border-radius: 1rem !important;
+    padding: 3rem !important;
+}
+
+.nc-theme-pricing .nc-success-icon {
+    background: #22c55e !important; /* green-500 */
+}
+
+/* Error state */
+.nc-theme-pricing .nc-error-page {
+    background: #fff !important;
+    border-radius: 1rem !important;
+    padding: 3rem !important;
+}
+
+/* Email form */
+.nc-theme-pricing .nc-email-form {
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
 }
