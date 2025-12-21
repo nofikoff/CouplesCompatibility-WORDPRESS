@@ -1,0 +1,512 @@
+[
+  {
+    "key": "group_ai_landing_real_content",
+    "title": "Landing Page: Relationship Destiny (with Content)",
+    "fields": [
+      {
+        "key": "field_tab_meta",
+        "label": "Page Meta",
+        "name": "",
+        "type": "tab",
+        "placement": "top"
+      },
+      {
+        "key": "field_page_title",
+        "label": "Page Title (SEO)",
+        "name": "page_title",
+        "type": "text",
+        "default_value": "Discover Your Relationship Destiny - Numerology & Tarot Compatibility"
+      },
+      {
+        "key": "field_tab_hero",
+        "label": "Hero Section",
+        "name": "",
+        "type": "tab"
+      },
+      {
+        "key": "field_hero_title",
+        "label": "Hero Title",
+        "name": "hero_title",
+        "type": "text",
+        "default_value": "Discover Your Relationship Destiny"
+      },
+      {
+        "key": "field_hero_subtitle",
+        "label": "Hero Subtitle",
+        "name": "hero_subtitle",
+        "type": "textarea",
+        "rows": 3,
+        "default_value": "Enter two birth dates and reveal deep compatibility insights based on Numerology & Tarot."
+      },
+      {
+        "key": "field_hero_bottom_text",
+        "label": "Bottom Text (under button)",
+        "name": "hero_bottom_text",
+        "type": "text",
+        "default_value": "Join thousands who've discovered their relationship potential"
+      },
+      {
+        "key": "field_tab_about",
+        "label": "About Section",
+        "name": "",
+        "type": "tab"
+      },
+      {
+        "key": "field_about_title",
+        "label": "About Title",
+        "name": "about_title",
+        "type": "text",
+        "default_value": "Why This Compatibility Analysis Is Different"
+      },
+      {
+        "key": "field_about_description",
+        "label": "About Description",
+        "name": "about_description",
+        "type": "textarea",
+        "default_value": "Our program combines Numerology with the 22 Major Arcana of Tarot to uncover how two people connect, grow, and face challenges together. It's not fortune telling — it's a unique algorithm that turns symbolic insights into practical recommendations."
+      },
+      {
+        "key": "field_benefit1_title",
+        "label": "Benefit 1 Title",
+        "name": "benefit1_title",
+        "type": "text",
+        "wrapper": { "width": "50" },
+        "default_value": "Unique Tarot–Numerology blend"
+      },
+      {
+        "key": "field_benefit1_description",
+        "label": "Benefit 1 Description",
+        "name": "benefit1_description",
+        "type": "textarea",
+        "rows": 3,
+        "wrapper": { "width": "50" },
+        "default_value": "Combines ancient wisdom with modern analysis"
+      },
+      {
+        "key": "field_benefit2_title",
+        "label": "Benefit 2 Title",
+        "name": "benefit2_title",
+        "type": "text",
+        "wrapper": { "width": "50" },
+        "default_value": "Personalized, actionable insights"
+      },
+      {
+        "key": "field_benefit2_description",
+        "label": "Benefit 2 Description",
+        "name": "benefit2_description",
+        "type": "textarea",
+        "rows": 3,
+        "wrapper": { "width": "50" },
+        "default_value": "Practical guidance tailored to your specific relationship"
+      },
+      {
+        "key": "field_benefit3_title",
+        "label": "Benefit 3 Title",
+        "name": "benefit3_title",
+        "type": "text",
+        "wrapper": { "width": "50" },
+        "default_value": "For love, friendship, and business partnerships"
+      },
+      {
+        "key": "field_benefit3_description",
+        "label": "Benefit 3 Description",
+        "name": "benefit3_description",
+        "type": "textarea",
+        "rows": 3,
+        "wrapper": { "width": "50" },
+        "default_value": "Works for all types of meaningful relationships"
+      },
+      {
+        "key": "field_tab_example",
+        "label": "Example Report",
+        "name": "",
+        "type": "tab"
+      },
+      {
+        "key": "field_example_title",
+        "label": "Example Title",
+        "name": "example_title",
+        "type": "text",
+        "default_value": "Example of Your Report"
+      },
+      {
+        "key": "field_example_quote",
+        "label": "Example Quote",
+        "name": "example_quote",
+        "type": "textarea",
+        "default_value": "\"Don't rush into formal commitments. Give your relationship 6–12 months without ultimatums. Hold weekly 30-min couple check-ins. Build transparency and resilience together.\""
+      },
+      {
+        "key": "field_example_caption",
+        "label": "Example Caption",
+        "name": "example_caption",
+        "type": "text",
+        "default_value": "Sample insight from your personalized compatibility report"
+      },
+      {
+        "key": "field_example_cta_button",
+        "label": "Example CTA Button",
+        "name": "example_cta_button",
+        "type": "text",
+        "default_value": "Want to see your full compatibility report?"
+      },
+      {
+        "key": "field_tab_pricing",
+        "label": "Pricing",
+        "name": "",
+        "type": "tab"
+      },
+      {
+        "key": "field_pricing_title",
+        "label": "Pricing Section Title",
+        "name": "pricing_title",
+        "type": "text",
+        "default_value": "Choose Your Path"
+      },
+      {
+        "key": "field_tab_reviews",
+        "label": "Reviews",
+        "name": "",
+        "type": "tab"
+      },
+      {
+        "key": "field_reviews_title",
+        "label": "Reviews Title",
+        "name": "reviews_title",
+        "type": "text",
+        "default_value": "What Others Say"
+      },
+      {
+        "key": "field_review1_avatar",
+        "label": "Review 1: Avatar",
+        "name": "review1_avatar",
+        "type": "image",
+        "return_format": "url",
+        "preview_size": "thumbnail",
+        "library": "all",
+        "wrapper": { "width": "25" },
+        "default_value": "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1"
+      },
+      {
+        "key": "field_review1_name",
+        "label": "Review 1: Name",
+        "name": "review1_name",
+        "type": "text",
+        "wrapper": { "width": "25" },
+        "default_value": "Anna"
+      },
+      {
+        "key": "field_review1_age",
+        "label": "Review 1: Age",
+        "name": "review1_age",
+        "type": "text",
+        "wrapper": { "width": "25" },
+        "default_value": "34"
+      },
+      {
+        "key": "field_review1_location",
+        "label": "Review 1: Location",
+        "name": "review1_location",
+        "type": "text",
+        "wrapper": { "width": "25" },
+        "default_value": "Berlin"
+      },
+      {
+        "key": "field_review1_text",
+        "label": "Review 1: Text",
+        "name": "review1_text",
+        "type": "textarea",
+        "rows": 3,
+        "default_value": "\"This saved my relationship!\""
+      },
+      {
+        "key": "field_review2_avatar",
+        "label": "Review 2: Avatar",
+        "name": "review2_avatar",
+        "type": "image",
+        "return_format": "url",
+        "wrapper": { "width": "25" },
+        "default_value": "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1"
+      },
+      {
+        "key": "field_review2_name",
+        "label": "Review 2: Name",
+        "name": "review2_name",
+        "type": "text",
+        "wrapper": { "width": "25" },
+        "default_value": "Julia"
+      },
+      {
+        "key": "field_review2_age",
+        "label": "Review 2: Age",
+        "name": "review2_age",
+        "type": "text",
+        "wrapper": { "width": "25" },
+        "default_value": "41"
+      },
+      {
+        "key": "field_review2_location",
+        "label": "Review 2: Location",
+        "name": "review2_location",
+        "type": "text",
+        "wrapper": { "width": "25" },
+        "default_value": "NYC"
+      },
+      {
+        "key": "field_review2_text",
+        "label": "Review 2: Text",
+        "name": "review2_text",
+        "type": "textarea",
+        "rows": 3,
+        "default_value": "\"The insights were so accurate, it felt like magic.\""
+      },
+      {
+        "key": "field_review3_avatar",
+        "label": "Review 3: Avatar",
+        "name": "review3_avatar",
+        "type": "image",
+        "return_format": "url",
+        "wrapper": { "width": "25" },
+        "default_value": "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1"
+      },
+      {
+        "key": "field_review3_name",
+        "label": "Review 3: Name",
+        "name": "review3_name",
+        "type": "text",
+        "wrapper": { "width": "25" },
+        "default_value": "Maria"
+      },
+      {
+        "key": "field_review3_age",
+        "label": "Review 3: Age",
+        "name": "review3_age",
+        "type": "text",
+        "wrapper": { "width": "25" },
+        "default_value": "29"
+      },
+      {
+        "key": "field_review3_location",
+        "label": "Review 3: Location",
+        "name": "review3_location",
+        "type": "text",
+        "wrapper": { "width": "25" },
+        "default_value": "Madrid"
+      },
+      {
+        "key": "field_review3_text",
+        "label": "Review 3: Text",
+        "name": "review3_text",
+        "type": "textarea",
+        "rows": 3,
+        "default_value": "\"We finally understood our differences.\""
+      },
+      {
+        "key": "field_tab_faq",
+        "label": "FAQ",
+        "name": "",
+        "type": "tab"
+      },
+      {
+        "key": "field_faq_title",
+        "label": "FAQ Section Title",
+        "name": "faq_title",
+        "type": "text",
+        "default_value": "Frequently Asked Questions"
+      },
+      {
+        "key": "field_faq1_question",
+        "label": "Question 1",
+        "name": "faq1_question",
+        "type": "text",
+        "default_value": "Is this fortune telling?"
+      },
+      {
+        "key": "field_faq1_answer",
+        "label": "Answer 1",
+        "name": "faq1_answer",
+        "type": "textarea",
+        "rows": 3,
+        "default_value": "No. It's an algorithmic numerology system based on Tarot archetypes. We use mathematical calculations and symbolic interpretations to provide insights, not predictions about the future."
+      },
+      {
+        "key": "field_faq2_question",
+        "label": "Question 2",
+        "name": "faq2_question",
+        "type": "text",
+        "default_value": "Can I use this for business partnerships?"
+      },
+      {
+        "key": "field_faq2_answer",
+        "label": "Answer 2",
+        "name": "faq2_answer",
+        "type": "textarea",
+        "rows": 3,
+        "default_value": "Absolutely. The algorithm analyzes compatibility dynamics including leadership styles, communication patterns, and potential friction points, which are crucial for business."
+      },
+      {
+        "key": "field_faq3_question",
+        "label": "Question 3",
+        "name": "faq3_question",
+        "type": "text",
+        "default_value": "How fast will I get my result?"
+      },
+      {
+        "key": "field_faq3_answer",
+        "label": "Answer 3",
+        "name": "faq3_answer",
+        "type": "textarea",
+        "rows": 3,
+        "default_value": "Instantly. As soon as you complete the payment (for paid plans), the PDF report is generated and available for download immediately."
+      },
+      {
+        "key": "field_faq4_question",
+        "label": "Question 4",
+        "name": "faq4_question",
+        "type": "text",
+        "default_value": "How accurate are the insights?"
+      },
+      {
+        "key": "field_faq4_answer",
+        "label": "Answer 4",
+        "name": "faq4_answer",
+        "type": "textarea",
+        "rows": 3,
+        "default_value": "Our users report a 90% accuracy rate. Since it is based on fixed numerological data (birth dates), the archetypal influences are consistent and highly relevant."
+      },
+      {
+        "key": "field_faq5_question",
+        "label": "Question 5",
+        "name": "faq5_question",
+        "type": "text",
+        "default_value": "Can I get a refund if I'm not satisfied?"
+      },
+      {
+        "key": "field_faq5_answer",
+        "label": "Answer 5",
+        "name": "faq5_answer",
+        "type": "textarea",
+        "rows": 3,
+        "default_value": "Yes, we offer a 7-day money-back guarantee if you feel the report did not provide any value to your relationship understanding."
+      },
+      {
+        "key": "field_tab_footer",
+        "label": "Footer",
+        "name": "",
+        "type": "tab"
+      },
+      {
+        "key": "field_footer_brand_name",
+        "label": "Brand Name",
+        "name": "footer_brand_name",
+        "type": "text",
+        "wrapper": { "width": "50" },
+        "default_value": "Relationship Destiny"
+      },
+      {
+        "key": "field_footer_description",
+        "label": "Footer Description",
+        "name": "footer_description",
+        "type": "textarea",
+        "rows": 3,
+        "wrapper": { "width": "50" },
+        "default_value": "Discover deep compatibility insights through our unique blend of numerology and tarot. Understanding your relationship potential has never been easier."
+      },
+      {
+        "key": "field_footer_contact_title",
+        "label": "Contact Title",
+        "name": "footer_contact_title",
+        "type": "text",
+        "wrapper": { "width": "50" },
+        "default_value": "Contact"
+      },
+      {
+        "key": "field_footer_email",
+        "label": "Email",
+        "name": "footer_email",
+        "type": "email",
+        "wrapper": { "width": "50" },
+        "default_value": "support@yourdomain.com"
+      },
+      {
+        "key": "field_footer_social_title",
+        "label": "Social Title",
+        "name": "footer_social_title",
+        "type": "text",
+        "default_value": "Follow Us"
+      },
+      {
+        "key": "field_footer_instagram_url",
+        "label": "Instagram URL",
+        "name": "footer_instagram_url",
+        "type": "url",
+        "wrapper": { "width": "50" },
+        "default_value": "#"
+      },
+      {
+        "key": "field_footer_facebook_url",
+        "label": "Facebook URL",
+        "name": "footer_facebook_url",
+        "type": "url",
+        "wrapper": { "width": "50" },
+        "default_value": "#"
+      },
+      {
+        "key": "field_footer_privacy_text",
+        "label": "Privacy Policy Text",
+        "name": "footer_privacy_text",
+        "type": "text",
+        "wrapper": { "width": "50" },
+        "default_value": "Privacy Policy"
+      },
+      {
+        "key": "field_footer_privacy_url",
+        "label": "Privacy Policy URL",
+        "name": "footer_privacy_url",
+        "type": "url",
+        "wrapper": { "width": "50" },
+        "default_value": "#"
+      },
+      {
+        "key": "field_footer_terms_text",
+        "label": "Terms Text",
+        "name": "footer_terms_text",
+        "type": "text",
+        "wrapper": { "width": "50" },
+        "default_value": "Terms of Service"
+      },
+      {
+        "key": "field_footer_terms_url",
+        "label": "Terms URL",
+        "name": "footer_terms_url",
+        "type": "url",
+        "wrapper": { "width": "50" },
+        "default_value": "#"
+      },
+      {
+        "key": "field_footer_copyright",
+        "label": "Copyright Text",
+        "name": "footer_copyright",
+        "type": "text",
+        "default_value": "© 2025 Relationship Destiny. All rights reserved."
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_template",
+          "operator": "==",
+          "value": "default"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Auto-generated fields for AI Landing Page (Pre-filled with Content)"
+  }
+]
