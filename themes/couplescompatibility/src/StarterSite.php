@@ -10,7 +10,6 @@ class StarterSite extends Site {
 		// Хуки WordPress
 		add_action('after_setup_theme', [$this, 'theme_supports']);
 		add_filter('timber/context', [$this, 'add_to_context']);
-		add_filter('timber/twig', [$this, 'add_to_twig']);
 
 		parent::__construct();
 	}
@@ -43,16 +42,4 @@ class StarterSite extends Site {
 		return $context;
 	}
 
-	/**
-	 * Добавляем свои функции/фильтры в Twig
-	 */
-	public function add_to_twig($twig) {
-		// Добавляем функцию перевода __() в Twig
-		// Использование: {{ __('My String', 'ai-landing') }}
-		$twig->addFunction(new \Twig\TwigFunction('__', function ($text, $domain = 'default') {
-			return __($text, $domain);
-		}));
-
-		return $twig;
-	}
 }
