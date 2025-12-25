@@ -1,18 +1,16 @@
 <?php
 /**
- * Главный файл шаблона
+ * Main template file
  */
 
 $context = Timber\Timber::context();
 $context['post'] = Timber\Timber::get_post();
 
-// === ИНТЕГРАЦИЯ С ACF ===
-// Если поля ACF существуют, добавляем их в контекст.
-// Polylang сам подменит данные в зависимости от языка.
+// ACF Integration - add fields to context if ACF is active
+// Polylang automatically handles field translations
 if (function_exists('get_fields')) {
 	$context['fields'] = get_fields();
 }
 
-// Рендерим шаблон
-// Timber ищет файл в папке views/pages/
+// Render template from views/pages/
 Timber\Timber::render('pages/landing.twig', $context);

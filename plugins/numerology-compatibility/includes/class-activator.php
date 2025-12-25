@@ -9,18 +9,18 @@ class Activator {
     public static function activate() {
         error_log('NC Activator: Starting activation...');
 
-        // 1. Проверка версии PHP
+        // 1. Check PHP version
         if (version_compare(PHP_VERSION, '7.4', '<')) {
             deactivate_plugins(plugin_basename(NC_PLUGIN_FILE));
             wp_die('This plugin requires PHP 7.4 or higher.');
         }
         error_log('NC Activator: PHP version check passed');
 
-        // 2. Установка базовых опций
+        // 2. Set default options
         self::set_default_options();
         error_log('NC Activator: Options set');
 
-        // 3. Создание директорий
+        // 3. Create directories
         self::create_directories();
         error_log('NC Activator: Directories created');
 
@@ -28,13 +28,13 @@ class Activator {
         flush_rewrite_rules();
         error_log('NC Activator: Rewrite rules flushed');
 
-        // 5. Установка флага для редиректа
+        // 5. Set redirect flag
         set_transient('nc_activation_redirect', true, 30);
         error_log('NC Activator: Activation completed successfully');
     }
 
     /**
-     * Установка опций по умолчанию
+     * Set default options
      */
     private static function set_default_options() {
         $defaults = [
@@ -56,7 +56,7 @@ class Activator {
     }
 
     /**
-     * Создание необходимых директорий
+     * Create required directories
      */
     private static function create_directories() {
         $upload_dir = wp_upload_dir();
@@ -73,7 +73,7 @@ class Activator {
             }
         }
 
-        // Защита директории логов
+        // Protect logs directory
         $htaccess = $upload_dir['basedir'] . '/nc-logs/.htaccess';
         if (!file_exists($htaccess)) {
             file_put_contents($htaccess, 'Deny from all');

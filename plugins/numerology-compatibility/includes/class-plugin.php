@@ -22,6 +22,7 @@ class Plugin {
 		// Core classes
 		require_once NC_PLUGIN_DIR . 'includes/class-loader.php';
 		require_once NC_PLUGIN_DIR . 'includes/class-i18n.php';
+		require_once NC_PLUGIN_DIR . 'includes/class-geo-language.php';
 
 		// Admin classes
 		require_once NC_PLUGIN_DIR . 'admin/class-admin.php';
@@ -42,6 +43,10 @@ class Plugin {
 	private function set_locale() {
 		$plugin_i18n = new I18n();
 		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
+
+		// Geo-based language switching
+		$geo_language = new GeoLanguage();
+		$geo_language->register();
 	}
 
 	private function define_admin_hooks() {
@@ -72,22 +77,22 @@ class Plugin {
 		// Shortcodes
 		$this->loader->add_action('init', $shortcodes, 'register_shortcodes');
 
-		// AJAX handlers for calculations - новые endpoints
+		// AJAX handlers for calculations
 		$this->loader->add_action('wp_ajax_nc_calculate_free', $ajax_handler, 'handle_free_calculation');
 		$this->loader->add_action('wp_ajax_nopriv_nc_calculate_free', $ajax_handler, 'handle_free_calculation');
 
 		$this->loader->add_action('wp_ajax_nc_calculate_paid', $ajax_handler, 'handle_paid_calculation');
 		$this->loader->add_action('wp_ajax_nopriv_nc_calculate_paid', $ajax_handler, 'handle_paid_calculation');
 
-		// Отправка PDF на email по секретному коду
+		// Send PDF to email by secret code
 		$this->loader->add_action('wp_ajax_nc_send_email', $ajax_handler, 'handle_send_email');
 		$this->loader->add_action('wp_ajax_nopriv_nc_send_email', $ajax_handler, 'handle_send_email');
 
-		// Получение расчета по secret_code (для страницы результата)
+		// Get calculation by secret_code (for result page)
 		$this->loader->add_action('wp_ajax_nc_get_calculation', $ajax_handler, 'handle_get_calculation');
 		$this->loader->add_action('wp_ajax_nopriv_nc_get_calculation', $ajax_handler, 'handle_get_calculation');
 
-		// DEPRECATED: Старые endpoints для обратной совместимости
+		// DEPRECATED: Legacy endpoints for backward compatibility
 		$this->loader->add_action('wp_ajax_nc_calculate', $ajax_handler, 'handle_calculation');
 		$this->loader->add_action('wp_ajax_nopriv_nc_calculate', $ajax_handler, 'handle_calculation');
 

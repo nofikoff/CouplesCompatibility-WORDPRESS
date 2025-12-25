@@ -7,22 +7,21 @@ use NC\Api\ApiCalculations;
 class AjaxHandler {
 
 	/**
-	 * Обработка бесплатного расчета
+	 * Handle free calculation
 	 * AJAX action: nc_calculate_free
 	 *
-	 * НОВОЕ ПОВЕДЕНИЕ:
-	 * - Email НЕ требуется на этом шаге (убран из формы)
-	 * - Возвращает secret_code и pdf_url
-	 * - Email НЕ отправляется автоматически
+	 * - Email is NOT required at this step
+	 * - Returns secret_code and pdf_url
+	 * - Email is NOT sent automatically
 	 */
 	public function handle_free_calculation() {
 		try {
-			// Проверка nonce
+			// Verify nonce
 			if (!check_ajax_referer('nc_ajax_nonce', 'nonce', false)) {
 				wp_send_json_error(['message' => __('Security check failed', 'numerology-compatibility')]);
 			}
 
-			// Проверка consent (проверяем что значение равно '1' или true)
+			// Validate consent checkboxes
 			$harm_consent = isset($_POST['harm_consent']) && ($_POST['harm_consent'] === '1' || $_POST['harm_consent'] === 'true' || $_POST['harm_consent'] === true);
 			$entertainment_consent = isset($_POST['entertainment_consent']) && ($_POST['entertainment_consent'] === '1' || $_POST['entertainment_consent'] === 'true' || $_POST['entertainment_consent'] === true);
 
@@ -30,16 +29,15 @@ class AjaxHandler {
 				wp_send_json_error(['message' => __('All consent checkboxes must be accepted', 'numerology-compatibility')]);
 			}
 
-			// Выполняем бесплатный расчет (БЕЗ email)
+			// Execute free calculation (without email)
 			$calc = new ApiCalculations();
 			$result = $calc->calculate_free($_POST);
 
-			// Возвращаем результат с secret_code и pdf_url
-			// ПРИМЕЧАНИЕ: calculation_id и другие данные уже в $result от backend
+			// Return result with secret_code and pdf_url
 			wp_send_json_success([
 				'calculation_id' => $result['calculation_id'] ?? null,
 				'secret_code' => $result['secret_code'] ?? null,
-				'pdf_url' => $result['pdf_url'] ?? null, // ВАЖНО: не заменяем на пустую строку!
+				'pdf_url' => $result['pdf_url'] ?? null,
 				'type' => $result['type'] ?? 'free',
 				'message' => __('Calculation completed! PDF report is being generated and will be available shortly.', 'numerology-compatibility')
 			]);
@@ -50,19 +48,19 @@ class AjaxHandler {
 	}
 
 	/**
-	 * Обработка платного расчета
+	 * Handle paid calculation
 	 * AJAX action: nc_calculate_paid
 	 *
-	 * Возвращает checkout_url для редиректа на страницу оплаты
+	 * Returns checkout_url for redirect to payment page
 	 */
 	public function handle_paid_calculation() {
 		try {
-			// Проверка nonce
+			// Verify nonce
 			if (!check_ajax_referer('nc_ajax_nonce', 'nonce', false)) {
 				wp_send_json_error(['message' => __('Security check failed', 'numerology-compatibility')]);
 			}
 
-			// Проверка consent (проверяем что значение равно '1' или true)
+			// Validate consent checkboxes
 			$harm_consent = isset($_POST['harm_consent']) && ($_POST['harm_consent'] === '1' || $_POST['harm_consent'] === 'true' || $_POST['harm_consent'] === true);
 			$entertainment_consent = isset($_POST['entertainment_consent']) && ($_POST['entertainment_consent'] === '1' || $_POST['entertainment_consent'] === 'true' || $_POST['entertainment_consent'] === true);
 
@@ -70,14 +68,14 @@ class AjaxHandler {
 				wp_send_json_error(['message' => __('All consent checkboxes must be accepted', 'numerology-compatibility')]);
 			}
 
-			// Получаем тип тарифа (standard или premium)
+			// Get tier type (standard or premium)
 			$tier = $_POST['tier'] ?? 'standard';
 
-			// Создаем Checkout Session на бэкенде
+			// Create Checkout Session on backend
 			$calc = new ApiCalculations();
 			$result = $calc->calculate_paid($_POST, $tier);
 
-			// Возвращаем checkout_url для редиректа
+			// Return checkout_url for redirect
 			wp_send_json_success([
 				'checkout_url' => $result['checkout_url'],
 				'calculation_id' => $result['calculation_id'] ?? null,
@@ -90,26 +88,26 @@ class AjaxHandler {
 	}
 
 	/**
-	 * DEPRECATED: Старый метод, оставлен для обратной совместимости
-	 * Используйте handle_free_calculation() или handle_paid_calculation()
+	 * DEPRECATED: Legacy method for backward compatibility
+	 * Use handle_free_calculation() or handle_paid_calculation()
 	 */
 	public function handle_calculation() {
 		$this->handle_free_calculation();
 	}
 
 	/**
-	 * DEPRECATED: Старый метод, оставлен для обратной совместимости
-	 * Используйте handle_paid_calculation()
+	 * DEPRECATED: Legacy method for backward compatibility
+	 * Use handle_paid_calculation()
 	 */
 	public function handle_payment() {
 		$this->handle_paid_calculation();
 	}
 
 	/**
-	 * Получить расчет по секретному коду
+	 * Get calculation by secret code
 	 * AJAX action: nc_get_calculation
 	 *
-	 * Используется на странице результата [numerology_result]
+	 * Used on result page [numerology_result]
 	 */
 	public function handle_get_calculation() {
 		try {
@@ -144,24 +142,23 @@ class AjaxHandler {
 	}
 
 	/**
-	 * Отправить PDF отчет на email
+	 * Send PDF report to email
 	 * AJAX action: nc_send_email
 	 *
-	 * НОВЫЙ ОБРАБОТЧИК для отправки PDF на email после расчета
-	 * Принимает secret_code и email, отправляет PDF на указанный адрес
+	 * Accepts secret_code and email, sends PDF to specified address
 	 */
 	public function handle_send_email() {
 		try {
-			// Проверка nonce
+			// Verify nonce
 			if (!check_ajax_referer('nc_ajax_nonce', 'nonce', false)) {
 				wp_send_json_error(['message' => __('Security check failed', 'numerology-compatibility')]);
 			}
 
-			// Получаем данные
+			// Get data
 			$secret_code = sanitize_text_field($_POST['secret_code'] ?? '');
 			$email = sanitize_email($_POST['email'] ?? '');
 
-			// Валидация
+			// Validation
 			if (empty($secret_code)) {
 				wp_send_json_error(['message' => __('Secret code is required', 'numerology-compatibility')]);
 			}
@@ -170,7 +167,7 @@ class AjaxHandler {
 				wp_send_json_error(['message' => __('Valid email is required', 'numerology-compatibility')]);
 			}
 
-			// Отправляем email через API
+			// Send email via API
 			$calc = new ApiCalculations();
 			$result = $calc->send_email($secret_code, $email);
 

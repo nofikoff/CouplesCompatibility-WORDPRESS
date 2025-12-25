@@ -64,10 +64,10 @@ class PublicClass {
 				'entertainment_consent_required' => __('You must acknowledge this is for entertainment purposes', 'numerology-compatibility'),
 				'payment_failed' => __('Payment failed. Please try again.', 'numerology-compatibility'),
 				'payment_timeout' => __('Payment verification timed out. Please contact support if you were charged.', 'numerology-compatibility'),
-				// HTML5 валидационные сообщения
+				// HTML5 validation messages
 				'field_required' => __('Please fill in this field', 'numerology-compatibility'),
 				'checkbox_required' => __('Please check this box if you want to continue', 'numerology-compatibility'),
-				// Сообщения процесса обработки
+				// Processing messages
 				'calculating_compatibility' => __('Calculating your compatibility...', 'numerology-compatibility'),
 				'please_wait' => __('Please wait...', 'numerology-compatibility'),
 				'creating_payment_session' => __('Creating payment session...', 'numerology-compatibility'),

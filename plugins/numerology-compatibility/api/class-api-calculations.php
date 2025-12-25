@@ -3,8 +3,8 @@
 namespace NC\Api;
 
 /**
- * Класс для работы с API расчетов нумерологии
- * Взаимодействует с бэкендом согласно спецификации OpenAPI
+ * Numerology API calculations class
+ * Interacts with backend according to OpenAPI specification
  */
 class ApiCalculations {
 
@@ -15,15 +15,15 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Бесплатный расчет
+	 * Free calculation
 	 * POST /api/v1/calculate/free
 	 *
-	 * - Email ОТСУТСТВУЕТ на этом шаге (запрашивается после расчета)
-	 * - Бэкенд возвращает secret_code для доступа к расчету
-	 * - Бэкенд возвращает pdf_url для скачивания PDF
+	 * - Email is NOT required at this step (requested after calculation)
+	 * - Backend returns secret_code for calculation access
+	 * - Backend returns pdf_url for PDF download
 	 *
-	 * @param array $data Данные формы (person1_date, person2_date)
-	 * @return array Результат расчета с secret_code и pdf_url
+	 * @param array $data Form data (person1_date, person2_date)
+	 * @return array Calculation result with secret_code and pdf_url
 	 * @throws \Exception
 	 */
 	public function calculate_free($data) {
@@ -31,17 +31,17 @@ class ApiCalculations {
 
 		$locale = $this->get_current_locale();
 
-		// Подготавливаем данные согласно API спецификации
+		// Prepare data according to API specification
 		$request_data = [
 			'person1_date' => sanitize_text_field($data['person1_date']),
 			'person2_date' => sanitize_text_field($data['person2_date']),
 			'locale' => $locale,
 		];
 
-		// Отправляем запрос на бэкенд
+		// Send request to backend
 		$response = $this->client->request('/calculate/free', 'POST', $request_data);
 
-		// Laravel API возвращает данные в формате {success, message, data}
+		// Laravel API returns data in format {success, message, data}
 		$data_response = $response['data'] ?? [];
 
 		if (!empty($data_response)) {
@@ -52,16 +52,16 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Платный расчет - создание Checkout Session
+	 * Paid calculation - create Checkout Session
 	 * POST /api/v1/calculate/paid
 	 *
-	 * - Email ОТСУТСТВУЕТ на этом шаге (запрашивается ПОСЛЕ оплаты)
-	 * - Бэкенд возвращает secret_code для доступа к расчету
-	 * - После оплаты пользователь может указать email для отправки PDF + чека
+	 * - Email is NOT required at this step (requested AFTER payment)
+	 * - Backend returns secret_code for calculation access
+	 * - After payment user can provide email for PDF + receipt delivery
 	 *
-	 * @param array $data Данные формы (person1_date, person2_date)
-	 * @param string $tier Тип тарифа (standard|premium)
-	 * @return array {checkout_url, calculation_id, secret_code} для редиректа на оплату
+	 * @param array $data Form data (person1_date, person2_date)
+	 * @param string $tier Tier type (standard|premium)
+	 * @return array {checkout_url, calculation_id, secret_code} for payment redirect
 	 * @throws \Exception
 	 */
 	public function calculate_paid($data, $tier) {
@@ -74,7 +74,6 @@ class ApiCalculations {
 		$result_page_url = $this->get_localized_result_url($locale);
 
 		// Backend will add payment_id and calculation_id to success_url automatically
-		// We just pass the base URLs
 		$success_url = $result_page_url;
 		$cancel_url = $result_page_url;
 
@@ -87,10 +86,10 @@ class ApiCalculations {
 			'cancel_url' => $cancel_url,
 		];
 
-		// Отправляем запрос на создание Checkout Session
+		// Send request to create Checkout Session
 		$response = $this->client->request('/calculate/paid', 'POST', $request_data);
 
-		// Laravel API возвращает данные в формате {success, message, data}
+		// Laravel API returns data in format {success, message, data}
 		$data_response = $response['data'] ?? [];
 
 		if (!empty($data_response['checkout_url'])) {
@@ -101,11 +100,11 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Получить информацию о расчете
+	 * Get calculation information
 	 * GET /api/v1/calculations/{id}
 	 *
-	 * @param string $calculation_id ID расчета
-	 * @return array Информация о расчете
+	 * @param string $calculation_id Calculation ID
+	 * @return array Calculation information
 	 * @throws \Exception
 	 */
 	public function get_calculation($calculation_id) {
@@ -115,16 +114,16 @@ class ApiCalculations {
 
 		$response = $this->client->request('/calculations/' . $calculation_id, 'GET');
 
-		// Laravel API возвращает данные в формате {success, data}
+		// Laravel API returns data in format {success, data}
 		return $response['data'] ?? [];
 	}
 
 	/**
-	 * Получить URL для скачивания PDF
+	 * Get PDF download URL
 	 * GET /api/v1/calculations/{id}/pdf
 	 *
-	 * @param string $calculation_id ID расчета
-	 * @return string URL для скачивания PDF
+	 * @param string $calculation_id Calculation ID
+	 * @return string PDF download URL
 	 */
 	public function get_pdf_url($calculation_id) {
 		if (empty($calculation_id)) {
@@ -136,19 +135,19 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Валидация данных для расчета
-	 * Email НЕ проверяется, т.к. он ВСЕГДА отсутствует на первом шаге
+	 * Validate calculation data
+	 * Email is NOT validated as it's ALWAYS absent on first step
 	 *
-	 * @param array $data Данные формы (person1_date, person2_date)
+	 * @param array $data Form data (person1_date, person2_date)
 	 * @throws \Exception
 	 */
 	private function validate_calculation_data($data) {
-		// Валидация дат рождения
+		// Validate birth dates
 		if (empty($data['person1_date']) || empty($data['person2_date'])) {
 			throw new \Exception(__('Both birth dates are required', 'numerology-compatibility'));
 		}
 
-		// Проверка формата дат
+		// Check date format
 		$date1 = \DateTime::createFromFormat('Y-m-d', $data['person1_date']);
 		$date2 = \DateTime::createFromFormat('Y-m-d', $data['person2_date']);
 
@@ -156,7 +155,7 @@ class ApiCalculations {
 			throw new \Exception(__('Invalid date format. Required: Y-m-d', 'numerology-compatibility'));
 		}
 
-		// Проверка, что даты не в будущем
+		// Check that dates are not in the future
 		$today = new \DateTime();
 		if ($date1 > $today || $date2 > $today) {
 			throw new \Exception(__('Birth dates cannot be in the future', 'numerology-compatibility'));
@@ -164,7 +163,7 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Валидация тарифа
+	 * Validate tier
 	 *
 	 * @param string $tier
 	 * @throws \Exception
@@ -204,7 +203,7 @@ class ApiCalculations {
 	private function get_localized_result_url($locale) {
 		$base_url = get_option('nc_result_page_url', '');
 
-		// Если URL не задан, используем referer или home
+		// If URL is not set, use referer or home
 		if (empty($base_url)) {
 			$referer = wp_get_referer();
 			if ($referer) {
@@ -213,7 +212,7 @@ class ApiCalculations {
 			return home_url('/');
 		}
 
-		// Polylang: получить локализованную версию страницы
+		// Polylang: get localized page version
 		if (function_exists('pll_get_post')) {
 			$post_id = url_to_postid($base_url);
 			if ($post_id) {
@@ -228,11 +227,11 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Получить информацию о расчете по секретному коду
+	 * Get calculation information by secret code
 	 * GET /api/v1/calculations/by-code/{secret_code}
 	 *
-	 * @param string $secret_code Секретный код расчета (32 символа)
-	 * @return array Информация о расчете с pdf_url
+	 * @param string $secret_code Secret code (32 characters)
+	 * @return array Calculation info with pdf_url
 	 * @throws \Exception
 	 */
 	public function get_calculation_by_code($secret_code) {
@@ -248,37 +247,35 @@ class ApiCalculations {
 	}
 
 	/**
-	 * Отправить PDF отчет на email по секретному коду
+	 * Send PDF report to email by secret code
 	 * POST /api/v1/calculations/send-email
 	 *
-	 * НОВЫЙ ENDPOINT для отправки PDF на email после расчета
-	 *
-	 * @param string $secret_code Секретный код расчета
-	 * @param string $email Email для отправки
-	 * @return array Результат отправки
+	 * @param string $secret_code Secret code
+	 * @param string $email Email address
+	 * @return array Send result
 	 * @throws \Exception
 	 */
 	public function send_email($secret_code, $email) {
-		// Валидация секретного кода
+		// Validate secret code
 		if (empty($secret_code) || strlen($secret_code) !== 32) {
 			throw new \Exception(__('Invalid secret code', 'numerology-compatibility'));
 		}
 
-		// Валидация email
+		// Validate email
 		if (empty($email) || !is_email($email)) {
 			throw new \Exception(__('Valid email is required', 'numerology-compatibility'));
 		}
 
-		// Подготавливаем данные
+		// Prepare data
 		$request_data = [
 			'secret_code' => sanitize_text_field($secret_code),
 			'email' => sanitize_email($email),
 		];
 
-		// Отправляем запрос на бэкенд
+		// Send request to backend
 		$response = $this->client->request('/calculations/send-email', 'POST', $request_data);
 
-		// Laravel API возвращает данные в формате {success, message, data}
+		// Laravel API returns data in format {success, message, data}
 		$data_response = $response['data'] ?? [];
 
 		if (!empty($data_response)) {

@@ -9,3 +9,25 @@ db-dumps
 /themes/twentytwentyfour/
 /themes/twentytwentythree/
 /themes/index.php
+
+# Environment files with sensitive data
+.env
+.env.local
+.env.*.local
+
+# SSH keys
+*.pem
+*.key
+
+# Composer vendor in theme
+/themes/couplescompatibility/vendor/
+
+# Plugin vendor
+/plugins/numerology-compatibility/vendor/
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db

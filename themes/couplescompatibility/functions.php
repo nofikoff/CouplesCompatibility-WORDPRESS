@@ -1,21 +1,21 @@
 <?php
 /**
- * Точка входа в тему
+ * Theme entry point
  */
 
-// 1. Подключаем автозагрузчик Composer
+// 1. Include Composer autoloader
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 	require_once __DIR__ . '/vendor/autoload.php';
 } else {
-	// Fallback, если забыли сделать composer install
-	wp_die('<h1>Ошибка: Composer не установлен</h1><p>Запустите <code>composer install</code> в папке темы.</p>');
+	// Fallback if composer install was not run
+	wp_die('<h1>Error: Composer not installed</h1><p>Run <code>composer install</code> in theme folder.</p>');
 }
 
-// 2. Инициализируем Timber
+// 2. Initialize Timber
 Timber\Timber::init();
 
-// 3. Указываем, где лежат Twig файлы
+// 3. Set Twig templates directory
 Timber\Timber::$dirname = ['views'];
 
-// 4. Запускаем наш класс конфигурации (см. следующий файл)
+// 4. Initialize theme configuration class
 new MyTheme\StarterSite();

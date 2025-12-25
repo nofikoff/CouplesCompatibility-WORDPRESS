@@ -91,10 +91,10 @@ class Shortcodes {
 		$attributes = shortcode_atts([
 			'style' => 'cards',
 			'highlight' => 'standard',
-			'calculator_url' => '' // URL страницы с калькулятором (опционально)
+			'calculator_url' => '' // Calculator page URL (optional)
 		], $atts);
 
-		// Если calculator_url не указан, используем якорь на текущей странице
+		// If calculator_url is not set, use anchor on current page
 		$base_url = !empty($attributes['calculator_url'])
 			? esc_url($attributes['calculator_url'])
 			: '#nc-calculator-wrapper';
