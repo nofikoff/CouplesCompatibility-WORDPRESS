@@ -77,14 +77,6 @@ See [Theme README](themes/couplescompatibility/README.md) for detailed workflow.
 - **Geo-detection**: Auto-switch language by country
 - **GDPR**: Data export and deletion tools
 
-## Deployment
-
-```bash
-./deploy-remote.sh
-```
-
-Configure deployment in `.env` file.
-
 ## License
 
 GPL v2 or later
