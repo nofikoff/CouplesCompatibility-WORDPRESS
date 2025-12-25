@@ -70,20 +70,17 @@
             {# Bottom bar #}
             <div class="border-t border-gray-700 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
+                    {# Page IDs: Privacy=627, Terms=682, About=621 #}
                     <div class="flex space-x-6 mb-4 md:mb-0">
-                        {% if options.site_privacy_url %}
-                        <a href="{{ options.site_privacy_url }}"
+                        <a href="{{ function('get_permalink', function('pll_get_post', 627) ?: 627) }}"
                            class="text-gray-300 hover:text-yellow-400 transition-colors duration-200 text-sm">
                             {{ __('Privacy Policy', 'couplescompatibility') }}
                         </a>
-                        {% endif %}
-                        {% if options.site_terms_url %}
-                        <a href="{{ options.site_terms_url }}"
+                        <a href="{{ function('get_permalink', function('pll_get_post', 682) ?: 682) }}"
                            class="text-gray-300 hover:text-yellow-400 transition-colors duration-200 text-sm">
                             {{ __('Terms of Service', 'couplescompatibility') }}
                         </a>
-                        {% endif %}
-                        <a href="/about"
+                        <a href="{{ function('get_permalink', function('pll_get_post', 621) ?: 621) }}"
                            class="text-gray-300 hover:text-yellow-400 transition-colors duration-200 text-sm">
                             {{ __('About', 'couplescompatibility') }}
                         </a>
