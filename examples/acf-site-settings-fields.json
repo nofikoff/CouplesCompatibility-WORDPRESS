@@ -1,0 +1,144 @@
+[
+    {
+        "key": "group_site_settings",
+        "title": "Site Settings",
+        "fields": [
+            {
+                "key": "field_site_brand_name",
+                "label": "Brand Name",
+                "name": "site_brand_name",
+                "type": "text",
+                "instructions": "Site brand name displayed in header and footer",
+                "required": 0,
+                "wrapper": {
+                    "width": "50",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "Relationship Destiny"
+            },
+            {
+                "key": "field_site_description",
+                "label": "Site Description",
+                "name": "site_description",
+                "type": "textarea",
+                "instructions": "Short description displayed in footer",
+                "required": 0,
+                "wrapper": {
+                    "width": "100",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "Discover deep compatibility insights through our unique blend of numerology and tarot.",
+                "rows": 3
+            },
+            {
+                "key": "field_site_email",
+                "label": "Contact Email",
+                "name": "site_email",
+                "type": "email",
+                "instructions": "Contact email displayed in footer",
+                "required": 0,
+                "wrapper": {
+                    "width": "50",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "support@example.com"
+            },
+            {
+                "key": "field_site_instagram_url",
+                "label": "Instagram URL",
+                "name": "site_instagram_url",
+                "type": "url",
+                "instructions": "Instagram profile URL",
+                "required": 0,
+                "wrapper": {
+                    "width": "50",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "https://instagram.com/yourprofile"
+            },
+            {
+                "key": "field_site_facebook_url",
+                "label": "Facebook URL",
+                "name": "site_facebook_url",
+                "type": "url",
+                "instructions": "Facebook page URL",
+                "required": 0,
+                "wrapper": {
+                    "width": "50",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "https://facebook.com/yourpage"
+            },
+            {
+                "key": "field_site_privacy_url",
+                "label": "Privacy Policy URL",
+                "name": "site_privacy_url",
+                "type": "url",
+                "instructions": "Link to Privacy Policy page",
+                "required": 0,
+                "wrapper": {
+                    "width": "50",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "/privacy-policy"
+            },
+            {
+                "key": "field_site_terms_url",
+                "label": "Terms of Service URL",
+                "name": "site_terms_url",
+                "type": "url",
+                "instructions": "Link to Terms of Service page",
+                "required": 0,
+                "wrapper": {
+                    "width": "50",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "/terms-of-service"
+            },
+            {
+                "key": "field_site_copyright",
+                "label": "Copyright Text",
+                "name": "site_copyright",
+                "type": "text",
+                "instructions": "Copyright text (year is added automatically)",
+                "required": 0,
+                "wrapper": {
+                    "width": "50",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "Numerology Couples Compatibility. All rights reserved."
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "page_template",
+                    "operator": "==",
+                    "value": "page-site-settings.php"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "active": true
+    }
+]
