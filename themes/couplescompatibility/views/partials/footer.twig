@@ -89,7 +89,7 @@
                         {% endif %}
                     </div>
                     <div class="text-gray-400 text-sm">
-                        {{ fields.footer_copyright ?: '&copy; ' ~ "now"|date("Y") ~ ' ' ~ site.name }}
+                        {{ '&copy; ' ~ "now"|date("Y") ~ ' ' ~ (fields.footer_copyright ?: site.name) }}
                     </div>
                 </div>
             </div>

@@ -13,23 +13,18 @@
  * Domain Path: /languages
  */
 
-// Prevent direct access
 if (!defined('ABSPATH')) {
     exit;
 }
 
-// Define plugin constants
 define('NC_VERSION', '1.0.1');
 define('NC_PLUGIN_FILE', __FILE__);
 define('NC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('NC_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('NC_PLUGIN_BASENAME', plugin_basename(__FILE__));
-
-// Minimum requirements
 define('NC_MIN_PHP_VERSION', '7.4');
 define('NC_MIN_WP_VERSION', '5.8');
 
-// Check requirements before doing anything
 if (version_compare(PHP_VERSION, NC_MIN_PHP_VERSION, '<')) {
     add_action('admin_notices', function() {
         ?>
@@ -45,7 +40,6 @@ if (version_compare(PHP_VERSION, NC_MIN_PHP_VERSION, '<')) {
     return;
 }
 
-// ОТЛАДКА: Проверим существование autoloader
 $autoloader_path = NC_PLUGIN_DIR . 'vendor/autoload.php';
 if (!file_exists($autoloader_path)) {
     add_action('admin_notices', function() use ($autoloader_path) {
@@ -58,17 +52,13 @@ if (!file_exists($autoloader_path)) {
         <?php
     });
 
-    // Временное решение: загрузим классы вручную
     require_once NC_PLUGIN_DIR . 'includes/class-activator.php';
     require_once NC_PLUGIN_DIR . 'includes/class-deactivator.php';
 } else {
-    // Загружаем autoloader
     require_once $autoloader_path;
 }
 
-// Дополнительная проверка: если autoloader не работает, загрузим классы вручную
 if (!class_exists('NC\Activator')) {
-    // Загружаем все необходимые файлы вручную
     $required_files = [
         'includes/class-activator.php',
         'includes/class-deactivator.php',
@@ -87,9 +77,7 @@ if (!class_exists('NC\Activator')) {
     }
 }
 
-// Activation/Deactivation hooks
 register_activation_hook(__FILE__, function() {
-    // Дополнительная отладка
     error_log('NC Plugin: Activation hook triggered');
 
     if (class_exists('NC\Activator')) {
@@ -107,16 +95,13 @@ register_deactivation_hook(__FILE__, function() {
     }
 });
 
-// Initialize plugin
 add_action('plugins_loaded', function() {
-    // Проверяем, что класс Plugin существует
     if (class_exists('NC\Plugin')) {
         $plugin = new \NC\Plugin();
         $plugin->run();
     } else {
         error_log('NC Plugin: Plugin class not found during initialization');
 
-        // Показываем ошибку в админке
         add_action('admin_notices', function() {
             ?>
             <div class="notice notice-error">
@@ -128,7 +113,6 @@ add_action('plugins_loaded', function() {
     }
 });
 
-// Добавим функцию для отладки
 if (!function_exists('nc_debug')) {
     function nc_debug($message, $data = null) {
         if (defined('WP_DEBUG') && WP_DEBUG) {
