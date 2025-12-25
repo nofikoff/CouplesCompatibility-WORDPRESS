@@ -28,3 +28,11 @@ msgstr ""
 #: views/blocks/blog-preview.twig
 msgid "From Our Blog"
 msgstr ""
+
+#: views/partials/footer.twig
+msgid "Contact"
+msgstr ""
+
+#: views/partials/footer.twig
+msgid "Follow Us"
+msgstr ""

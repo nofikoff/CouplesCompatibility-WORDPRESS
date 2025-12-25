@@ -30,3 +30,11 @@ msgstr "Про нас"
 #: views/blocks/blog-preview.twig
 msgid "From Our Blog"
 msgstr "З нашого блогу"
+
+#: views/partials/footer.twig
+msgid "Contact"
+msgstr "Контакти"
+
+#: views/partials/footer.twig
+msgid "Follow Us"
+msgstr "Ми в соцмережах"
