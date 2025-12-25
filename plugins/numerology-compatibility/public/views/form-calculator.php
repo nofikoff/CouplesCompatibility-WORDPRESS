@@ -29,8 +29,6 @@ $price_premium = get_option('nc_price_premium', '19.99');
 <?php if ($is_reversed): ?>
     <!-- REVERSED MODE: Step 1 = Package Selection -->
     <div class="nc-step nc-step-1 nc-active" data-step="1">
-        <h2><?php _e('Choose Your Report Type', 'numerology-compatibility'); ?></h2>
-
         <div class="nc-packages">
             <div class="nc-package" data-package="free" data-tier="free">
                 <div class="nc-package-header">
@@ -195,8 +193,6 @@ $price_premium = get_option('nc_price_premium', '19.99');
     <!-- NORMAL MODE: Step 2 = Package Selection -->
 	<?php if ($package_type === 'auto' && $show_prices): ?>
         <div class="nc-step nc-step-2 nc-hidden" data-step="2">
-            <h2><?php _e('Choose Your Report Type', 'numerology-compatibility'); ?></h2>
-
             <div class="nc-packages">
                 <div class="nc-package" data-package="free" data-tier="free">
                     <div class="nc-package-header">

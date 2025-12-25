@@ -119,10 +119,6 @@ msgstr "Я розумію, що це лише для розваги та сам�
 msgid "Continue"
 msgstr "Продовжити"
 
-#: public/views/form-calculator.php:78
-msgid "Choose Your Report Type"
-msgstr "Виберіть тип звіту"
-
 #: public/views/form-calculator.php:83
 #: public/views/form-calculator.php:84
 #: public/class-shortcodes.php:53
