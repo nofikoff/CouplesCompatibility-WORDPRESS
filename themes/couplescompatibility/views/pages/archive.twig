@@ -1,0 +1,28 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-16">
+    <header class="mb-12">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{{ title }}</h1>
+        {% if description %}
+            <p class="text-gray-600">{{ description }}</p>
+        {% endif %}
+    </header>
+
+    {% if posts %}
+        <div class="space-y-8">
+            {% for post in posts %}
+                <article class="border-b border-gray-200 pb-8">
+                    <h2 class="text-2xl font-semibold text-gray-900 mb-2">
+                        <a href="{{ post.link }}" class="hover:text-pink-500 transition-colors">{{ post.title }}</a>
+                    </h2>
+                    <p class="text-gray-500 text-sm mb-4">{{ post.date|date('d.m.Y') }}</p>
+                    <p class="text-gray-700">{{ post.preview }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-gray-600">{{ __('No posts found', 'couplescompatibility') }}</p>
+    {% endif %}
+</div>
+{% endblock %}
