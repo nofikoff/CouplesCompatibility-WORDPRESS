@@ -27,7 +27,7 @@
                 {# Contact #}
                 <div>
                     <h4 class="text-lg font-semibold mb-4 text-purple-300">
-                        {{ __('Contact', 'couplescompatibility') }}
+                        {{ function('__', 'Contact', 'couplescompatibility') }}
                     </h4>
                     <div class="space-y-2">
                         {% if options.site_email %}
@@ -42,7 +42,7 @@
                 {# Social Media #}
                 <div>
                     <h4 class="text-lg font-semibold mb-4 text-purple-300">
-                        {{ __('Follow Us', 'couplescompatibility') }}
+                        {{ function('__', 'Follow Us', 'couplescompatibility') }}
                     </h4>
                     <div class="flex space-x-4">
                         {% if options.site_instagram_url %}
@@ -74,15 +74,15 @@
                     <div class="flex space-x-6 mb-4 md:mb-0">
                         <a href="{{ function('get_permalink', function('pll_get_post', 627) ?: 627) }}"
                            class="text-gray-300 hover:text-yellow-400 transition-colors duration-200 text-sm">
-                            {{ __('Privacy Policy', 'couplescompatibility') }}
+                            {{ function('__', 'Privacy Policy', 'couplescompatibility') }}
                         </a>
                         <a href="{{ function('get_permalink', function('pll_get_post', 682) ?: 682) }}"
                            class="text-gray-300 hover:text-yellow-400 transition-colors duration-200 text-sm">
-                            {{ __('Terms of Service', 'couplescompatibility') }}
+                            {{ function('__', 'Terms of Service', 'couplescompatibility') }}
                         </a>
                         <a href="{{ function('get_permalink', function('pll_get_post', 621) ?: 621) }}"
                            class="text-gray-300 hover:text-yellow-400 transition-colors duration-200 text-sm">
-                            {{ __('About', 'couplescompatibility') }}
+                            {{ function('__', 'About', 'couplescompatibility') }}
                         </a>
                     </div>
                     <div class="text-gray-400 text-sm">

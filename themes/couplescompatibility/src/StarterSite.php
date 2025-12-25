@@ -42,7 +42,8 @@ class StarterSite extends Site {
 		add_theme_support('menus');
 
 		// Localization support (text domain)
-		load_theme_textdomain('couplescompatibility', get_template_directory() . '/languages');
+		$mofile = get_template_directory() . '/languages/couplescompatibility-' . get_locale() . '.mo';
+		load_textdomain('couplescompatibility', $mofile);
 	}
 
 	/**
