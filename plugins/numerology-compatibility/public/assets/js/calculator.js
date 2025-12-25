@@ -429,7 +429,7 @@
      */
     Calculator.prototype.startPaymentPolling = function(paymentId, calculationId) {
         var self = this;
-        var maxAttempts = 10;
+        var maxAttempts = 20;
         var attempts = 0;
         var pollingActive = true;
 
@@ -668,7 +668,7 @@
     Calculator.prototype.checkPdfStatus = function() {
         var self = this;
         var attempts = 0;
-        var maxAttempts = 15;
+        var maxAttempts = 30;
         var pollInterval = 2000;
 
         console.log('Starting PDF polling for URL:', this.pdfUrl);
