@@ -1105,7 +1105,7 @@
 /* PDF download */
 .nc-theme-hero .nc-pdf-download a {
     background: linear-gradient(to right, #facc15, #eab308);
-    color: #581c87;
+    color: #fff;
 }
 
 .nc-theme-hero .nc-pdf-generating {
