@@ -5,7 +5,7 @@ Can be extended with navigation menu if needed
 
 <header class="bg-gradient-to-r from-purple-900 to-purple-800 z-50 p-6">
     <div class="container mx-auto flex justify-between items-center">
-        <a href="/" class="flex items-center hover:opacity-80 transition-opacity">
+        <a href="{{ function('pll_home_url') ?: '/' }}" class="flex items-center hover:opacity-80 transition-opacity">
             <svg class="w-8 h-8 text-yellow-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd"
                       d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"

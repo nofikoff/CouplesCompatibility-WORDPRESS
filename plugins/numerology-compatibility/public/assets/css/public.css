@@ -198,7 +198,7 @@
 
 .nc-btn-primary {
     background: var(--nc-primary);
-    color: white;
+    color: white !important;
 }
 
 .nc-btn-primary:hover {
