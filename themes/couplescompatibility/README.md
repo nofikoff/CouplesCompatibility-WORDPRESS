@@ -16,6 +16,17 @@ This project uses WordPress instead of a modern framework like Next.js for sever
 
 5. **No Build Process for Content**: Content changes are instant. No need to rebuild/redeploy the site for text updates.
 
+### Why Not Headless WordPress + Next.js?
+
+Headless architecture (WordPress API + GraphQL + Next.js) was considered but rejected:
+
+1. **Unnecessary complexity**: Content changes would require rebuild/redeploy instead of instant updates
+2. **No SPA requirements**: The calculator is simple AJAX, not complex React state management
+3. **Triple infrastructure**: WordPress + Next.js + Laravel = 3 deploy targets, 3 failure points
+4. **Target audience**: Non-technical editors need instant content updates, not CI/CD pipelines
+
+Headless makes sense for complex dashboards, shared web/mobile frontends, or large dev teams. For a landing page with a form — it's overengineering.
+
 ## Development Workflow
 
 ### Landing Page Creation
