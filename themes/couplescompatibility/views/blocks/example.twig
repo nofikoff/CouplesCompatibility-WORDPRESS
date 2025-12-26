@@ -1,6 +1,6 @@
 {#
     Example report section
-    ACF fields: example_title, example_quote, example_caption, example_cta_button
+    ACF fields: example_title, example_quote, example_caption, example_cta_button, example_cta_button_url
 #}
 
 <section class="py-20 bg-white">
@@ -34,7 +34,7 @@
             </div>
 
             {% if fields.example_cta_button %}
-            <a href="#" class="inline-flex items-center bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-4 px-8 rounded-lg hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+            <a href="{{ fields.example_cta_button_url ?: '#' }}" class="inline-flex items-center bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-4 px-8 rounded-lg hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
                 {{ fields.example_cta_button }}
                 <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
