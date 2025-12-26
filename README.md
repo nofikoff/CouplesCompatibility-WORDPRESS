@@ -19,6 +19,7 @@ WordPress theme and plugin for numerology compatibility calculator at [couplesco
 |-----------|-------------|---------------|
 | **Theme** | Timber-based Twig templates, multilingual support | [Theme README](themes/couplescompatibility/README.md) |
 | **Plugin** | Shortcode-based calculator, payment integration | [Plugin README](plugins/numerology-compatibility/README.md) |
+| **Content Management** | Guide for operators (no WordPress experience needed) | [Content Manual](docs/CONTENT-MANAGEMENT-MANUAL.md) |
 
 ## Deployment
 
