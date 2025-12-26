@@ -694,7 +694,7 @@
                             setTimeout(checkPdf, pollInterval);
                         } else {
                             console.error('PDF polling timeout');
-                            var errorMsg = nc_public.i18n.pdf_generation_failed || 'PDF generation failed. Please try again.';
+                            var errorMsg = nc_public.i18n.pdf_generation_failed || 'PDF generation failed. Please try to reload page.';
                             if (self.calculationId) {
                                 errorMsg += ' ' + (nc_public.i18n.calculation_id_label || 'Calculation ID') + ': ' + self.calculationId;
                             }
@@ -709,7 +709,7 @@
                             setTimeout(checkPdf, pollInterval);
                         } else {
                             console.error('PDF polling timeout (425 status)');
-                            var errorMsg = nc_public.i18n.pdf_generation_failed || 'PDF generation failed. Please try again.';
+                            var errorMsg = nc_public.i18n.pdf_generation_failed || 'PDF generation failed. Please try to reload page.';
                             if (self.calculationId) {
                                 errorMsg += ' ' + (nc_public.i18n.calculation_id_label || 'Calculation ID') + ': ' + self.calculationId;
                             }

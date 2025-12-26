@@ -257,7 +257,7 @@
                             setTimeout(checkPdf, pollInterval);
                         } else {
                             console.error('PDF polling timeout');
-                            self.showError(nc_public.i18n.pdf_generation_failed || 'PDF generation failed. Please try again.');
+                            self.showError(nc_public.i18n.pdf_generation_failed || 'PDF generation failed. Please try to reload page.');
                         }
                     }
                 },
