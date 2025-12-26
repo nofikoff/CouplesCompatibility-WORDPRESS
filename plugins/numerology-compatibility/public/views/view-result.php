@@ -20,6 +20,9 @@ $payment_id = sanitize_text_field($_GET['payment_id'] ?? '');
 $calculation_id = sanitize_text_field($_GET['calculation_id'] ?? '');
 $payment_cancelled = isset($_GET['payment_cancelled']) && $_GET['payment_cancelled'] === '1';
 
+// Localized home URL (Polylang support)
+$home_url = function_exists('pll_home_url') ? pll_home_url() : home_url('/');
+
 // Determine initial state
 $show_pending = $payment_success && $payment_id;
 $show_cancelled = $payment_cancelled;
@@ -94,10 +97,7 @@ $show_empty = !$show_pending && !$show_cancelled && empty($secret_code);
 
             <!-- New Calculation Link -->
             <div class="nc-form-actions nc-mt-2">
-                <?php
-                $calculator_url = home_url('/');
-                ?>
-                <a href="<?php echo esc_url($calculator_url); ?>" class="nc-btn nc-btn-outline">
+                <a href="<?php echo esc_url($home_url); ?>" class="nc-btn nc-btn-outline">
                     <?php _e('Calculate Another', 'numerology-compatibility'); ?>
                 </a>
             </div>
@@ -130,7 +130,7 @@ $show_empty = !$show_pending && !$show_cancelled && empty($secret_code);
             </div>
 
             <div class="nc-form-actions">
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="nc-btn nc-btn-primary">
+                <a href="<?php echo esc_url($home_url); ?>" class="nc-btn nc-btn-primary">
                     <?php _e('Go to Homepage', 'numerology-compatibility'); ?>
                 </a>
             </div>
@@ -145,7 +145,7 @@ $show_empty = !$show_pending && !$show_cancelled && empty($secret_code);
             <p class="nc-error-message"><?php _e('Your payment was cancelled. No charges were made.', 'numerology-compatibility'); ?></p>
 
             <div class="nc-form-actions">
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="nc-btn nc-btn-primary">
+                <a href="<?php echo esc_url($home_url); ?>" class="nc-btn nc-btn-primary">
                     <?php _e('Try Again', 'numerology-compatibility'); ?>
                 </a>
             </div>
@@ -160,7 +160,7 @@ $show_empty = !$show_pending && !$show_cancelled && empty($secret_code);
             <p class="nc-error-message"><?php _e('Please complete a calculation first to see your results.', 'numerology-compatibility'); ?></p>
 
             <div class="nc-form-actions">
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="nc-btn nc-btn-primary">
+                <a href="<?php echo esc_url($home_url); ?>" class="nc-btn nc-btn-primary">
                     <?php _e('Start Calculation', 'numerology-compatibility'); ?>
                 </a>
             </div>
