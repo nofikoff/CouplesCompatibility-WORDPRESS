@@ -102,6 +102,8 @@ $active_tab = $_GET['tab'] ?? 'general';
                         <input type="url" name="nc_result_page_url" value="<?php echo esc_attr(get_option('nc_result_page_url', '')); ?>" class="regular-text" placeholder="https://example.com/compatibility-result/">
                         <p class="description">
                             <?php _e('URL of the page with [numerology_result] shortcode. After payment, users will be redirected here.', 'numerology-compatibility'); ?>
+                            <br>
+                            <?php _e('For multilingual sites: this page must have translated versions linked via Polylang. Users will be redirected to the localized version based on their language.', 'numerology-compatibility'); ?>
                         </p>
                     </td>
                 </tr>
