@@ -289,6 +289,8 @@
     text-align: center;
     position: relative;
     transition: all 0.3s;
+    box-sizing: border-box;
+    max-width: 100%;
 }
 
 .nc-package:hover {
@@ -879,6 +881,10 @@
         grid-template-columns: 1fr;
     }
 
+    .nc-package.nc-package-featured {
+        transform: none;
+    }
+
     .nc-stats-row {
         grid-template-columns: 1fr 1fr;
     }
@@ -1394,6 +1400,14 @@
 @media (max-width: 768px) {
     .nc-theme-pricing .nc-packages {
         grid-template-columns: 1fr !important;
+    }
+
+    .nc-theme-pricing .nc-package.nc-package-featured {
+        transform: none !important;
+    }
+
+    .nc-theme-pricing .nc-package.nc-package-featured:hover {
+        transform: translateY(-0.5rem) !important;
     }
 }
 
