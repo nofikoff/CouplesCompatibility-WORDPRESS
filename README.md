@@ -20,7 +20,13 @@ WordPress theme and plugin for numerology compatibility calculator at [couplesco
 | **Theme** | Timber-based Twig templates, multilingual support | [Theme README](themes/couplescompatibility/README.md) |
 | **Plugin** | Shortcode-based calculator, payment integration | [Plugin README](plugins/numerology-compatibility/README.md) |
 
-## Quick Start
+## Deployment
+
+**Production:** The project is designed for standard LAMP hosting for WordPress. Simply upload the theme and plugin to your WordPress installation.
+
+**Development:** Docker is used for local development and testing only.
+
+## Local Development
 
 ### Prerequisites
 
@@ -49,6 +55,32 @@ cd ../../plugins/numerology-compatibility && composer install
 ```
 
 Access WordPress at http://localhost
+
+### WordPress Configuration
+
+After setup, configure WordPress:
+
+**Required Plugins:**
+
+| Plugin | Type | Description |
+|--------|------|-------------|
+| [Advanced Custom Fields](https://wordpress.org/plugins/advanced-custom-fields/) | Third-party | Custom fields for pages and templates |
+| [Polylang](https://wordpress.org/plugins/polylang/) | Third-party | Multilingual support (EN, RU, UK) |
+| Numerology Compatibility Calculator | Custom | Main calculator with payment integration |
+
+**Theme:**
+
+| Theme | Description |
+|-------|-------------|
+| Couples Compatibility | Multilingual theme based on Timber and Tailwind CSS |
+
+**Activation Steps:**
+
+1. Install and activate **Advanced Custom Fields** and **Polylang** from WordPress plugin repository
+2. Activate custom plugin **Numerology Compatibility Calculator** (`plugins/numerology-compatibility`)
+3. Activate custom theme **Couples Compatibility** (`themes/couplescompatibility`)
+4. Configure Polylang languages (English, Russian, Ukrainian)
+5. Import ACF field groups from `examples/acf-landing-page-fields.json` and `examples/acf-site-settings-fields.json`
 
 ## Examples
 
