@@ -145,10 +145,20 @@
       },
       {
         "key": "field_example_cta_button",
-        "label": "Example CTA Button",
+        "label": "Example CTA Button Text",
         "name": "example_cta_button",
         "type": "text",
+        "wrapper": { "width": "50" },
         "default_value": "Want to see your full compatibility report?"
+      },
+      {
+        "key": "field_example_cta_button_url",
+        "label": "Example CTA Button URL (PDF Example)",
+        "name": "example_cta_button_url",
+        "type": "url",
+        "instructions": "Link to example PDF report",
+        "wrapper": { "width": "50" },
+        "default_value": "#"
       },
       {
         "key": "field_tab_pricing",
