@@ -53,12 +53,12 @@ class GeoLanguage {
 			return;
 		}
 
-		if (!$this->is_page_view()) {
+		// Check if geo detection was already done
+		if (isset($_COOKIE[self::COOKIE_NAME])) {
 			return;
 		}
 
-		// Check if geo detection was already done
-		if (isset($_COOKIE[self::COOKIE_NAME])) {
+		if (!$this->is_page_view()) {
 			return;
 		}
 
@@ -89,14 +89,22 @@ class GeoLanguage {
 	}
 
 	/**
-	 * template_redirect fires before WordPress serves robots.txt, the favicon, feeds and
-	 * trackbacks (wp-includes/template-loader.php) and is where core renders sitemaps, so a
-	 * crawler from UA would get a 302 to /uk/ instead of the file it asked for.
+	 * True only for a GET/HEAD request of an HTML page a visitor navigates to.
+	 *
+	 * template_redirect also runs for robots.txt, the favicon, feeds, trackbacks and embeds
+	 * (wp-includes/template-loader.php serves them after it), and a 302 would replace the file a
+	 * crawler asked for or turn a POST into a GET. Core has no is_sitemap(): sitemaps are told
+	 * apart by their query vars.
 	 *
 	 * @return bool
 	 */
 	private function is_page_view() {
-		return !(is_robots() || is_favicon() || is_feed() || is_trackback()
+		$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+		if ($method !== 'GET' && $method !== 'HEAD') {
+			return false;
+		}
+
+		return !(is_robots() || is_favicon() || is_feed() || is_trackback() || is_embed()
 			|| get_query_var('sitemap') || get_query_var('sitemap-stylesheet'));
 	}
 

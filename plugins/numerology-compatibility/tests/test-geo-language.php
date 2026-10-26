@@ -23,6 +23,7 @@ class TestGeoLanguage extends TestCase {
         $_COOKIE = [];
         $_SERVER['HTTP_CF_IPCOUNTRY'] = 'UA';
         $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
 
         $uk = (object) ['slug' => 'uk'];
         $pll = new \stdClass();
@@ -45,35 +46,68 @@ class TestGeoLanguage extends TestCase {
             'is_favicon' => false,
             'is_feed' => false,
             'is_trackback' => false,
+            'is_embed' => false,
             'get_query_var' => '',
         ]);
     }
 
     public function tearDown(): void {
         Monkey\tearDown();
-        unset($_SERVER['HTTP_CF_IPCOUNTRY'], $_SERVER['REQUEST_URI']);
+        $_COOKIE = [];
+        unset($_SERVER['HTTP_CF_IPCOUNTRY'], $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
         parent::tearDown();
     }
 
     /**
-     * @dataProvider serviceRequests
+     * @dataProvider conditionalTags
      */
-    public function test_service_request_is_not_redirected($function, $value) {
-        Functions\when($function)->justReturn($value);
-        Functions\expect('wp_safe_redirect')->never();
+    public function test_service_request_is_not_redirected($tag) {
+        Functions\when($tag)->justReturn(true);
 
-        (new GeoLanguage())->maybe_switch_language();
-
-        $this->addToAssertionCount(1);
+        $this->assertNoRedirect();
     }
 
-    public function serviceRequests() {
+    public function conditionalTags() {
         return [
-            'robots.txt' => ['is_robots', true],
-            'favicon.ico' => ['is_favicon', true],
-            'feed' => ['is_feed', true],
-            'trackback' => ['is_trackback', true],
-            'sitemap' => ['get_query_var', 'index'],
+            'robots.txt' => ['is_robots'],
+            'favicon.ico' => ['is_favicon'],
+            'feed' => ['is_feed'],
+            'trackback' => ['is_trackback'],
+            'embed' => ['is_embed'],
+        ];
+    }
+
+    /**
+     * @dataProvider sitemapQueryVars
+     */
+    public function test_sitemap_request_is_not_redirected($var) {
+        Functions\when('get_query_var')->alias(function($name) use ($var) {
+            return $name === $var ? 'index' : '';
+        });
+
+        $this->assertNoRedirect();
+    }
+
+    public function sitemapQueryVars() {
+        return [
+            'sitemap' => ['sitemap'],
+            'sitemap stylesheet' => ['sitemap-stylesheet'],
+        ];
+    }
+
+    /**
+     * @dataProvider nonNavigationMethods
+     */
+    public function test_non_get_request_is_not_redirected($method) {
+        $_SERVER['REQUEST_METHOD'] = $method;
+
+        $this->assertNoRedirect();
+    }
+
+    public function nonNavigationMethods() {
+        return [
+            'POST' => ['POST'],
+            'PUT' => ['PUT'],
         ];
     }
 
@@ -92,5 +126,18 @@ class TestGeoLanguage extends TestCase {
         $this->expectException(RedirectIssued::class);
 
         (new GeoLanguage())->maybe_switch_language();
+    }
+
+    /**
+     * A request that reached setcookie() would also fail here: PHPUnit has printed output, and
+     * phpunit.xml turns the "headers already sent" warning into an exception.
+     */
+    private function assertNoRedirect() {
+        Functions\expect('wp_safe_redirect')->never();
+
+        (new GeoLanguage())->maybe_switch_language();
+
+        // never() is verified by Monkey\tearDown(); counted here so PHPUnit does not flag the test as risky.
+        $this->addToAssertionCount(1);
     }
 }
