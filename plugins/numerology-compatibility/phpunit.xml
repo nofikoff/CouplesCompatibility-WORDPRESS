@@ -10,6 +10,7 @@
     <testsuites>
         <testsuite name="Unit Tests">
             <file>tests/test-shortcodes.php</file>
+            <file>tests/test-geo-language.php</file>
         </testsuite>
         <testsuite name="Integration Tests">
             <file>tests/test-api-client.php</file>

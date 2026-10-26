@@ -53,6 +53,10 @@ class GeoLanguage {
 			return;
 		}
 
+		if (!$this->is_page_view()) {
+			return;
+		}
+
 		// Check if geo detection was already done
 		if (isset($_COOKIE[self::COOKIE_NAME])) {
 			return;
@@ -82,6 +86,18 @@ class GeoLanguage {
 			wp_safe_redirect($target_url);
 			exit;
 		}
+	}
+
+	/**
+	 * template_redirect fires before WordPress serves robots.txt, the favicon, feeds and
+	 * trackbacks (wp-includes/template-loader.php) and is where core renders sitemaps, so a
+	 * crawler from UA would get a 302 to /uk/ instead of the file it asked for.
+	 *
+	 * @return bool
+	 */
+	private function is_page_view() {
+		return !(is_robots() || is_favicon() || is_feed() || is_trackback()
+			|| get_query_var('sitemap') || get_query_var('sitemap-stylesheet'));
 	}
 
 	/**
